@@ -17,7 +17,7 @@ if __name__ == "__main__":
         os.makedirs(db_url_)
     except Exception as e:
         print(f'💽 {e}')
-        answer = input(f'An existing Arma 3 metadata database already exists. Delete it and proceed? (Y/N):')
+        answer = input(f'An existing Arma 3 metadata database already exists. Delete it and proceed? (Y/N)> ').strip()
         if answer.lower() == 'y':
             shutil.rmtree(db_url_)
             os.makedirs(db_url_)
