@@ -12,6 +12,13 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import AnyMessage, HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, START, END
 
+try:
+    import db_schema
+    STATIC_SCHEMA = db_schema.SCHEMA_TEXT # db_schema.py에 SCHEMA_TEXT라는 변수가 있다고 가정
+except ImportError:
+    STATIC_SCHEMA = ""
+instruction_path = Path("INSTRUCTION.md")
+INSTRUCTIONS = instruction_path.read_text(encoding="utf-8") if instruction_path.exists() else ""
 
 # =========================
 # Utils: env parsing
@@ -172,11 +179,15 @@ class AgentState(TypedDict):
     attempts: int
     steps: int
     seen_sql: List[str]
+    instruction: str      #
+    db_schema_doc: str    #
 
 
 @dataclass
 class Config:
     db_path: str
+    instruction_path: str   #
+    db_schema_path: str     #
 
     model: str
     temperature: float
@@ -241,7 +252,18 @@ def make_graph(cfg: Config):
 
     def node_load_schema(state: AgentState) -> Dict[str, Any]:
         schema = get_schema_sqlite(cfg.db_path)
-        return {"schema": schema}
+        ## *** ##
+        instruction = ""
+        if Path(cfg.instruction_path).exists():
+            instruction = Path(cfg.instruction_path).read_text(encoding="utf-8")
+
+        db_schema_doc = ""
+        if Path(cfg.db_schema_path).exists():
+            db_schema_doc = Path(cfg.db_schema_path).read_text(encoding="utf-8")
+        print(f"📄 INSTRUCTION loaded: {len(instruction)} chars")
+        print(f"📄 DB_SCHEMA_GUIDE loaded: {len(db_schema_doc)} chars")
+        ## *** ##
+        return {"schema": schema, "instruction": instruction, "db_schema_doc": db_schema_doc}
 
     def _check_repeat_sql(state: AgentState, candidate_sql: str) -> str:
         seen = state.get("seen_sql", [])
@@ -255,8 +277,15 @@ def make_graph(cfg: Config):
         msgs: List[AnyMessage] = [
             SystemMessage(SYSTEM_TEXT2SQL),
             SystemMessage(f"SCHEMA:\n{state['schema']}"),
-            HumanMessage(state["question"]),
+            # HumanMessage(state["question"]),
         ]
+        ## *** ##
+        if state.get("instruction"):
+            msgs.append(SystemMessage(f"INSTRUCTION:\n{state['instruction']}"))   # ← 추가
+        if state.get("db_schema_doc"):
+            msgs.append(SystemMessage(f"DB_SCHEMA_GUIDE:\n{state['db_schema_doc']}"))  # ← 추가
+        msgs.append(HumanMessage(state["question"]))
+        ## *** ##
         ai = llm.invoke(msgs)
         sql = extract_sql(ai.content)
 
@@ -294,6 +323,12 @@ def make_graph(cfg: Config):
             SystemMessage(f"PREVIOUS_SQL:\n{state['sql']}"),
             SystemMessage(f"ERROR:\n{state['error']}"),
         ]
+        ## *** ##
+        if state.get("instruction"):
+            msgs.append(SystemMessage(f"INSTRUCTION:\n{state['instruction']}"))
+        if state.get("db_schema_doc"):
+            msgs.append(SystemMessage(f"DB_SCHEMA_GUIDE:\n{state['db_schema_doc']}"))
+        ## *** ##
         ai = llm.invoke(msgs)
         fixed = extract_sql(ai.content)
 
@@ -392,6 +427,10 @@ def main():
         max_rows=env_int("MAX_ROWS", 50),
         block_non_readonly_sql=env_bool("BLOCK_NON_READONLY_SQL", True),
         treat_refusal_result_as_error=env_bool("TREAT_REFUSAL_RESULT_AS_ERROR", True),
+        ## *** ##
+        instruction_path=env_str("INSTRUCTION_PATH", "INSTRUCTION.md"),
+        db_schema_path=env_str("DB_SCHEMA_PATH", "db_schema.py"),
+        ## *** ##
     )
 
     graph = make_graph(cfg)
