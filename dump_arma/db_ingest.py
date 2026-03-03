@@ -496,7 +496,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                                         side=side,
                                         seq=seq,
                                         keyname=keyname,
-                                        targetunit=unit,
+                                        unit=unit,
                                         weapon=weapon,
                                         muzzle=muzzle,
                                         # mode=mode,

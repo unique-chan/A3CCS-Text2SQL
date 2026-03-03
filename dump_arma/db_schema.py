@@ -136,7 +136,7 @@ class EventF(Base):
     side: Mapped[str] = mapped_column(String, primary_key=True)
     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
     keyname: Mapped[str] = mapped_column(String)
-    targetunit: Mapped[str | None] = mapped_column(String)               
+    unit: Mapped[str | None] = mapped_column(String)               
     weapon: Mapped[str | None] = mapped_column(String)
     muzzle: Mapped[str | None] = mapped_column(String)
     # mode: Mapped[str | None] = mapped_column(String)
