@@ -187,7 +187,7 @@ def parse_hitpoints(hitpoint_obj):
     if not hitpoint_obj or not isinstance(hitpoint_obj, list) or len(hitpoint_obj) < 3:
         return []
 
-    names = hitpoint_obj[0]
+    names = hitpoint_obj[1]
     damages = hitpoint_obj[2]
 
     if not isinstance(names, list) or not isinstance(damages, list):
@@ -412,8 +412,8 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                         if not isinstance(entries, list):
                             continue
 
-                        # team from key prefix: "B_event_EDC" -> "b", "OP_event_D" -> "op"
-                        team = keyname.split("_", 1)[0].lower()
+                        # side from key prefix: "B_event_EDC" -> "b", "OP_event_D" -> "op"
+                        side = keyname.split("_", 1)[0].lower()
                         keyname = keyname.lower() 
 
                         # event type suffix
@@ -446,7 +446,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                             #     session.add(
                             #         EventED(
                             #             snapshotid=sid,
-                            #             team=team,
+                            #             side=side,
                             #             seq=seq,
                             #             keyname=keyname,
                             #             datetime=start_iso,
@@ -467,11 +467,11 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                                     session.add(
                                         EventEDC(
                                             snapshotid=sid,
-                                            team=team,
+                                            side=side,
                                             seq=seq,
                                             keyname=keyname,
                                             datetime=start_iso,
-                                            group=group,
+                                            groupname=group,
                                             targetunit=targetunit,
                                             newknowsabout=newknowsabout,
                                             oldknowsabout=oldknowsabout,
@@ -493,7 +493,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                                     EventF(
                                         snapshotid=sid,
                                         datetime=start_iso,
-                                        team=team,
+                                        side=side,
                                         seq=seq,
                                         keyname=keyname,
                                         unit=unit,
@@ -520,7 +520,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                                 session.add(
                                     EventD(
                                         snapshotid=sid,
-                                        team=team,
+                                        side=side,
                                         seq=seq,
                                         keyname=keyname,
                                         datetime=start_iso,
@@ -546,7 +546,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                                 session.add(
                                     EventK(
                                         snapshotid=sid,
-                                        team=team,
+                                        side=side,
                                         seq=seq,
                                         keyname=keyname,
                                         datetime=start_iso,

@@ -116,24 +116,24 @@ class EventEDC(Base):
     __tablename__ = "event_knowsaboutchanged"
     snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
     datetime: Mapped[str | None] = mapped_column(String)          
-    team: Mapped[str] = mapped_column(String, primary_key=True)
+    side: Mapped[str] = mapped_column(String, primary_key=True)
     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
     keyname: Mapped[str] = mapped_column(String)
-    group: Mapped[str | None] = mapped_column(String)
+    groupname: Mapped[str | None] = mapped_column(String)
     targetunit: Mapped[str | None] = mapped_column(String)
     newknowsabout: Mapped[float | None] = mapped_column(Float)
     oldknowsabout: Mapped[float | None] = mapped_column(Float)
     paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
-Index("ix_eventedc_snapshot_team_time", EventEDC.snapshotid, EventEDC.team, EventEDC.datetime)
+Index("ix_eventedc_snapshot_side_time", EventEDC.snapshotid, EventEDC.side, EventEDC.datetime)
 
 
 class EventF(Base):
     __tablename__ = "event_fired"
     snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
     datetime: Mapped[str | None] = mapped_column(String)
-    team: Mapped[str] = mapped_column(String, primary_key=True)
+    side: Mapped[str] = mapped_column(String, primary_key=True)
     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
     keyname: Mapped[str] = mapped_column(String)
     unit: Mapped[str | None] = mapped_column(String)               
@@ -147,14 +147,14 @@ class EventF(Base):
     paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
-Index("ix_eventf_snapshot_team_time", EventF.snapshotid, EventF.team, EventF.datetime)
+Index("ix_eventf_snapshot_side_time", EventF.snapshotid, EventF.side, EventF.datetime)
 
 
 class EventD(Base):
     __tablename__ = "event_dammaged"
     snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
     datetime: Mapped[str | None] = mapped_column(String)
-    team: Mapped[str] = mapped_column(String, primary_key=True)
+    side: Mapped[str] = mapped_column(String, primary_key=True)
     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
     keyname: Mapped[str] = mapped_column(String)
     unit: Mapped[str | None] = mapped_column(String)                
@@ -167,14 +167,14 @@ class EventD(Base):
     paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
-Index("ix_eventd_snapshot_team_time", EventD.snapshotid, EventD.team, EventD.datetime)
+Index("ix_eventd_snapshot_side_time", EventD.snapshotid, EventD.side, EventD.datetime)
 
 
 class EventK(Base):
     __tablename__ = "event_killed"
     snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
     datetime: Mapped[str | None] = mapped_column(String)
-    team: Mapped[str] = mapped_column(String, primary_key=True)
+    side: Mapped[str] = mapped_column(String, primary_key=True)
     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
     keyname: Mapped[str] = mapped_column(String)
     unit: Mapped[str | None] = mapped_column(String)
@@ -184,4 +184,4 @@ class EventK(Base):
     paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
-Index("ix_eventk_snapshot_team_time", EventK.snapshotid, EventK.team, EventK.datetime)
+Index("ix_eventk_snapshot_side_time", EventK.snapshotid, EventK.side, EventK.datetime)
