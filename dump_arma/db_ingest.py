@@ -461,7 +461,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                                 newknowsabout = _to_float_or_none(params[2]) if len(params) > 2 else None
                                 oldknowsabout = _to_float_or_none(params[3]) if len(params) > 3 else None
 
-                                if targetunit is not None and '_' in targetunit and targetunit.startswith(team + "_"):
+                                if targetunit is not None and '_' in targetunit and ( targetunit.startswith("b_") or targetunit.startswith("op_") ):
                                     session.add(
                                         EventEDC(
                                             snapshotid=sid,
