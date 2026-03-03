@@ -12,7 +12,7 @@
 
 
 ## SQL 변환 시 유의사항
-- 아래 **테이블 구조**를 반드시 확인하여, 자연어 텍스트 질의에 답변하기 위해 필요한 테이블을 1개 이상 선택할 것.
+- 아래 테이블 구조를 반드시 확인하여, 자연어 텍스트 질의에 답변하기 위해 필요한 테이블을 1개 이상 선택할 것.
 - 필요 시 Join 연산을 사용하되, 너무 과도한 Join 연산은 가급적 자제할 것.
 - 중복 결과가 발생하면, 우선 Join 조건이 올바른지 검토하고, 최후의 수단으로 Distinct를 사용할 것.
 - 자연어 질문을 SQL로 변환하기 전, 질문이 목록 조회인지, 집계 (Aggregation)인지 그 성격을 우선 파악할 것.
@@ -26,14 +26,14 @@
   - snapshots
   - groups
   - vehicles
-  - vehicles_ammo
   - vehicles_hitpoints
+  - vehicles_ammo
   - units
   - units_ammo
-  - event_dammaged
-  - event_fired
-  - event_killed
   - event_knowsaboutchanged
+  - event_fired
+  - event_dammaged
+  - event_killed
 
 
 ### snapshots 테이블
