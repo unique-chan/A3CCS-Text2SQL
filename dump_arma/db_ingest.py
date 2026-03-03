@@ -460,20 +460,22 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                                 targetunit = params[1] if len(params) > 1 else None
                                 newknowsabout = _to_float_or_none(params[2]) if len(params) > 2 else None
                                 oldknowsabout = _to_float_or_none(params[3]) if len(params) > 3 else None
-                                session.add(
-                                    EventEDC(
-                                        snapshotid=sid,
-                                        team=team,
-                                        seq=seq,
-                                        keyname=keyname,
-                                        datetime=start_iso,
-                                        group=group,
-                                        targetunit=targetunit,
-                                        newknowsabout=newknowsabout,
-                                        oldknowsabout=oldknowsabout,
-                                        paramsjson=paramsjson,
+
+                                if targetunit is not None and '_' in targetunit:
+                                    session.add(
+                                        EventEDC(
+                                            snapshotid=sid,
+                                            team=team,
+                                            seq=seq,
+                                            keyname=keyname,
+                                            datetime=start_iso,
+                                            group=group,
+                                            targetunit=targetunit,
+                                            newknowsabout=newknowsabout,
+                                            oldknowsabout=oldknowsabout,
+                                            paramsjson=paramsjson,
+                                        )
                                     )
-                                )
 
                             # event_fired ->
                             elif etype == "f":
