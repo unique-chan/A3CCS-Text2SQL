@@ -110,19 +110,19 @@ Index("ix_vhp_snapshot_side_vehicle", VehicleHitpoint.snapshotid, VehicleHitpoin
 Index("ix_vhp_snapshot_side_hitpoint", VehicleHitpoint.snapshotid, VehicleHitpoint.side, VehicleHitpoint.hitpoint)
 
 
-class EventED(Base):
-    __tablename__ = "event_enemydetected"
-    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
-    datetime: Mapped[str | None] = mapped_column(String)          
-    team: Mapped[str] = mapped_column(String, primary_key=True)       
-    seq: Mapped[int] = mapped_column(Integer, primary_key=True)
-    keyname: Mapped[str] = mapped_column(String)                      
-    group: Mapped[str | None] = mapped_column(String)              
-    newtarget: Mapped[str | None] = mapped_column(String)                
-    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+# class EventED(Base):
+#     __tablename__ = "event_enemydetected"
+#     snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+#     datetime: Mapped[str | None] = mapped_column(String)          
+#     team: Mapped[str] = mapped_column(String, primary_key=True)       
+#     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
+#     keyname: Mapped[str] = mapped_column(String)                      
+#     group: Mapped[str | None] = mapped_column(String)              
+#     newtarget: Mapped[str | None] = mapped_column(String)                
+#     paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
-Index("ix_evented_snapshot_team_time", EventED.snapshotid, EventED.team, EventED.datetime)
+# Index("ix_evented_snapshot_team_time", EventED.snapshotid, EventED.team, EventED.datetime)
 
 
 class EventEDC(Base):

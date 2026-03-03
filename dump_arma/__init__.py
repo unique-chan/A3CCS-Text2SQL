@@ -9,7 +9,7 @@ from .db_schema import (
     UnitAmmo,
     VehicleAmmo,
     VehicleHitpoint,
-    EventED,
+    # EventED,
     EventEDC,
     EventF,
     EventD,

@@ -16,7 +16,7 @@ from .db_schema import (
     UnitAmmo,
     VehicleAmmo,
     VehicleHitpoint,
-    EventED,
+    # EventED,
     EventEDC,
     EventF,
     EventD,
@@ -418,8 +418,8 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                         up = keyname.upper()
                         if up.endswith("_EVENT_EDC"):
                             etype = "edc"
-                        elif up.endswith("_EVENT_ED"):
-                            etype = "ed"
+                        # elif up.endswith("_EVENT_ED"):
+                        #     etype = "ed"
                         elif up.endswith("_EVENT_F"):
                             etype = "f"
                         elif up.endswith("_EVENT_D"):
@@ -437,25 +437,25 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                             params = e[1:]
                             paramsjson = dumps(params)
 
-                            # event_enemydetected
-                            if etype == "ed":
-                                group = params[0] if len(params) > 0 else None
-                                newtarget = params[1] if len(params) > 1 else None
-                                session.add(
-                                    EventED(
-                                        snapshotid=sid,
-                                        team=team,
-                                        seq=seq,
-                                        keyname=keyname,
-                                        datetime=start_iso,
-                                        group=group,
-                                        newtarget=newtarget,
-                                        paramsjson=paramsjson,
-                                    )
-                                )
+                            # event_enemydetected ->
+                            # if etype == "ed":
+                            #     group = params[0] if len(params) > 0 else None
+                            #     newtarget = params[1] if len(params) > 1 else None
+                            #     session.add(
+                            #         EventED(
+                            #             snapshotid=sid,
+                            #             team=team,
+                            #             seq=seq,
+                            #             keyname=keyname,
+                            #             datetime=start_iso,
+                            #             group=group,
+                            #             newtarget=newtarget,
+                            #             paramsjson=paramsjson,
+                            #         )
+                            #     )
 
-                            # event_knowsaboutchanged 
-                            elif etype == "edc":
+                            #event_knowsaboutchanged ->
+                            if etype == "edc":
                                 group = params[0] if len(params) > 0 else None
                                 targetunit = params[1] if len(params) > 1 else None
                                 newknowsabout = _to_float_or_none(params[2]) if len(params) > 2 else None
