@@ -315,20 +315,21 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
 
                         ux, uy = safe_pos2(u.get("pos", []))
 
-                        session.add(
-                            Unit(
-                                snapshotid=sid,
-                                side=side,
-                                unitname=uname,
-                                datetime=start_iso,
-                                groupname="_".join(uname.split("_")[:4]),
-                                unittype=u.get("unittype"),
-                                posx=ux,
-                                posy=uy,
-                                damage=u.get("damage", 0.0),
-                                objectparent=u.get("objectparent"),
+                        if '_' in uname:
+                            session.add(
+                                Unit(
+                                    snapshotid=sid,
+                                    side=side,
+                                    unitname=uname,
+                                    datetime=start_iso,
+                                    groupname="_".join(uname.split("_")[:4]),
+                                    unittype=u.get("unittype"),
+                                    posx=ux,
+                                    posy=uy,
+                                    damage=u.get("damage", 0.0),
+                                    objectparent=u.get("objectparent"),
+                                )
                             )
-                        )
 
                         ammo_agg = aggregate_ammo(normalize_ammo_items(u.get("ammo", [])))
                         for ammotype, count_sum in ammo_agg.items():
