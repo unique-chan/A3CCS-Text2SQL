@@ -8,90 +8,193 @@ class Base(DeclarativeBase):
 
 class Snapshot(Base):
     __tablename__ = "snapshots"
-    snapshot_id: Mapped[str] = mapped_column(String, primary_key=True)              # Surrogate key
-    source_file: Mapped[str] = mapped_column(String, nullable=False)                # original json file name
-    sha256: Mapped[str] = mapped_column(String, nullable=False, unique=True)        # content hash (to avoid duplicates)
-    datetime: Mapped[str | None] = mapped_column(String)                            # ISO8601: [YYYY-MM-DD]T[HH:MM:SS.mmm]
-    raw_json: Mapped[str] = mapped_column(Text, nullable=False)                     # original raw json content
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    sourcefile: Mapped[str] = mapped_column(String, nullable=False)
+    sha256: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    datetime: Mapped[str | None] = mapped_column(String)          # ISO8601
+    rawjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
 class Group(Base):
     __tablename__ = "groups"
-    snapshot_id: Mapped[str] = mapped_column(String, primary_key=True)              # foreign key to Snapshot.snapshot_id
-    side: Mapped[str] = mapped_column(String, primary_key=True)                     # side identifier ("friend" | "enemy")
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    side: Mapped[str] = mapped_column(String, primary_key=True)
+    company: Mapped[str] = mapped_column(String, primary_key=True)
+    platoon: Mapped[str] = mapped_column(String, primary_key=True)
+    squad: Mapped[str] = mapped_column(String, primary_key=True)
+    groupname: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)          
+    leaderposx: Mapped[float | None] = mapped_column(Float)
+    leaderposy: Mapped[float | None] = mapped_column(Float)
+    waypointposx: Mapped[float | None] = mapped_column(Float)
+    waypointposy: Mapped[float | None] = mapped_column(Float)
 
-    company: Mapped[str] = mapped_column(String, primary_key=True)                  # Company (중대) identifier (1, 2, 3, ...)
-    platoon: Mapped[str] = mapped_column(String, primary_key=True)                  # Platoon (소대) identifier (i[n]: IFV, t[n]: Tank, hq[n]: headquarter, ...)
-    squad: Mapped[str] = mapped_column(String, primary_key=True)                    # Squad (분대) identifier
-    groupname: Mapped[str] = mapped_column(String, primary_key=True)                # [Side]_[Company]_[Platoon]_[Squad]
 
-    leaderpos_x: Mapped[float | None] = mapped_column(Float)                        # Leader X position of the squad
-    leaderpos_y: Mapped[float | None] = mapped_column(Float)                        # Leader Y position of the squad
-    leaderpos_z: Mapped[float | None] = mapped_column(Float)                        # Leader Z position of the squad
-    unitlist_json: Mapped[str | None] = mapped_column(Text)                         # Members belonging to each squad (json list)
-    waypointpos_json: Mapped[str | None] = mapped_column(Text)                      # ??? Waypoint positions (json list)
+Index("ix_groups_snapshot_side_group", Group.snapshotid, Group.side, Group.groupname)
 
-Index("ix_groups_snapshot_side_group", Group.snapshot_id, Group.side, Group.groupname)
 
 class Unit(Base):
     __tablename__ = "units"
-    snapshot_id: Mapped[str] = mapped_column(String, primary_key=True)              # foreign key to Snapshot.snapshot_id
-    side: Mapped[str] = mapped_column(String, primary_key=True)                     # side identifier ("friend" | "enemy")
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)          
+    side: Mapped[str] = mapped_column(String, primary_key=True)
     unitname: Mapped[str] = mapped_column(String, primary_key=True)
-    groupname: Mapped[str] = mapped_column(String)                                  # foreign key to Group.groupname
+    groupname: Mapped[str] = mapped_column(String)
     unittype: Mapped[str | None] = mapped_column(String)
-    pos_x: Mapped[float | None] = mapped_column(Float)                              # X position of the unit
-    pos_y: Mapped[float | None] = mapped_column(Float)                              # Y position of the unit
-    pos_z: Mapped[float | None] = mapped_column(Float)                              # Z position of the unit
-    damage: Mapped[float | None] = mapped_column(Float)                             # damage value between 0.0 and 1.0
-    objectparent: Mapped[str | None] = mapped_column(String)                        # vehiclename if the unit is in a vehicle
-    # discovered: Mapped[float | None] = mapped_column(Float)                       # only available for enemy units
-    # behaviour: Mapped[str | None] = mapped_column(String)
+    posx: Mapped[float | None] = mapped_column(Float)
+    posy: Mapped[float | None] = mapped_column(Float)
+    damage: Mapped[float | None] = mapped_column(Float)
+    objectparent: Mapped[str | None] = mapped_column(String)
 
-Index("ix_units_snapshot_side_group", Unit.snapshot_id, Unit.side, Unit.groupname)
+
+Index("ix_units_snapshot_side_group", Unit.snapshotid, Unit.side, Unit.groupname)
+
 
 class Vehicle(Base):
     __tablename__ = "vehicles"
-    snapshot_id: Mapped[str] = mapped_column(String, primary_key=True)              # foreign key to Snapshot.snapshot_id
-    side: Mapped[str] = mapped_column(String, primary_key=True)                     # side identifier ("friend" | "enemy")
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)          
+    side: Mapped[str] = mapped_column(String, primary_key=True)
     vehiclename: Mapped[str] = mapped_column(String, primary_key=True)
-    groupname: Mapped[str] = mapped_column(String)                                  # foreign key to Group.groupname
+    groupname: Mapped[str] = mapped_column(String)
     vehicletype: Mapped[str | None] = mapped_column(String)
-    pos_x: Mapped[float | None] = mapped_column(Float)                              # X position of the vehicle
-    pos_y: Mapped[float | None] = mapped_column(Float)                              # Y position of the vehicle
-    pos_z: Mapped[float | None] = mapped_column(Float)                              # Z position of the vehicle
-    damage: Mapped[float | None] = mapped_column(Float)                             # damage value between 0.0 and 1.0
-    hitpoint_json: Mapped[str | None] = mapped_column(Text)                         # available hitpoints and their damage values
-    # discovered: Mapped[float | None] = mapped_column(Float)                       # only available for enemy vehicles
-    # group_display_name: Mapped[str | None] = mapped_column(String)                # display_name ???
+    posx: Mapped[float | None] = mapped_column(Float)
+    posy: Mapped[float | None] = mapped_column(Float)
+    posz: Mapped[float | None] = mapped_column(Float)             
+    damage: Mapped[float | None] = mapped_column(Float)
+    hitpointjson: Mapped[str | None] = mapped_column(Text)        
 
-Index("ix_vehicles_snapshot_side_group", Vehicle.snapshot_id, Vehicle.side, Vehicle.groupname)
+
+Index("ix_vehicles_snapshot_side_group", Vehicle.snapshotid, Vehicle.side, Vehicle.groupname)
+
 
 class UnitAmmo(Base):
     __tablename__ = "units_ammo"
-    snapshot_id: Mapped[str] = mapped_column(String, primary_key=True)
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)          
     side: Mapped[str] = mapped_column(String, primary_key=True)
-    unitname: Mapped[str] = mapped_column(String, primary_key=True)
-
-    ammo_key: Mapped[str] = mapped_column(String, primary_key=True)                 # normalized identifier (class/magazine/weapon/...)
-    count: Mapped[int | None] = mapped_column(Integer)                              # ammo count (nullable if unknown)
-    raw_json: Mapped[str | None] = mapped_column(Text)                              # original ammo item json (for audit/debug)
+    unitname: Mapped[str] = mapped_column(String, primary_key=True)       
+    ammotype: Mapped[str] = mapped_column(String, primary_key=True)
+    count: Mapped[int | None] = mapped_column(Integer)
 
 
-Index("ix_units_ammo_snapshot_side_key", UnitAmmo.snapshot_id, UnitAmmo.side, UnitAmmo.ammo_key)
-Index("ix_units_ammo_snapshot_side_unit", UnitAmmo.snapshot_id, UnitAmmo.side, UnitAmmo.unitname)
+Index("ix_units_ammo_snapshot_side_key", UnitAmmo.snapshotid, UnitAmmo.side, UnitAmmo.ammotype)
+Index("ix_units_ammo_snapshot_side_unit", UnitAmmo.snapshotid, UnitAmmo.side, UnitAmmo.unitname)
 
 
 class VehicleAmmo(Base):
     __tablename__ = "vehicles_ammo"
-    snapshot_id: Mapped[str] = mapped_column(String, primary_key=True)
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)          
     side: Mapped[str] = mapped_column(String, primary_key=True)
-    vehiclename: Mapped[str] = mapped_column(String, primary_key=True)
-
-    ammo_key: Mapped[str] = mapped_column(String, primary_key=True)                 # normalized identifier (class/magazine/weapon/...)
-    count: Mapped[int | None] = mapped_column(Integer)                              # ammo count (nullable if unknown)
-    raw_json: Mapped[str | None] = mapped_column(Text)                              # original ammo item json (for audit/debug)
+    vehiclename: Mapped[str] = mapped_column(String, primary_key=True)       
+    ammotype: Mapped[str] = mapped_column(String, primary_key=True)
+    count: Mapped[int | None] = mapped_column(Integer)
 
 
-Index("ix_vehicles_ammo_snapshot_side_key", VehicleAmmo.snapshot_id, VehicleAmmo.side, VehicleAmmo.ammo_key)
-Index("ix_vehicles_ammo_snapshot_side_vehicle", VehicleAmmo.snapshot_id, VehicleAmmo.side, VehicleAmmo.vehiclename)
+Index("ix_vehicles_ammo_snapshot_side_key", VehicleAmmo.snapshotid, VehicleAmmo.side, VehicleAmmo.ammotype)
+Index("ix_vehicles_ammo_snapshot_side_vehicle", VehicleAmmo.snapshotid, VehicleAmmo.side, VehicleAmmo.vehiclename)
+
+
+class VehicleHitpoint(Base):
+    __tablename__ = "vehicles_hitpoints"
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)          
+    side: Mapped[str] = mapped_column(String, primary_key=True)
+    vehiclename: Mapped[str] = mapped_column(String, primary_key=True)       # vehiclename
+    hitpoint: Mapped[str] = mapped_column(String, primary_key=True)
+    damage: Mapped[float | None] = mapped_column(Float)
+
+
+Index("ix_vhp_snapshot_side_vehicle", VehicleHitpoint.snapshotid, VehicleHitpoint.side, VehicleHitpoint.vehiclename)
+Index("ix_vhp_snapshot_side_hitpoint", VehicleHitpoint.snapshotid, VehicleHitpoint.side, VehicleHitpoint.hitpoint)
+
+
+class EventED(Base):
+    __tablename__ = "event_enemydetected"
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)          
+    team: Mapped[str] = mapped_column(String, primary_key=True)       
+    seq: Mapped[int] = mapped_column(Integer, primary_key=True)
+    keyname: Mapped[str] = mapped_column(String)                      
+    group: Mapped[str | None] = mapped_column(String)              
+    newtarget: Mapped[str | None] = mapped_column(String)                
+    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+Index("ix_evented_snapshot_team_time", EventED.snapshotid, EventED.team, EventED.datetime)
+
+
+class EventEDC(Base):
+    __tablename__ = "event_knowsaboutchanged"
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)          
+    team: Mapped[str] = mapped_column(String, primary_key=True)
+    seq: Mapped[int] = mapped_column(Integer, primary_key=True)
+    keyname: Mapped[str] = mapped_column(String)
+    group: Mapped[str | None] = mapped_column(String)
+    targetunit: Mapped[str | None] = mapped_column(String)
+    newknowsabout: Mapped[float | None] = mapped_column(Float)
+    oldknowsabout: Mapped[float | None] = mapped_column(Float)
+    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+Index("ix_eventedc_snapshot_team_time", EventEDC.snapshotid, EventEDC.team, EventEDC.datetime)
+
+
+class EventF(Base):
+    __tablename__ = "event_fired"
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)
+    team: Mapped[str] = mapped_column(String, primary_key=True)
+    seq: Mapped[int] = mapped_column(Integer, primary_key=True)
+    keyname: Mapped[str] = mapped_column(String)
+    unit: Mapped[str | None] = mapped_column(String)               
+    weapon: Mapped[str | None] = mapped_column(String)
+    muzzle: Mapped[str | None] = mapped_column(String)
+    mode: Mapped[str | None] = mapped_column(String)
+    ammo: Mapped[str | None] = mapped_column(String)
+    magazine: Mapped[str | None] = mapped_column(String)
+    projectile: Mapped[str | None] = mapped_column(String)
+    gunner: Mapped[str | None] = mapped_column(String)                
+    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+Index("ix_eventf_snapshot_team_time", EventF.snapshotid, EventF.team, EventF.datetime)
+
+
+class EventD(Base):
+    __tablename__ = "event_dammaged"
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)
+    team: Mapped[str] = mapped_column(String, primary_key=True)
+    seq: Mapped[int] = mapped_column(Integer, primary_key=True)
+    keyname: Mapped[str] = mapped_column(String)
+    unit: Mapped[str | None] = mapped_column(String)                
+    hitselection: Mapped[str | None] = mapped_column(String)
+    damage: Mapped[float | None] = mapped_column(Float)
+    hitpartindex: Mapped[int | None] = mapped_column(Integer)
+    hitpoint: Mapped[str | None] = mapped_column(String)       
+    shooter: Mapped[str | None] = mapped_column(String)                   
+    projecttile: Mapped[str | None] = mapped_column(String)
+    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+Index("ix_eventd_snapshot_team_time", EventD.snapshotid, EventD.team, EventD.datetime)
+
+
+class EventK(Base):
+    __tablename__ = "event_killed"
+    snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
+    datetime: Mapped[str | None] = mapped_column(String)
+    team: Mapped[str] = mapped_column(String, primary_key=True)
+    seq: Mapped[int] = mapped_column(Integer, primary_key=True)
+    keyname: Mapped[str] = mapped_column(String)
+    unit: Mapped[str | None] = mapped_column(String)
+    killer: Mapped[str | None] = mapped_column(String)
+    instigator: Mapped[str | None] = mapped_column(String)
+    useeffects: Mapped[int | None] = mapped_column(Integer)
+    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+Index("ix_eventk_snapshot_team_time", EventK.snapshotid, EventK.team, EventK.datetime)
