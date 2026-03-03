@@ -26,6 +26,7 @@ class Group(Base):
     datetime: Mapped[str | None] = mapped_column(String)          
     leaderposx: Mapped[float | None] = mapped_column(Float)
     leaderposy: Mapped[float | None] = mapped_column(Float)
+    leaderposz: Mapped[float | None] = mapped_column(Float)
     waypointposx: Mapped[float | None] = mapped_column(Float)
     waypointposy: Mapped[float | None] = mapped_column(Float)
 
@@ -43,6 +44,7 @@ class Unit(Base):
     unittype: Mapped[str | None] = mapped_column(String)
     posx: Mapped[float | None] = mapped_column(Float)
     posy: Mapped[float | None] = mapped_column(Float)
+    posz: Mapped[float | None] = mapped_column(Float)
     damage: Mapped[float | None] = mapped_column(Float)
     objectparent: Mapped[str | None] = mapped_column(String)
 
@@ -108,21 +110,6 @@ class VehicleHitpoint(Base):
 
 Index("ix_vhp_snapshot_side_vehicle", VehicleHitpoint.snapshotid, VehicleHitpoint.side, VehicleHitpoint.vehiclename)
 Index("ix_vhp_snapshot_side_hitpoint", VehicleHitpoint.snapshotid, VehicleHitpoint.side, VehicleHitpoint.hitpoint)
-
-
-# class EventED(Base):
-#     __tablename__ = "event_enemydetected"
-#     snapshotid: Mapped[str] = mapped_column(String, primary_key=True)
-#     datetime: Mapped[str | None] = mapped_column(String)          
-#     team: Mapped[str] = mapped_column(String, primary_key=True)       
-#     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
-#     keyname: Mapped[str] = mapped_column(String)                      
-#     group: Mapped[str | None] = mapped_column(String)              
-#     newtarget: Mapped[str | None] = mapped_column(String)                
-#     paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
-
-
-# Index("ix_evented_snapshot_team_time", EventED.snapshotid, EventED.team, EventED.datetime)
 
 
 class EventEDC(Base):

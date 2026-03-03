@@ -288,7 +288,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                         platoon = parts[2] if len(parts) > 2 else None
                         squad = parts[3] if len(parts) > 3 else None
 
-                        lx, ly = safe_pos2(g.get("leaderpos", []))
+                        lx, ly, lz = safe_pos3(g.get("leaderpos", []))
                         wx, wy = safe_waypoint_xy(g.get("waypointpos", []))
 
                         session.add(
@@ -302,6 +302,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                                 groupname=gc,
                                 leaderposx=lx,
                                 leaderposy=ly,
+                                leaderposz=lz,
                                 waypointposx=wx,
                                 waypointposy=wy,
                             )
@@ -313,7 +314,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                         if not uname:
                             continue
 
-                        ux, uy = safe_pos2(u.get("pos", []))
+                        ux, uy, uz = safe_pos3(u.get("pos", []))
 
                         if '_' in uname:
                             session.add(
@@ -326,6 +327,7 @@ def dump_arma_into_sql(db_url: str = None, json_dir=None):
                                     unittype=u.get("unittype"),
                                     posx=ux,
                                     posy=uy,
+                                    posz=uz,
                                     damage=u.get("damage", 0.0),
                                     objectparent=u.get("objectparent"),
                                 )
