@@ -92,23 +92,44 @@ def is_safe_sql(sql: str) -> bool:
     return s.startswith("select") or s.startswith("with")
 
 
-def run_sqlite(db_path: str, sql: str, max_rows: int = 50) -> str:
-    """Execute SQL and return a pretty column-aligned text table (like .header on + .mode column)."""
-    conn = _connect_sqlite(db_path)
+###
+def run_and_save_sqlite(db_path: str, sql: str, csv_path: Path, max_rows: int = 50, save_csv=True) -> str:
+    """
+    Run SQL and save the result with csv
+    """
+    conn = _connect_sqlite(db_path) 
     try:
         cur = conn.cursor()
         cur.execute(sql)
 
         if cur.description is not None:
-            rows = cur.fetchmany(max_rows)
-            cols = [d[0] for d in cur.description]
 
-            if not rows:
+            # 1. header & data
+            cols = [d[0] for d in cur.description]
+            terminal_rows = []
+            
+            # 2. open csv file and save
+            if save_csv is True:
+                with csv_path.open("w", newline="", encoding="utf-8") as f:
+                    writer = csv.writer(f)
+                    writer.writerow(cols)
+                    count = 0
+                    while True:
+                        batch = cur.fetchmany(1000)
+                        if not batch:
+                            break
+                        writer.writerows(batch)
+                        for row in batch:
+                            if count < max_rows:
+                                terminal_rows.append(row)
+                            count += 1
+
+            # 3. Table for terminal
+            if not terminal_rows:
                 return "(0 rows)"
 
-            # column widths
             widths = [len(c) for c in cols]
-            for r in rows:
+            for r in terminal_rows:
                 for i in range(len(cols)):
                     widths[i] = max(widths[i], len(str(r[i])))
 
@@ -118,16 +139,20 @@ def run_sqlite(db_path: str, sql: str, max_rows: int = 50) -> str:
             out = []
             out.append(fmt(cols))
             out.append("-+-".join("-" * w for w in widths))
-            for r in rows:
-                out.append(fmt([r[i] for i in range(len(cols))]))
-            if len(rows) == max_rows:
-                out.append(f"... (showing first {max_rows} rows)")
+            for r in terminal_rows:
+                out.append(fmt(r))
+                
+            if count > max_rows:
+                out.append(f"... (showing the first {max_rows} rows of {count} rows.)")
+                
             return "\n".join(out)
-
         conn.commit()
         return "(ok)"
+    except Exception as e:
+        return f"Error: {e}"
     finally:
         conn.close()
+###
 
 
 def extract_sql(text: str) -> str:
@@ -174,6 +199,7 @@ class AgentState(TypedDict):
     seen_sql: List[str]
     instruction: str      #
     db_schema_doc: str    #
+    csv_path: str
 
 
 @dataclass
@@ -196,13 +222,15 @@ class Config:
 # =========================
 # Prompts
 # =========================
+
+# Rules: - 
+
 SYSTEM_TEXT2SQL = """You are a Text-to-SQL assistant for a SQLite database.
 
 Rules:
 - Generate a SINGLE SQLite SQL query that answers the user's question.
 - Use ONLY the provided schema. If a column/table does not exist, do not hallucinate it.
 - Prefer simple, correct SQL.
-- Default to LIMIT 50 for potentially large outputs unless the user explicitly asks otherwise.
 - Output ONLY SQL inside a ```sql``` code block. No extra explanation.
 - Read-only: produce SELECT/CTE (WITH) queries only.
 - DO NOT use sqlite3 CLI meta-commands such as .header, .mode, .tables, .schema
@@ -288,10 +316,12 @@ def make_graph(cfg: Config):
             return {"error": "Blocked non-read-only SQL. Only SELECT/WITH are allowed."}
 
         return {"error": ""}  # clear safety error
-
+    
+    ###    
     def node_execute_sql(state: AgentState) -> Dict[str, Any]:
+        csv_path = state.get("csv_path")
         try:
-            out = run_sqlite(cfg.db_path, state["sql"], max_rows=cfg.max_rows)
+            out = run_and_save_sqlite(cfg.db_path, state["sql"], csv_path=csv_path, max_rows=cfg.max_rows)
 
             if cfg.treat_refusal_result_as_error and looks_like_refusal_result(out):
                 return {"result": out, "error": "Refusal-style result detected; must attempt a real computation/query."}
@@ -299,6 +329,7 @@ def make_graph(cfg: Config):
             return {"result": out, "error": ""}
         except Exception as e:
             return {"result": "", "error": f"{type(e).__name__}: {e}"}
+    ###
 
     def node_repair_sql(state: AgentState) -> Dict[str, Any]:
         msgs: List[AnyMessage] = [
@@ -387,6 +418,23 @@ def make_graph(cfg: Config):
 
 
 # =========================
+# etc - get_time, save_sql_txt
+# =========================
+from datetime import datetime
+import csv
+
+def get_time():
+    return datetime.now().strftime("%y%m%d%H%M%S")
+
+
+def save_sql_txt(question: str, sql: str, out_path: Path):
+    content = (
+        f"Question: {question}\n\n"
+        f"SQL:\n{sql.strip()}\n"
+    )
+    out_path.write_text(content, encoding="utf-8")
+
+# =========================
 # Main (CLI)
 # =========================
 def main():
@@ -422,7 +470,15 @@ def main():
     print(f"🧯 Limits: MAX_REPAIR_ATTEMPTS={cfg.max_repair_attempts}, MAX_STEPS={cfg.max_steps}, MAX_SAME_SQL_REPEATS={cfg.max_same_sql_repeats}")
     print("Type 'exit' to quit.\n")
 
+    ###
+    out_dir = Path("result")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    ###
     while True:
+        run_id = get_time()
+        sql_path = out_dir / f"{run_id}_sql.txt"
+        csv_path = out_dir / f"{run_id}_result.csv"
+
         q = input("Question> ").strip()
         if not q:
             continue
@@ -439,9 +495,20 @@ def main():
             "attempts": 0,
             "steps": 0,
             "seen_sql": [],
+            "csv_path": csv_path,
         }
 
         final_state = graph.invoke(init_state)
+        ###
+        sql_text = final_state.get("sql", "").strip()
+        save_sql_txt(q, sql_text, sql_path)
+
+        if sql_text:
+            try:
+                run_and_save_sqlite(cfg.db_path, sql_text, csv_path)
+            except Exception as e:
+                final_state["error"] = (final_state.get("error", "") + f"\n[csv save error] {e}").strip()
+        ###
 
         print("\n--- SQL ---")
         print(final_state.get("sql", "").strip())
@@ -455,6 +522,7 @@ def main():
         if final_state.get("error"):
             print("\n--- ERROR ---")
             print(final_state["error"])
+
             print(f"(attempts={final_state.get('attempts', 0)}, steps={final_state.get('steps', 0)})")
 
         print("\n")
