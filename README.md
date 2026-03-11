@@ -1,9 +1,9 @@
 <h1 align="center">
- A3CCS-Text2SQL 🍾
+💾 A3CCS-Text2SQL
 </h1>
 
 <h3 align="center">
- 🛠️ Text2SQL for handling metadata of Arma3
+🛠️ Text2SQL for handling metadata of Arma3
 </h3>
 
 <p align="center">
@@ -15,8 +15,8 @@
 ### Preliminaries
 
 ~~~shell
-conda create -n byob python=3.11 -y
-conda activate byob
+conda create -n text2sql python=3.11 -y
+conda activate text2sql
 pip install -r requirements.txt
 ~~~
 
