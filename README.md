@@ -11,6 +11,8 @@
   <a href="#"><img alt="Arma 3" src="https://img.shields.io/badge/Game-Arma 3-green?logo=steam"></a>
 </p>
 
+### Note
+- This code is originally designed for A3CCS (https://github.com/citizen135/A3CCS)
 
 ### Preliminaries
 
