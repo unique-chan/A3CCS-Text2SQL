@@ -1,9 +1,9 @@
 <h1 align="center">
- BYOB: Bring Your Own Battleplan! 🍾
+ A3CCS-Text2SQL 🍾
 </h1>
 
 <h3 align="center">
- 🛠️ Simulation Platform and Code
+ 🛠️ Text2SQL for handling metadata of Arma3
 </h3>
 
 <p align="center">
