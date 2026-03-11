@@ -253,6 +253,8 @@ class Config:
     block_non_readonly_sql: bool
     treat_refusal_result_as_error: bool
 
+    output_dir: str
+
 
 @dataclass
 class RuntimeResources:
