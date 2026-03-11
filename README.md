@@ -33,7 +33,12 @@ mkdirs mymodels
 huggingface-cli download openai/gpt-oss-20b --local-dir ./mymodels/gpt-oss-20b
 ~~~
 
-### Test (Arma3 metadata)
+### Dump Arma3 metadata to SQLite3 (DB)
+~~~shell
+python test_dump_arma.py
+~~~
+
+### Test 
 
 - Remote LLM PC (Note: we use GPT OSS 20B)
 ~~~shell
@@ -49,7 +54,6 @@ vllm serve ./gpt-oss-20b --host 0.0.0.0 --port 8000
 - Local PC (Just checking SQLite)
 
 ~~~shell
-python test_dump_arma.py
 sqlite3 outputs/arma_sql/state.db
 ~~~
 
