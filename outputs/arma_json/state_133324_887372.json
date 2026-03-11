@@ -1,0 +1,8256 @@
+{
+  "friend_info": {
+    "start_time": [
+      2026,
+      3,
+      4,
+      13,
+      33,
+      24,
+      794
+    ],
+    "end_time": [
+      2026,
+      3,
+      4,
+      13,
+      33,
+      24,
+      795
+    ],
+    "groups": [
+      {
+        "groupname": "b_1_m2_1",
+        "unitlist": [
+          "b_1_m2_1_u1",
+          "b_1_m2_1_u2",
+          "b_1_m2_1_u3"
+        ],
+        "leaderpos": [
+          18093.2,
+          16725.4,
+          2.09449
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ]
+      },
+      {
+        "groupname": "b_1_m2_2",
+        "unitlist": [
+          "b_1_m2_2_u1",
+          "b_1_m2_2_u2",
+          "b_1_m2_2_u3"
+        ],
+        "leaderpos": [
+          18642.8,
+          16933.9,
+          2.60393
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ]
+      },
+      {
+        "groupname": "b_1_m2_3",
+        "unitlist": [
+          "b_1_m2_3_u1",
+          "b_1_m2_3_u2",
+          "b_1_m2_3_u3"
+        ],
+        "leaderpos": [
+          18791.5,
+          17323.2,
+          2.59723
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ]
+      },
+      {
+        "groupname": "b_1_m2_4",
+        "unitlist": [
+          "b_1_m2_4_u3",
+          "b_1_m2_4_u1",
+          "b_1_m2_4_u2"
+        ],
+        "leaderpos": [
+          18678.5,
+          16994.9,
+          2.59442
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ]
+      },
+      {
+        "groupname": "b_1_t1_1",
+        "unitlist": [
+          "b_1_t1_1_u1",
+          "b_1_t1_1_u2",
+          "b_1_t1_1_u3",
+          "b_1_t1_1_u4"
+        ],
+        "leaderpos": [
+          17841.8,
+          16606.9,
+          2.14994
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_t1_2",
+        "unitlist": [
+          "b_1_t1_2_u1",
+          "b_1_t1_2_u2",
+          "b_1_t1_2_u3",
+          "b_1_t1_2_u4"
+        ],
+        "leaderpos": [
+          18640.7,
+          16910.1,
+          2.24237
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_t1_3",
+        "unitlist": [
+          "b_1_t1_3_u4",
+          "b_1_t1_3_u1",
+          "b_1_t1_3_u2",
+          "b_1_t1_3_u3"
+        ],
+        "leaderpos": [
+          18404.9,
+          16741.4,
+          2.18399
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_t1_4",
+        "unitlist": [
+          "b_1_t1_4_u1",
+          "b_1_t1_4_u2",
+          "b_1_t1_4_u3",
+          "b_1_t1_4_u4"
+        ],
+        "leaderpos": [
+          18553.5,
+          16865.5,
+          2.13642
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_i1_1",
+        "unitlist": [
+          "b_1_i1_1_u5",
+          "b_1_i1_1_u1",
+          "b_1_i1_1_u4",
+          "b_1_i1_1_u6",
+          "b_1_i1_1_u3",
+          "b_1_i1_1_u2"
+        ],
+        "leaderpos": [
+          18610.8,
+          16904.5,
+          0.00185013
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_i1_2",
+        "unitlist": [
+          "b_1_i1_2_u5",
+          "b_1_i1_2_u1",
+          "b_1_i1_2_u4",
+          "b_1_i1_2_u6",
+          "b_1_i1_2_u3",
+          "b_1_i1_2_u2"
+        ],
+        "leaderpos": [
+          18870,
+          16939.3,
+          0.00168991
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_i1_3",
+        "unitlist": [
+          "b_1_i1_3_u5",
+          "b_1_i1_3_u1",
+          "b_1_i1_3_u4",
+          "b_1_i1_3_u6",
+          "b_1_i1_3_u3",
+          "b_1_i1_3_u2"
+        ],
+        "leaderpos": [
+          18875.4,
+          16975.1,
+          0.00159836
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_i1_4",
+        "unitlist": [
+          "b_1_i1_4_u5",
+          "b_1_i1_4_u1",
+          "b_1_i1_4_u4",
+          "b_1_i1_4_u6",
+          "b_1_i1_4_u3",
+          "b_1_i1_4_u2"
+        ],
+        "leaderpos": [
+          18756.1,
+          16831.2,
+          0.00127411
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_i2_1",
+        "unitlist": [
+          "b_1_i2_1_u5",
+          "b_1_i2_1_u1",
+          "b_1_i2_1_u4",
+          "b_1_i2_1_u6",
+          "b_1_i2_1_u3",
+          "b_1_i2_1_u2"
+        ],
+        "leaderpos": [
+          18919.2,
+          16939.6,
+          0.00144196
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ]
+      },
+      {
+        "groupname": "b_1_i2_2",
+        "unitlist": [
+          "b_1_i2_2_u5",
+          "b_1_i2_2_u1",
+          "b_1_i2_2_u4",
+          "b_1_i2_2_u6",
+          "b_1_i2_2_u3",
+          "b_1_i2_2_u2"
+        ],
+        "leaderpos": [
+          18877.6,
+          16939.4,
+          0.00164413
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ]
+      },
+      {
+        "groupname": "b_1_i2_3",
+        "unitlist": [
+          "b_1_i2_3_u5",
+          "b_1_i2_3_u1",
+          "b_1_i2_3_u4",
+          "b_1_i2_3_u6",
+          "b_1_i2_3_u3",
+          "b_1_i2_3_u2"
+        ],
+        "leaderpos": [
+          18819.4,
+          16923.6,
+          0.00177383
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ]
+      },
+      {
+        "groupname": "b_1_i2_4",
+        "unitlist": [
+          "b_1_i2_4_u5",
+          "b_1_i2_4_u1",
+          "b_1_i2_4_u4",
+          "b_1_i2_4_u6",
+          "b_1_i2_4_u3",
+          "b_1_i2_4_u2"
+        ],
+        "leaderpos": [
+          18841.9,
+          16934.5,
+          0.00162506
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ]
+      },
+      {
+        "groupname": "b_1_m1_1",
+        "unitlist": [
+          "b_1_m1_1_u1",
+          "b_1_m1_1_u2",
+          "b_1_m1_1_u3"
+        ],
+        "leaderpos": [
+          18846.3,
+          16966.3,
+          2.60569
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_m1_2",
+        "unitlist": [
+          "b_1_m1_2_u1",
+          "b_1_m1_2_u2",
+          "b_1_m1_2_u3"
+        ],
+        "leaderpos": [
+          18855.8,
+          17308.7,
+          2.59538
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_m1_3",
+        "unitlist": [
+          "b_1_m1_3_u1",
+          "b_1_m1_3_u2",
+          "b_1_m1_3_u3"
+        ],
+        "leaderpos": [
+          18916.6,
+          17249.1,
+          2.5896
+        ],
+        "waypointpos": []
+      },
+      {
+        "groupname": "b_1_m1_4",
+        "unitlist": [
+          "b_1_m1_4_u1",
+          "b_1_m1_4_u2",
+          "b_1_m1_4_u3"
+        ],
+        "leaderpos": [
+          18947.9,
+          17078.5,
+          2.6027
+        ],
+        "waypointpos": []
+      }
+    ],
+    "units": [
+      {
+        "unitname": "b_1_m2_1_u1",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18091.6,
+          16723.3,
+          1.18836
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_1_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_1_u2",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18093.6,
+          16724.9,
+          1.67763
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_1_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_1_u3",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18093.2,
+          16725.4,
+          2.09449
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_1_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_1_u1",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          17839.4,
+          16606.3,
+          0.693813
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_1_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_1_u2",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          17841,
+          16607.1,
+          1.60474
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_1_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_1_u3",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          17841.8,
+          16606.9,
+          2.14994
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_1_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_1_u4",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          17842,
+          16606,
+          2.18111
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_1_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "u1",
+        "unittype": "B_Soldier_A_F",
+        "pos": [
+          14189.5,
+          16538.1,
+          0.00143242
+        ],
+        "ammo": [
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "Chemlight_green",
+            1
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "16Rnd_9x21_Mag",
+            16
+          ],
+          [
+            "16Rnd_9x21_Mag",
+            16
+          ],
+          [
+            "HandGrenade",
+            1
+          ],
+          [
+            "HandGrenade",
+            1
+          ],
+          [
+            "SmokeShell",
+            1
+          ],
+          [
+            "SmokeShellGreen",
+            1
+          ],
+          [
+            "Chemlight_green",
+            1
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "30Rnd_65x39_caseless_mag",
+            30
+          ],
+          [
+            "100Rnd_65x39_caseless_mag",
+            100
+          ],
+          [
+            "NLAW_F",
+            1
+          ],
+          [
+            "HandGrenade",
+            1
+          ],
+          [
+            "HandGrenade",
+            1
+          ],
+          [
+            "MiniGrenade",
+            1
+          ],
+          [
+            "MiniGrenade",
+            1
+          ],
+          [
+            "1Rnd_HE_Grenade_shell",
+            1
+          ],
+          [
+            "1Rnd_HE_Grenade_shell",
+            1
+          ],
+          [
+            "1Rnd_HE_Grenade_shell",
+            1
+          ],
+          [
+            "3Rnd_HE_Grenade_shell",
+            3
+          ],
+          [
+            "10Rnd_338_Mag",
+            10
+          ],
+          [
+            "10Rnd_338_Mag",
+            10
+          ],
+          [
+            "20Rnd_762x51_Mag",
+            20
+          ],
+          [
+            "20Rnd_762x51_Mag",
+            20
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_1_u5",
+        "unittype": "rhsusf_army_ocp_javelin",
+        "pos": [
+          18934,
+          16934,
+          0.00137329
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_1_u1",
+        "unittype": "rhsusf_army_ocp_teamleader",
+        "pos": [
+          18919.2,
+          16939.6,
+          0.00144196
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m18_purple",
+            1
+          ],
+          [
+            "rhs_mag_m18_yellow",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_1_u4",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18945.5,
+          16928.4,
+          0.00130463
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_1_u6",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18927.6,
+          16944.4,
+          0.00146484
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_1_u3",
+        "unittype": "rhsusf_army_ocp_grenadier",
+        "pos": [
+          18959.9,
+          16924.2,
+          0.00131989
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_1_u2",
+        "unittype": "rhsusf_army_ocp_autorifleman",
+        "pos": [
+          18939.4,
+          16949.1,
+          0.00138855
+        ],
+        "ammo": [
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhsusf_200Rnd_556x45_mixed_soft_pouch_coyote",
+            200
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_2_u1",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18638.2,
+          16909.3,
+          0.670139
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_2_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_2_u2",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18639.9,
+          16910.2,
+          1.72837
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_2_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_2_u3",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18640.7,
+          16910.1,
+          2.24237
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_2_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_2_u4",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18640.9,
+          16909.2,
+          2.32327
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_2_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_3_u4",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18403,
+          16739.6,
+          0.787609
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_3_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_3_u1",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18404.1,
+          16741.2,
+          1.65841
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_3_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_3_u2",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18404.9,
+          16741.4,
+          2.18399
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_3_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_3_u3",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18405.4,
+          16740.7,
+          2.22064
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_3_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_4_u1",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18553.6,
+          16862.9,
+          0.612411
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_4_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_4_u2",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18553.1,
+          16864.8,
+          1.57983
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_4_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_4_u3",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18553.5,
+          16865.5,
+          2.13642
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_4_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_t1_4_u4",
+        "unittype": "rhsusf_army_ucp_combatcrewman",
+        "pos": [
+          18554.4,
+          16865.4,
+          2.14845
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_t1_4_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_2_u1",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18642.1,
+          16931.4,
+          1.16777
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_2_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_2_u2",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18643.4,
+          16933.5,
+          2.19607
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_2_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_2_u3",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18642.8,
+          16933.9,
+          2.60393
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_2_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_4_u3",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18677.8,
+          16992.5,
+          1.16496
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_4_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_4_u1",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18679.1,
+          16994.5,
+          2.18815
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_4_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_4_u2",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18678.5,
+          16994.9,
+          2.59442
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_4_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_3_u1",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18789.3,
+          17322.1,
+          1.16553
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_3_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_3_u2",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18791.7,
+          17322.5,
+          2.19061
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_3_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m2_3_u3",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18791.5,
+          17323.2,
+          2.59723
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m2_3_v1",
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_2_u1",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18853.3,
+          17309.2,
+          1.17084
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_2_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_2_u2",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18855.5,
+          17308.1,
+          2.18723
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_2_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_2_u3",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18855.8,
+          17308.7,
+          2.59538
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_2_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_1_u1",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18844.2,
+          16965,
+          1.19427
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_1_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_1_u2",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18846.5,
+          16965.6,
+          2.20547
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_1_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_1_u3",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18846.3,
+          16966.3,
+          2.60569
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_1_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_4_u1",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18946.4,
+          17080.5,
+          1.16173
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_4_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_4_u2",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18947.3,
+          17078.2,
+          2.18921
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_4_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_4_u3",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18947.9,
+          17078.5,
+          2.6027
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_4_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_3_u1",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18915.3,
+          17251.2,
+          1.19335
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_3_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_3_u2",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18915.9,
+          17248.8,
+          2.1767
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_3_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_m1_3_u3",
+        "unittype": "rhsusf_army_ucp_crewman",
+        "pos": [
+          18916.6,
+          17249.1,
+          2.5896
+        ],
+        "ammo": [
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhsusf_mag_15Rnd_9x19_FMJ",
+            15
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_an_m8hc",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": "b_1_m1_3_v1",
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_2_u5",
+        "unittype": "rhsusf_army_ocp_javelin",
+        "pos": [
+          18890.4,
+          16930.8,
+          0.00152588
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_2_u1",
+        "unittype": "rhsusf_army_ocp_teamleader",
+        "pos": [
+          18877.6,
+          16939.4,
+          0.00164413
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m18_purple",
+            1
+          ],
+          [
+            "rhs_mag_m18_yellow",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_2_u4",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18901.5,
+          16926.8,
+          0.00141525
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_2_u6",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18889.4,
+          16943.6,
+          0.00161743
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_2_u3",
+        "unittype": "rhsusf_army_ocp_grenadier",
+        "pos": [
+          18913.6,
+          16923.4,
+          0.00152588
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_2_u2",
+        "unittype": "rhsusf_army_ocp_autorifleman",
+        "pos": [
+          18901.8,
+          16948.2,
+          0.00156403
+        ],
+        "ammo": [
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhsusf_200Rnd_556x45_mixed_soft_pouch_coyote",
+            200
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_4_u5",
+        "unittype": "rhsusf_army_ocp_javelin",
+        "pos": [
+          18854.1,
+          16930.9,
+          0.00165939
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_4_u1",
+        "unittype": "rhsusf_army_ocp_teamleader",
+        "pos": [
+          18841.9,
+          16934.5,
+          0.00162506
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m18_purple",
+            1
+          ],
+          [
+            "rhs_mag_m18_yellow",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_4_u4",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18865,
+          16925.9,
+          0.0015564
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_4_u6",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18852.3,
+          16940.1,
+          0.00165558
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_4_u3",
+        "unittype": "rhsusf_army_ocp_grenadier",
+        "pos": [
+          18872.9,
+          16920.5,
+          0.00159454
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_4_u2",
+        "unittype": "rhsusf_army_ocp_autorifleman",
+        "pos": [
+          18903.2,
+          16940.5,
+          0.00144958
+        ],
+        "ammo": [
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhsusf_200Rnd_556x45_mixed_soft_pouch_coyote",
+            200
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_3_u5",
+        "unittype": "rhsusf_army_ocp_javelin",
+        "pos": [
+          18825.8,
+          16924.2,
+          0.00170898
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_3_u1",
+        "unittype": "rhsusf_army_ocp_teamleader",
+        "pos": [
+          18819.4,
+          16923.6,
+          0.00177383
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m18_purple",
+            1
+          ],
+          [
+            "rhs_mag_m18_yellow",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_3_u4",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18842,
+          16925.1,
+          0.00183487
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_3_u6",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18841.9,
+          16938.9,
+          0.00149918
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_3_u3",
+        "unittype": "rhsusf_army_ocp_grenadier",
+        "pos": [
+          18851.9,
+          16919.1,
+          0.00172043
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i2_3_u2",
+        "unittype": "rhsusf_army_ocp_autorifleman",
+        "pos": [
+          18846.2,
+          16946.8,
+          0.00157166
+        ],
+        "ammo": [
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhsusf_200Rnd_556x45_mixed_soft_pouch_coyote",
+            200
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_2_u5",
+        "unittype": "rhsusf_army_ocp_javelin",
+        "pos": [
+          18891.6,
+          16929.2,
+          0.00162506
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_2_u1",
+        "unittype": "rhsusf_army_ocp_teamleader",
+        "pos": [
+          18870,
+          16939.3,
+          0.00168991
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m18_purple",
+            1
+          ],
+          [
+            "rhs_mag_m18_yellow",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_2_u4",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18886.2,
+          16932.3,
+          0.000289917
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_2_u6",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18872.7,
+          16939.6,
+          0.00173569
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_2_u3",
+        "unittype": "rhsusf_army_ocp_grenadier",
+        "pos": [
+          18895.8,
+          16929.2,
+          0.00155258
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_2_u2",
+        "unittype": "rhsusf_army_ocp_autorifleman",
+        "pos": [
+          18929.6,
+          16938.3,
+          0.00139236
+        ],
+        "ammo": [
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhsusf_200Rnd_556x45_mixed_soft_pouch_coyote",
+            200
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_1_u5",
+        "unittype": "rhsusf_army_ocp_javelin",
+        "pos": [
+          18636.3,
+          16906.4,
+          0.00162506
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_1_u1",
+        "unittype": "rhsusf_army_ocp_teamleader",
+        "pos": [
+          18610.8,
+          16904.5,
+          0.00185013
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m18_purple",
+            1
+          ],
+          [
+            "rhs_mag_m18_yellow",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_1_u4",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18675.1,
+          16859.4,
+          0.00113678
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_1_u6",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18705.2,
+          16881.8,
+          0.00113297
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_1_u3",
+        "unittype": "rhsusf_army_ocp_grenadier",
+        "pos": [
+          18690.7,
+          16864.5,
+          0.00138092
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_1_u2",
+        "unittype": "rhsusf_army_ocp_autorifleman",
+        "pos": [
+          18703.8,
+          16880.2,
+          0.00128555
+        ],
+        "ammo": [
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhsusf_200Rnd_556x45_mixed_soft_pouch_coyote",
+            200
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_4_u5",
+        "unittype": "rhsusf_army_ocp_javelin",
+        "pos": [
+          18764.4,
+          16809.8,
+          0.00136566
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0.0184245,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_4_u1",
+        "unittype": "rhsusf_army_ocp_teamleader",
+        "pos": [
+          18756.1,
+          16831.2,
+          0.00127411
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m18_purple",
+            1
+          ],
+          [
+            "rhs_mag_m18_yellow",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0.0184253,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_4_u4",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18767.1,
+          16802.6,
+          0.00145721
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0.0176329,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_4_u6",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18761,
+          16818.8,
+          0.00143051
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0.0183728,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_4_u3",
+        "unittype": "rhsusf_army_ocp_grenadier",
+        "pos": [
+          18770.8,
+          16792.4,
+          0.00134659
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0.0183728,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_4_u2",
+        "unittype": "rhsusf_army_ocp_autorifleman",
+        "pos": [
+          18792.1,
+          16808.1,
+          0.0014534
+        ],
+        "ammo": [
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhsusf_200Rnd_556x45_mixed_soft_pouch_coyote",
+            200
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0.0165782,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_3_u5",
+        "unittype": "rhsusf_army_ocp_javelin",
+        "pos": [
+          18887.8,
+          16959.9,
+          0.00150681
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_3_u1",
+        "unittype": "rhsusf_army_ocp_teamleader",
+        "pos": [
+          18875.4,
+          16975.1,
+          0.00159836
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m18_purple",
+            1
+          ],
+          [
+            "rhs_mag_m18_yellow",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_3_u4",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18913.6,
+          16954.7,
+          0.00196838
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_3_u6",
+        "unittype": "rhsusf_army_ocp_rifleman_m4",
+        "pos": [
+          18880.7,
+          16979.4,
+          0.00172424
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_3_u3",
+        "unittype": "rhsusf_army_ocp_grenadier",
+        "pos": [
+          18907.5,
+          16942.9,
+          0.00167084
+        ],
+        "ammo": [
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_30Rnd_556x45_M855A1_Stanag",
+            30
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M433_HEDP",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ],
+          [
+            "rhs_mag_M583A1_white",
+            1
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "unitname": "b_1_i1_3_u2",
+        "unittype": "rhsusf_army_ocp_autorifleman",
+        "pos": [
+          18880.8,
+          16970.2,
+          0.00167084
+        ],
+        "ammo": [
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhs_mag_m67",
+            1
+          ],
+          [
+            "rhsusf_200Rnd_556x45_mixed_soft_pouch_coyote",
+            200
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ],
+          [
+            "rhsusf_100Rnd_556x45_soft_pouch",
+            100
+          ]
+        ],
+        "behaviour": "AWARE",
+        "damage": 0,
+        "objectparent": null,
+        "waypointpos": [],
+        "discovered": 0
+      }
+    ],
+    "vehicles": [
+      {
+        "vehiclename": "b_1_t1_1_v1",
+        "group": "B Alpha 1-2",
+        "vehicletype": "rhsusf_m1a2sep2wd_usarmy",
+        "pos": [
+          17840.5,
+          16606.2,
+          -0.055809
+        ],
+        "ammo": [
+          [
+            "rhs_mag_M829A3",
+            28
+          ],
+          [
+            "rhs_mag_M830A1",
+            8
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hitduke1",
+            "armor_composite_40",
+            "armor_composite_50",
+            "armor_composite_60",
+            "armor_composite_80",
+            "armor_composite_85",
+            "hitfueltank_left",
+            "hitfueltank_right",
+            "hitfuel",
+            "hitammohull",
+            "hitammo",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_optic_driver",
+            "hit_optic_dvea",
+            "hit_optic_driver_rear",
+            "hitturret",
+            "hitgun",
+            "hit_gps_headmirror",
+            "hit_gps_optical",
+            "hit_gps_tis",
+            "hit_optic_gps",
+            "hit_optic_gps_ti",
+            "hit_optic_crows_day",
+            "hit_optic_crows_ti",
+            "hit_optic_crows_lrf",
+            "hitturret",
+            "hitgun",
+            "hit_optic_loaderperiscope",
+            "hitturretloader",
+            "hitgunloader",
+            "#light_l",
+            "#light_l",
+            "#light_r",
+            "#light_r"
+          ],
+          [
+            "duke1",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "hit_fueltank_left",
+            "hit_fueltank_right",
+            "hit_fuel",
+            "",
+            "hit_ammo",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "light_l",
+            "light_l",
+            "light_r",
+            "light_r"
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_m2_1_v1",
+        "group": "B Alpha 1-1",
+        "vehicletype": "RHS_M2A3_wd",
+        "pos": [
+          18092.8,
+          16724.7,
+          0.0819473
+        ],
+        "ammo": [
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2A",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2BB",
+            2
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hit_optics_dvr_dve",
+            "hit_optics_dvr_rearcam",
+            "hithull_structural",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_lightl",
+            "hit_lightr",
+            "hit_optics_dvr_peri",
+            "hitfuel",
+            "hitslat_left_1",
+            "hitslat_left_2",
+            "hitslat_left_3",
+            "hitslat_right_1",
+            "hitslat_right_2",
+            "hitslat_right_3",
+            "hitslat_top_back",
+            "hitslat_top_left",
+            "hitslat_top_right",
+            "hitslat_back",
+            "hitslat_front",
+            "hitturret",
+            "hitgun",
+            "hit_optics_gnr",
+            "hit_optics_cdr_civ",
+            "hitturretcom",
+            "hitguncom",
+            "hit_optics_cdr_peri",
+            "#cabin_light",
+            "#cargo_light_1"
+          ],
+          [
+            "",
+            "",
+            "hit_engine",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "l svetlo",
+            "p svetlo",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_t1_2_v1",
+        "group": "B Alpha 1-5",
+        "vehicletype": "rhsusf_m1a2sep2wd_usarmy",
+        "pos": [
+          18639.4,
+          16909.3,
+          0.0434799
+        ],
+        "ammo": [
+          [
+            "rhs_mag_M829A3",
+            28
+          ],
+          [
+            "rhs_mag_M830A1",
+            8
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hitduke1",
+            "armor_composite_40",
+            "armor_composite_50",
+            "armor_composite_60",
+            "armor_composite_80",
+            "armor_composite_85",
+            "hitfueltank_left",
+            "hitfueltank_right",
+            "hitfuel",
+            "hitammohull",
+            "hitammo",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_optic_driver",
+            "hit_optic_dvea",
+            "hit_optic_driver_rear",
+            "hitturret",
+            "hitgun",
+            "hit_gps_headmirror",
+            "hit_gps_optical",
+            "hit_gps_tis",
+            "hit_optic_gps",
+            "hit_optic_gps_ti",
+            "hit_optic_crows_day",
+            "hit_optic_crows_ti",
+            "hit_optic_crows_lrf",
+            "hitturret",
+            "hitgun",
+            "hit_optic_loaderperiscope",
+            "hitturretloader",
+            "hitgunloader",
+            "#light_l",
+            "#light_l",
+            "#light_r",
+            "#light_r"
+          ],
+          [
+            "duke1",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "hit_fueltank_left",
+            "hit_fueltank_right",
+            "hit_fuel",
+            "",
+            "hit_ammo",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "light_l",
+            "light_l",
+            "light_r",
+            "light_r"
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_t1_3_v1",
+        "group": "B Alpha 1-6",
+        "vehicletype": "rhsusf_m1a2sep2wd_usarmy",
+        "pos": [
+          18404.1,
+          16740.1,
+          0.0961418
+        ],
+        "ammo": [
+          [
+            "rhs_mag_M829A3",
+            28
+          ],
+          [
+            "rhs_mag_M830A1",
+            8
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hitduke1",
+            "armor_composite_40",
+            "armor_composite_50",
+            "armor_composite_60",
+            "armor_composite_80",
+            "armor_composite_85",
+            "hitfueltank_left",
+            "hitfueltank_right",
+            "hitfuel",
+            "hitammohull",
+            "hitammo",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_optic_driver",
+            "hit_optic_dvea",
+            "hit_optic_driver_rear",
+            "hitturret",
+            "hitgun",
+            "hit_gps_headmirror",
+            "hit_gps_optical",
+            "hit_gps_tis",
+            "hit_optic_gps",
+            "hit_optic_gps_ti",
+            "hit_optic_crows_day",
+            "hit_optic_crows_ti",
+            "hit_optic_crows_lrf",
+            "hitturret",
+            "hitgun",
+            "hit_optic_loaderperiscope",
+            "hitturretloader",
+            "hitgunloader",
+            "#light_l",
+            "#light_l",
+            "#light_r",
+            "#light_r"
+          ],
+          [
+            "duke1",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "hit_fueltank_left",
+            "hit_fueltank_right",
+            "hit_fuel",
+            "",
+            "hit_ammo",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "light_l",
+            "light_l",
+            "light_r",
+            "light_r"
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_t1_4_v1",
+        "group": "B Alpha 2-1",
+        "vehicletype": "rhsusf_m1a2sep2wd_usarmy",
+        "pos": [
+          18553.9,
+          16864,
+          -0.0603867
+        ],
+        "ammo": [
+          [
+            "rhs_mag_M829A3",
+            28
+          ],
+          [
+            "rhs_mag_M830A1",
+            8
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_mag_762x51_M240_1200",
+            1200
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hitduke1",
+            "armor_composite_40",
+            "armor_composite_50",
+            "armor_composite_60",
+            "armor_composite_80",
+            "armor_composite_85",
+            "hitfueltank_left",
+            "hitfueltank_right",
+            "hitfuel",
+            "hitammohull",
+            "hitammo",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_optic_driver",
+            "hit_optic_dvea",
+            "hit_optic_driver_rear",
+            "hitturret",
+            "hitgun",
+            "hit_gps_headmirror",
+            "hit_gps_optical",
+            "hit_gps_tis",
+            "hit_optic_gps",
+            "hit_optic_gps_ti",
+            "hit_optic_crows_day",
+            "hit_optic_crows_ti",
+            "hit_optic_crows_lrf",
+            "hitturret",
+            "hitgun",
+            "hit_optic_loaderperiscope",
+            "hitturretloader",
+            "hitgunloader",
+            "#light_l",
+            "#light_l",
+            "#light_r",
+            "#light_r"
+          ],
+          [
+            "duke1",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "hit_fueltank_left",
+            "hit_fueltank_right",
+            "hit_fuel",
+            "",
+            "hit_ammo",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "light_l",
+            "light_l",
+            "light_r",
+            "light_r"
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_m2_2_v1",
+        "group": "B Alpha 2-2",
+        "vehicletype": "RHS_M2A3_wd",
+        "pos": [
+          18642.8,
+          16933.1,
+          -0.0525398
+        ],
+        "ammo": [
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2A",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2BB",
+            2
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hit_optics_dvr_dve",
+            "hit_optics_dvr_rearcam",
+            "hithull_structural",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_lightl",
+            "hit_lightr",
+            "hit_optics_dvr_peri",
+            "hitfuel",
+            "hitslat_left_1",
+            "hitslat_left_2",
+            "hitslat_left_3",
+            "hitslat_right_1",
+            "hitslat_right_2",
+            "hitslat_right_3",
+            "hitslat_top_back",
+            "hitslat_top_left",
+            "hitslat_top_right",
+            "hitslat_back",
+            "hitslat_front",
+            "hitturret",
+            "hitgun",
+            "hit_optics_gnr",
+            "hit_optics_cdr_civ",
+            "hitturretcom",
+            "hitguncom",
+            "hit_optics_cdr_peri",
+            "#cabin_light",
+            "#cargo_light_1"
+          ],
+          [
+            "",
+            "",
+            "hit_engine",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "l svetlo",
+            "p svetlo",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_m2_4_v1",
+        "group": "B Alpha 2-3",
+        "vehicletype": "RHS_M2A3_wd",
+        "pos": [
+          18678.5,
+          16994.2,
+          -0.0752487
+        ],
+        "ammo": [
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2A",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2BB",
+            2
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hit_optics_dvr_dve",
+            "hit_optics_dvr_rearcam",
+            "hithull_structural",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_lightl",
+            "hit_lightr",
+            "hit_optics_dvr_peri",
+            "hitfuel",
+            "hitslat_left_1",
+            "hitslat_left_2",
+            "hitslat_left_3",
+            "hitslat_right_1",
+            "hitslat_right_2",
+            "hitslat_right_3",
+            "hitslat_top_back",
+            "hitslat_top_left",
+            "hitslat_top_right",
+            "hitslat_back",
+            "hitslat_front",
+            "hitturret",
+            "hitgun",
+            "hit_optics_gnr",
+            "hit_optics_cdr_civ",
+            "hitturretcom",
+            "hitguncom",
+            "hit_optics_cdr_peri",
+            "#cabin_light",
+            "#cargo_light_1"
+          ],
+          [
+            "",
+            "",
+            "hit_engine",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "l svetlo",
+            "p svetlo",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_m2_3_v1",
+        "group": "B Alpha 2-4",
+        "vehicletype": "RHS_M2A3_wd",
+        "pos": [
+          18791,
+          17322.8,
+          -0.0697556
+        ],
+        "ammo": [
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2A",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2BB",
+            2
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hit_optics_dvr_dve",
+            "hit_optics_dvr_rearcam",
+            "hithull_structural",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_lightl",
+            "hit_lightr",
+            "hit_optics_dvr_peri",
+            "hitfuel",
+            "hitslat_left_1",
+            "hitslat_left_2",
+            "hitslat_left_3",
+            "hitslat_right_1",
+            "hitslat_right_2",
+            "hitslat_right_3",
+            "hitslat_top_back",
+            "hitslat_top_left",
+            "hitslat_top_right",
+            "hitslat_back",
+            "hitslat_front",
+            "hitturret",
+            "hitgun",
+            "hit_optics_gnr",
+            "hit_optics_cdr_civ",
+            "hitturretcom",
+            "hitguncom",
+            "hit_optics_cdr_peri",
+            "#cabin_light",
+            "#cargo_light_1"
+          ],
+          [
+            "",
+            "",
+            "hit_engine",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "l svetlo",
+            "p svetlo",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [
+          [
+            16500,
+            17000,
+            0
+          ]
+        ],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_m1_2_v1",
+        "group": "B Alpha 2-5",
+        "vehicletype": "RHS_M2A3_wd",
+        "pos": [
+          18855.1,
+          17308.7,
+          -0.0728607
+        ],
+        "ammo": [
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2A",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2BB",
+            2
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hit_optics_dvr_dve",
+            "hit_optics_dvr_rearcam",
+            "hithull_structural",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_lightl",
+            "hit_lightr",
+            "hit_optics_dvr_peri",
+            "hitfuel",
+            "hitslat_left_1",
+            "hitslat_left_2",
+            "hitslat_left_3",
+            "hitslat_right_1",
+            "hitslat_right_2",
+            "hitslat_right_3",
+            "hitslat_top_back",
+            "hitslat_top_left",
+            "hitslat_top_right",
+            "hitslat_back",
+            "hitslat_front",
+            "hitturret",
+            "hitgun",
+            "hit_optics_gnr",
+            "hit_optics_cdr_civ",
+            "hitturretcom",
+            "hitguncom",
+            "hit_optics_cdr_peri",
+            "#cabin_light",
+            "#cargo_light_1"
+          ],
+          [
+            "",
+            "",
+            "hit_engine",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "l svetlo",
+            "p svetlo",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_m1_1_v1",
+        "group": "B Alpha 2-6",
+        "vehicletype": "RHS_M2A3_wd",
+        "pos": [
+          18845.8,
+          16965.7,
+          -0.0399284
+        ],
+        "ammo": [
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2A",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2BB",
+            2
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hit_optics_dvr_dve",
+            "hit_optics_dvr_rearcam",
+            "hithull_structural",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_lightl",
+            "hit_lightr",
+            "hit_optics_dvr_peri",
+            "hitfuel",
+            "hitslat_left_1",
+            "hitslat_left_2",
+            "hitslat_left_3",
+            "hitslat_right_1",
+            "hitslat_right_2",
+            "hitslat_right_3",
+            "hitslat_top_back",
+            "hitslat_top_left",
+            "hitslat_top_right",
+            "hitslat_back",
+            "hitslat_front",
+            "hitturret",
+            "hitgun",
+            "hit_optics_gnr",
+            "hit_optics_cdr_civ",
+            "hitturretcom",
+            "hitguncom",
+            "hit_optics_cdr_peri",
+            "#cabin_light",
+            "#cargo_light_1"
+          ],
+          [
+            "",
+            "",
+            "hit_engine",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "l svetlo",
+            "p svetlo",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_m1_4_v1",
+        "group": "B Alpha 3-1",
+        "vehicletype": "RHS_M2A3_wd",
+        "pos": [
+          18947.4,
+          17079,
+          -0.0675735
+        ],
+        "ammo": [
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2A",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2BB",
+            2
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hit_optics_dvr_dve",
+            "hit_optics_dvr_rearcam",
+            "hithull_structural",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_lightl",
+            "hit_lightr",
+            "hit_optics_dvr_peri",
+            "hitfuel",
+            "hitslat_left_1",
+            "hitslat_left_2",
+            "hitslat_left_3",
+            "hitslat_right_1",
+            "hitslat_right_2",
+            "hitslat_right_3",
+            "hitslat_top_back",
+            "hitslat_top_left",
+            "hitslat_top_right",
+            "hitslat_back",
+            "hitslat_front",
+            "hitturret",
+            "hitgun",
+            "hit_optics_gnr",
+            "hit_optics_cdr_civ",
+            "hitturretcom",
+            "hitguncom",
+            "hit_optics_cdr_peri",
+            "#cabin_light",
+            "#cargo_light_1"
+          ],
+          [
+            "",
+            "",
+            "hit_engine",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "l svetlo",
+            "p svetlo",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [],
+        "discovered": 0
+      },
+      {
+        "vehiclename": "b_1_m1_3_v1",
+        "group": "B Alpha 3-2",
+        "vehicletype": "RHS_M2A3_wd",
+        "pos": [
+          18916.1,
+          17249.6,
+          -0.0647736
+        ],
+        "ammo": [
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_1100Rnd_762x51_M240",
+            1100
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_230Rnd_25mm_M242_HEI",
+            230
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_70Rnd_25mm_M242_APFSDS",
+            70
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2B_AERO",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2A",
+            2
+          ],
+          [
+            "rhs_mag_2Rnd_TOW2BB",
+            2
+          ],
+          [
+            "rhs_LaserFCSMag",
+            99
+          ]
+        ],
+        "damage": 0,
+        "hitpoint": [
+          [
+            "hit_optics_dvr_dve",
+            "hit_optics_dvr_rearcam",
+            "hithull_structural",
+            "hithull",
+            "hitengine",
+            "hitltrack",
+            "hitrtrack",
+            "hit_lightl",
+            "hit_lightr",
+            "hit_optics_dvr_peri",
+            "hitfuel",
+            "hitslat_left_1",
+            "hitslat_left_2",
+            "hitslat_left_3",
+            "hitslat_right_1",
+            "hitslat_right_2",
+            "hitslat_right_3",
+            "hitslat_top_back",
+            "hitslat_top_left",
+            "hitslat_top_right",
+            "hitslat_back",
+            "hitslat_front",
+            "hitturret",
+            "hitgun",
+            "hit_optics_gnr",
+            "hit_optics_cdr_civ",
+            "hitturretcom",
+            "hitguncom",
+            "hit_optics_cdr_peri",
+            "#cabin_light",
+            "#cargo_light_1"
+          ],
+          [
+            "",
+            "",
+            "hit_engine",
+            "hit_hull",
+            "hit_engine",
+            "hit_trackl",
+            "hit_trackr",
+            "l svetlo",
+            "p svetlo",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "vez",
+            "zbran",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "waypointpos": [],
+        "discovered": 0
+      }
+    ]
+  },
+  "enemy_info": {
+    "start_time": [
+      2026,
+      3,
+      4,
+      13,
+      33,
+      24,
+      825
+    ],
+    "end_time": [
+      2026,
+      3,
+      4,
+      13,
+      33,
+      24,
+      855
+    ],
+    "vehicles": [],
+    "units": []
+  },
+  "event": {
+    "start_time": [
+      2026,
+      3,
+      4,
+      13,
+      33,
+      19,
+      688
+    ],
+    "B_event_EDC": [
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          4
+        ],
+        "b_1_i1_2",
+        "b_1_i1_3_u3",
+        "0.0840719",
+        "0.0346839"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          4
+        ],
+        "b_1_i1_2",
+        "2ed22e58b80# 705170: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          4
+        ],
+        "b_1_i1_2",
+        "2ed22e5ab00# 704514: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          5
+        ],
+        "b_1_i1_2",
+        "b_1_i1_3_u5",
+        "0.04378",
+        "0.0318251"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          5
+        ],
+        "b_1_i1_2",
+        "b_1_i1_3_u2",
+        "0.523242",
+        "0.259219"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          5
+        ],
+        "b_1_i1_2",
+        "b_1_i1_3_u1",
+        "0.032978",
+        "0.0140804"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          5
+        ],
+        "b_1_i1_2",
+        "b_1_i1_3_u3",
+        "0.587642",
+        "0.0840719"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          5
+        ],
+        "b_1_i1_2",
+        "b_1_i2_1_u2",
+        "0.268288",
+        "0.0524185"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          5
+        ],
+        "b_1_i1_2",
+        "2ed22e89600# 705415: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          5
+        ],
+        "b_1_i1_2",
+        "b_1_i1_3_u5",
+        "0.204806",
+        "0.04378"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          6
+        ],
+        "b_1_i1_2",
+        "b_1_i1_3_u1",
+        "0.0582856",
+        "0.032978"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          6
+        ],
+        "b_1_i1_2",
+        "b_1_i2_4_u5",
+        "0.055177",
+        "0.0267413"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          6
+        ],
+        "b_1_i1_2",
+        "b_1_i2_4_u4",
+        "0.0869425",
+        "0.0422027"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          49
+        ],
+        "b_1_i2_1",
+        "2ed23190100# 679823: lampshabby_f.p3d Land_LampShabby_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          50
+        ],
+        "b_1_i2_1",
+        "2ed22e2d600# 704560: lampshabby_f.p3d Land_LampShabby_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          164
+        ],
+        "b_1_m2_2",
+        "2ed2313c100# 677192: fs_feed_f.p3d Land_fs_feed_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          164
+        ],
+        "b_1_m2_2",
+        "2ed22ea0100# 702261: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          164
+        ],
+        "b_1_m2_2",
+        "b_1_t1_2_v1",
+        "0.0330048",
+        "0.0126019"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          203
+        ],
+        "b_1_i1_1",
+        "2ed22e4d600# 702179: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          204
+        ],
+        "b_1_i1_1",
+        "2ed22ea0100# 702261: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          204
+        ],
+        "b_1_i1_1",
+        "2ed22e9ab00# 703705: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          939
+        ],
+        "b_1_t1_1",
+        "2ed231cc100# 668001: lampstreet_f.p3d Land_LampStreet_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          15,
+          939
+        ],
+        "b_1_t1_1",
+        "2ed22eccb80# 842412: lampshabby_f.p3d Land_LampShabby_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          112
+        ],
+        "b_1_i2_4",
+        "b_1_i1_3_u5",
+        "0.547585",
+        "0.470377"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          112
+        ],
+        "b_1_i2_4",
+        "b_1_i2_2_u2",
+        "0.134961",
+        "0.0994489"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          286
+        ],
+        "b_1_m1_4",
+        "2ed23166b00# 679450: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          286
+        ],
+        "b_1_m1_4",
+        "2ed23166080# 679243: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          286
+        ],
+        "b_1_m1_4",
+        "2ed2313f580# 678528: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          286
+        ],
+        "b_1_m1_4",
+        "2ed23144100# 678520: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          286
+        ],
+        "b_1_m1_4",
+        "2ed2312e080# 678032: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          286
+        ],
+        "b_1_m1_4",
+        "2ed2393d600# 1363304: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          286
+        ],
+        "b_1_m1_4",
+        "2ed2393a080# 1356810: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          286
+        ],
+        "b_1_m1_4",
+        "2ed2223cb80# 850982: lampshabby_f.p3d Land_LampShabby_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          16,
+          514
+        ],
+        "b_1_t1_3",
+        "2eceff3c100# 950428: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          478
+        ],
+        "b_1_t1_2",
+        "2ed22dd7580# 681269: lampshabby_f.p3d Land_LampShabby_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          478
+        ],
+        "b_1_t1_2",
+        "2ed22e47580# 701729: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          478
+        ],
+        "b_1_t1_2",
+        "2ed22e6ab00# 702356: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          478
+        ],
+        "b_1_t1_2",
+        "2ed229e2b00# 986648: lampshabby_f.p3d Land_LampShabby_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          478
+        ],
+        "b_1_t1_2",
+        "2ed22e3eb00# 698890: belltower_02_v1_f.p3d Land_BellTower_02_V1_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          626
+        ],
+        "b_1_t1_4",
+        "2ed22ea1600# 703320: lampstreet_f.p3d Land_LampStreet_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          626
+        ],
+        "b_1_t1_4",
+        "2ed22ea9600# 703460: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          627
+        ],
+        "b_1_t1_4",
+        "2ed22cf2b00# 960630: lampshabby_f.p3d Land_LampShabby_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          627
+        ],
+        "b_1_t1_4",
+        "2ed229e2080# 1602789: wpp_turbine_v2_f.p3d Land_wpp_Turbine_V2_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          896
+        ],
+        "b_1_m1_1",
+        "2ed23146080# 678460: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          896
+        ],
+        "b_1_m1_1",
+        "2ed22e5ab00# 704514: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          896
+        ],
+        "b_1_m1_1",
+        "2ed22e58b80# 705170: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          896
+        ],
+        "b_1_m1_1",
+        "2ed22ce2b00# 951966: lampshabby_f.p3d Land_LampShabby_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i1_2_u6",
+        "0.261175",
+        "0.164542"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i2_2_u5",
+        "0.329995",
+        "0.039675"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i1_2_u5",
+        "0.44432",
+        "0.0559904"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i1_2_u4",
+        "0.459885",
+        "0.0680714"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i2_2_u2",
+        "0.0270117",
+        "0.0116301"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i2_2_u6",
+        "0.0544022",
+        "0.0215789"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i2_2_u4",
+        "0.151735",
+        "0.0220224"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i2_2_u3",
+        "0.0461837",
+        "0.0307782"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i1_2_u3",
+        "0.381903",
+        "0.0923997"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i2_2_u4",
+        "0.459867",
+        "0.151735"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i2_2_u3",
+        "0.128218",
+        "0.0461837"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          17,
+          897
+        ],
+        "b_1_i1_3",
+        "b_1_i1_2_u3",
+        "0.464624",
+        "0.381903"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          363
+        ],
+        "b_1_i2_3",
+        "2ed22e90100# 705315: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          363
+        ],
+        "b_1_i2_3",
+        "2ed23933580# 1356428: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          364
+        ],
+        "b_1_i2_3",
+        "b_1_i2_4_u6",
+        "0.073297",
+        "0.0570469"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          364
+        ],
+        "b_1_i2_3",
+        "2ed22e34b80# 702418: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          983
+        ],
+        "b_1_i2_2",
+        "2ed22e5ab00# 704514: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          983
+        ],
+        "b_1_i2_2",
+        "2ed22e89600# 705415: lampstreet_small_f.p3d Land_LampStreet_small_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          983
+        ],
+        "b_1_i2_2",
+        "2ed22e58b80# 705170: powerpolewooden_l_f.p3d Land_PowerPoleWooden_L_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          984
+        ],
+        "b_1_i2_2",
+        "b_1_i1_3_u4",
+        "0.0944947",
+        "0.0262412"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          984
+        ],
+        "b_1_i2_2",
+        "b_1_i1_3_u3",
+        "0.11711",
+        "0.0700977"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          984
+        ],
+        "b_1_i2_2",
+        "b_1_i1_3_u4",
+        "0.438469",
+        "0.0944947"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          984
+        ],
+        "b_1_i2_2",
+        "2ed23938b80# 1356633: lampshabby_f.p3d Land_LampShabby_F",
+        "4",
+        "0"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          985
+        ],
+        "b_1_i2_2",
+        "b_1_i1_2_u3",
+        "0.24849",
+        "0.230236"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          985
+        ],
+        "b_1_i2_2",
+        "b_1_i1_3_u3",
+        "0.289528",
+        "0.11711"
+      ],
+      [
+        [
+          2026,
+          3,
+          4,
+          13,
+          33,
+          18,
+          985
+        ],
+        "b_1_i2_2",
+        "b_1_i1_3_u5",
+        "0.0668013",
+        "0.0320148"
+      ]
+    ],
+    "B_event_ED": [],
+    "B_event_F": [],
+    "B_event_D": [],
+    "B_event_K": [],
+    "OP_event_EDC": [],
+    "OP_event_ED": [],
+    "OP_event_F": [],
+    "OP_event_D": [],
+    "OP_event_K": [],
+    "end_time": [
+      2026,
+      3,
+      4,
+      13,
+      33,
+      19,
+      688
+    ]
+  }
+}
