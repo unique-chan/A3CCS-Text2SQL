@@ -56,21 +56,21 @@ vllm serve ./gpt-oss-20b --host 0.0.0.0 --port 8000
 
 - Local PC (Just checking SQLite)
 
-~~~shell
-sqlite3 outputs/arma_sql/state.db
-~~~
+  ~~~shell
+  sqlite3 outputs/arma_sql/state.db
+  ~~~
 
-~~~sql
-.header on
-.mode column  # Try .mode line
-
-select * from 'groups' limit 1;
-select * from 'units' limit 1;
-select * from 'vehicles' limit 1;
-select * from 'snapshots' limit 1;
-~~~
+  ~~~sql
+  .header on
+  .mode column  # Try .mode line
+  
+  select * from 'groups' limit 1;
+  select * from 'units' limit 1;
+  select * from 'vehicles' limit 1;
+  select * from 'snapshots' limit 1;
+  ~~~
 
 - Local PC (Leveraging Text2SQL)
-~~~shell
-python \text2sql_langgraph.py
-~~~
+  ~~~shell
+  python \text2sql_langgraph.py
+  ~~~
