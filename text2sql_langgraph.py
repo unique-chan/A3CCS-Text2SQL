@@ -595,6 +595,8 @@ def main():
 
         block_non_readonly_sql=env_bool("BLOCK_NON_READONLY_SQL", True),
         treat_refusal_result_as_error=env_bool("TREAT_REFUSAL_RESULT_AS_ERROR", True),
+
+        output_dir=env_str("OUT_DIR", "results"),
     )
 
     print("🔌 Checking prompt files...")
@@ -616,7 +618,7 @@ def main():
     )
     print("🔌 Type 'exit' to quit.\n")
 
-    out_dir = Path("result")
+    out_dir = Path(cfg.output_dir)  # Path(env_str("OUT_DIR", "results"))
     out_dir.mkdir(parents=True, exist_ok=True)
 
     while True:
