@@ -14,29 +14,32 @@
 ### Note
 - This code is originally designed for A3CCS (https://github.com/citizen135/A3CCS)
 
-### Preliminaries (Local PC)
+### Preliminaries 
+- Local PC
+  ~~~shell
+  conda create -n text2sql python=3.11 -y
+  conda activate text2sql
+  pip install -r requirements.txt
+  ~~~
 
-~~~shell
-conda create -n text2sql python=3.11 -y
-conda activate text2sql
-pip install -r requirements.txt
-~~~
+- Remote PC for LLM
+  ~~~shell
+  conda create -n hugging python=3.11 -y
+  conda activate hugging
+  pip install -U huggingface_hub==1.6.0
+  pip install -U vllm==0.17.0
+  mkdirs mymodels
+  huggingface-cli download openai/gpt-oss-20b --local-dir ./mymodels/gpt-oss-20b
+  ~~~
 
-### Preliminaries (Remote LLM PC)
+- You may have to change `.env` or `prompts/*.md`
 
-~~~shell
-conda create -n hugging python=3.11 -y
-conda activate hugging
-pip install -U huggingface_hub==1.6.0
-pip install -U vllm==0.17.0
-mkdirs mymodels
-huggingface-cli download openai/gpt-oss-20b --local-dir ./mymodels/gpt-oss-20b
-~~~
 
 ### Dump Arma3 metadata to SQLite3 (DB)
-~~~shell
-python test_dump_arma.py
-~~~
+- In `outputs/`, we provide our toy examples.
+  ~~~shell
+  python test_dump_arma.py
+  ~~~
 
 ### Test 
 
