@@ -1,4 +1,4 @@
-# Text-to-SQL Query Writing Guidelines
+# Text-to-SQL Query Writing Guidelines for Users!
 
 These guidelines help users write clear natural-language queries so that the Text-to-SQL model can generate correct SQL statements.  
 Ambiguous or underspecified questions may lead to incorrect SQL generation. Follow the rules below when writing queries.
