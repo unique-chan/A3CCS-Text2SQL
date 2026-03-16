@@ -1,6 +1,7 @@
 import os
 import re
 import csv
+import json
 import sqlite3
 import requests
 import time
@@ -9,7 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from operator import add
 from pathlib import Path
-from typing import Annotated, Any, Dict, List, Tuple
+from typing import Annotated, Any, Dict, List, Optional, Tuple
 from typing_extensions import TypedDict
 
 from dotenv import load_dotenv
@@ -195,6 +196,30 @@ def extract_sql(text: str) -> str:
     return t.rstrip(";") + ";"
 
 
+def extract_json_block(text: str) -> str:
+    raw = text.strip()
+    m = re.search(r"```json\s*(.*?)\s*```", raw, flags=re.S | re.I)
+    if m:
+        return m.group(1).strip()
+    return raw
+
+
+def parse_rewrite_intent_payload(text: str) -> Tuple[str, str]:
+    raw = extract_json_block(text)
+    data = json.loads(raw)
+
+    rewrite_mode = str(data.get("rewrite_mode", "")).strip().lower()
+    rewrite_guidance = str(data.get("rewrite_guidance", "")).strip()
+
+    if rewrite_mode not in {"guided", "autonomous"}:
+        raise ValueError(f"Invalid rewrite_mode: {rewrite_mode}")
+
+    if rewrite_mode == "autonomous":
+        rewrite_guidance = ""
+
+    return rewrite_mode, rewrite_guidance
+
+
 def looks_like_refusal_result(result_text: str) -> bool:
     s = result_text.lower()
     keywords = [
@@ -208,6 +233,10 @@ def looks_like_refusal_result(result_text: str) -> bool:
         "no information",
     ]
     return any(k in s for k in keywords)
+
+
+def is_rewrite_request(text: str) -> bool:
+    return text.strip().startswith("[재작성 요청]") or text.strip().startswith("[Rewrite]")
 
 
 # =========================
@@ -225,10 +254,22 @@ class AgentState(TypedDict):
     steps: int
     seen_sql: List[str]
     csv_path: Path
-    # for debugging purpose ->
     llm_generate_time: float
     llm_repair_time: float
     sql_execute_time: float
+
+    rewrite_mode: str
+    rewrite_request: str
+    rewrite_guidance: str
+    previous_question: str
+    previous_sql: str
+    previous_result: str
+    reflection: str
+    rewrite_attempts: int
+    rewrite_reflection_time: float
+    llm_rewrite_time: float
+    rewrite_intent_time: float
+    cheat_sheet_general: str
 
 
 @dataclass
@@ -236,7 +277,7 @@ class Config:
     db_path: str
     instruction_path: str
 
-    llm_backend: str  
+    llm_backend: str
 
     model: str
     temperature: float
@@ -246,6 +287,10 @@ class Config:
 
     text2sql_prompt_path: str
     repair_prompt_path: str
+    rewrite_intent_prompt_path: str
+    rewrite_reflect_prompt_path: str
+    rewrite_sql_prompt_path: str
+    sql_cheat_general_path: str
 
     max_repair_attempts: int
     max_steps: int
@@ -263,6 +308,10 @@ class RuntimeResources:
     instruction: str
     system_text2sql: str
     system_repair: str
+    system_rewrite_intent: str
+    system_rewrite_reflect: str
+    system_rewrite_sql: str
+    cheat_sheet_general: str
 
 
 # =========================
@@ -273,6 +322,10 @@ def load_runtime_resources(cfg: Config) -> RuntimeResources:
         instruction=load_optional_text(cfg.instruction_path),
         system_text2sql=load_required_text(cfg.text2sql_prompt_path),
         system_repair=load_required_text(cfg.repair_prompt_path),
+        system_rewrite_intent=load_required_text(cfg.rewrite_intent_prompt_path),
+        system_rewrite_reflect=load_required_text(cfg.rewrite_reflect_prompt_path),
+        system_rewrite_sql=load_required_text(cfg.rewrite_sql_prompt_path),
+        cheat_sheet_general=load_optional_text(cfg.sql_cheat_general_path),
     )
 
 
@@ -304,6 +357,48 @@ def build_repair_messages(state: AgentState, resources: RuntimeResources) -> Lis
     return msgs
 
 
+def build_rewrite_intent_messages(state: AgentState, resources: RuntimeResources) -> List[AnyMessage]:
+    return [
+        SystemMessage(resources.system_rewrite_intent),
+        HumanMessage(state.get("rewrite_request", "")),
+    ]
+
+
+def build_rewrite_reflection_messages(state: AgentState, resources: RuntimeResources) -> List[AnyMessage]:
+    msgs: List[AnyMessage] = [
+        SystemMessage(resources.system_rewrite_reflect),
+        SystemMessage(f"SCHEMA:\n{state['schema']}"),
+        SystemMessage(f"ORIGINAL_USER_QUESTION:\n{state['previous_question'] or state['question']}"),
+        SystemMessage(f"PREVIOUS_SQL:\n{state.get('previous_sql', '')}"),
+        SystemMessage(f"PREVIOUS_RESULT:\n{state.get('previous_result', '')}"),
+        SystemMessage(f"REWRITE_MODE:\n{state.get('rewrite_mode', '')}"),
+        SystemMessage(f"OPTIONAL_USER_GUIDANCE:\n{state.get('rewrite_guidance', '') or '(none)'}"),
+    ]
+    msgs.extend(maybe_instruction_messages(state.get("instruction", "")))
+    msgs.append(HumanMessage(state.get("rewrite_request", "[재작성 요청]")))
+    return msgs
+
+
+def build_rewrite_sql_messages(state: AgentState, resources: RuntimeResources) -> List[AnyMessage]:
+    msgs: List[AnyMessage] = [
+        SystemMessage(resources.system_rewrite_sql),
+        SystemMessage(f"SCHEMA:\n{state['schema']}"),
+        SystemMessage(f"ORIGINAL_USER_QUESTION:\n{state['previous_question'] or state['question']}"),
+        SystemMessage(f"PREVIOUS_SQL:\n{state.get('previous_sql', '')}"),
+        SystemMessage(f"PREVIOUS_RESULT:\n{state.get('previous_result', '')}"),
+        SystemMessage(f"REWRITE_MODE:\n{state.get('rewrite_mode', '')}"),
+        SystemMessage(f"OPTIONAL_USER_GUIDANCE:\n{state.get('rewrite_guidance', '') or '(none)'}"),
+        SystemMessage(f"REFLECTION:\n{state.get('reflection', '')}"),
+        SystemMessage(
+            "SQL_CHEAT_SHEET_EXAMPLES:\n"
+            + (state.get("cheat_sheet_general", "") or resources.cheat_sheet_general or "(empty)")
+        ),
+    ]
+    msgs.extend(maybe_instruction_messages(state.get("instruction", "")))
+    msgs.append(HumanMessage("Rewrite the SQL now."))
+    return msgs
+
+
 # =========================
 # LLM builder / validation
 # =========================
@@ -325,7 +420,11 @@ def build_llm(cfg: Config):
 def validate_text_resources(cfg: Config):
     load_required_text(cfg.text2sql_prompt_path)
     load_required_text(cfg.repair_prompt_path)
+    load_required_text(cfg.rewrite_intent_prompt_path)
+    load_required_text(cfg.rewrite_reflect_prompt_path)
+    load_required_text(cfg.rewrite_sql_prompt_path)
     load_optional_text(cfg.instruction_path)
+    load_optional_text(cfg.sql_cheat_general_path)
 
 
 def validate_llm_ready(cfg: Config):
@@ -373,6 +472,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         return {
             "schema": schema,
             "instruction": resources.instruction,
+            "cheat_sheet_general": resources.cheat_sheet_general,
         }
 
     def _check_repeat_sql(state: AgentState, candidate_sql: str) -> str:
@@ -394,8 +494,8 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         repeat_err = _check_repeat_sql(state, sql)
         if repeat_err:
             return {
-                "messages": [ai], 
-                "sql": sql, 
+                "messages": [ai],
+                "sql": sql,
                 "error": repeat_err,
                 "llm_generate_time": llm_time,
             }
@@ -406,6 +506,70 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             "error": "",
             "seen_sql": state.get("seen_sql", []) + [sql],
             "llm_generate_time": llm_time,
+        }
+
+    def node_classify_rewrite_intent(state: AgentState) -> Dict[str, Any]:
+        msgs = build_rewrite_intent_messages(state, resources)
+
+        t0 = time.perf_counter()
+        ai = llm.invoke(msgs)
+        intent_time = time.perf_counter() - t0
+
+        try:
+            rewrite_mode, rewrite_guidance = parse_rewrite_intent_payload(ai.content)
+        except Exception:
+            rewrite_mode = "autonomous"
+            rewrite_guidance = ""
+
+        return {
+            "messages": [ai],
+            "rewrite_mode": rewrite_mode,
+            "rewrite_guidance": rewrite_guidance,
+            "rewrite_intent_time": intent_time,
+            "error": "",
+        }
+
+
+    def node_rewrite_reflect(state: AgentState) -> Dict[str, Any]:
+        msgs = build_rewrite_reflection_messages(state, resources)
+
+        t0 = time.perf_counter()
+        ai = llm.invoke(msgs)
+        reflection = ai.content.strip()
+        reflection_time = time.perf_counter() - t0
+
+        return {
+            "messages": [ai],
+            "reflection": reflection,
+            "rewrite_attempts": state.get("rewrite_attempts", 0) + 1,
+            "rewrite_reflection_time": state.get("rewrite_reflection_time", 0.0) + reflection_time,
+            "error": "",
+        }
+
+    def node_rewrite_sql(state: AgentState) -> Dict[str, Any]:
+        msgs = build_rewrite_sql_messages(state, resources)
+
+        t0 = time.perf_counter()
+        ai = llm.invoke(msgs)
+        sql = extract_sql(ai.content)
+        rewrite_time = time.perf_counter() - t0
+
+        repeat_err = _check_repeat_sql(state, sql)
+        total_rewrite_time = state.get("llm_rewrite_time", 0.0) + rewrite_time
+        if repeat_err:
+            return {
+                "messages": [ai],
+                "sql": sql,
+                "error": repeat_err,
+                "llm_rewrite_time": total_rewrite_time,
+            }
+
+        return {
+            "messages": [ai],
+            "sql": sql,
+            "error": "",
+            "seen_sql": state.get("seen_sql", []) + [sql],
+            "llm_rewrite_time": total_rewrite_time,
         }
 
     def node_safety_check(state: AgentState) -> Dict[str, Any]:
@@ -429,16 +593,16 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             )
             exec_time = time.perf_counter() - t0
 
-
             if cfg.treat_refusal_result_as_error and looks_like_refusal_result(out):
                 return {
                     "result": out,
-                    "error": "Refusal-style result detected; must attempt a real computation/query."
+                    "error": "Refusal-style result detected; must attempt a real computation/query.",
+                    "sql_execute_time": exec_time,
                 }
 
-            return {"result": out, "error": "", "sql_exec_time": exec_time}
+            return {"result": out, "error": "", "sql_execute_time": exec_time}
         except Exception as e:
-            return {"result": "", "error": f"{type(e).__name__}: {e}", "sql_exec_time": 0.0}
+            return {"result": "", "error": f"{type(e).__name__}: {e}", "sql_execute_time": 0.0}
 
     def node_repair_sql(state: AgentState) -> Dict[str, Any]:
         msgs = build_repair_messages(state, resources)
@@ -458,7 +622,6 @@ def make_graph(cfg: Config, resources: RuntimeResources):
                 "attempts": state["attempts"] + 1,
                 "error": repeat_err,
                 "llm_repair_time": total_repair_time,
-
             }
 
         return {
@@ -474,6 +637,9 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         if state.get("error") and "Step limit exceeded" in state["error"]:
             return END
         return "prepare_context" if not state.get("schema") else "safety_check"
+
+    def route_after_prepare_context(state: AgentState) -> str:
+        return "classify_rewrite_intent" if state.get("rewrite_request") else "generate_sql"
 
     def route_after_safety(state: AgentState) -> str:
         if state.get("error") and "Step limit exceeded" in state["error"]:
@@ -492,6 +658,9 @@ def make_graph(cfg: Config, resources: RuntimeResources):
     g.add_node("tick", node_tick)
     g.add_node("prepare_context", node_prepare_context)
     g.add_node("generate_sql", node_generate_sql)
+    g.add_node("classify_rewrite_intent", node_classify_rewrite_intent)
+    g.add_node("rewrite_reflect", node_rewrite_reflect)
+    g.add_node("rewrite_sql", node_rewrite_sql)
     g.add_node("safety_check", node_safety_check)
     g.add_node("execute_sql", node_execute_sql)
     g.add_node("repair_sql", node_repair_sql)
@@ -507,8 +676,18 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         },
     )
 
-    g.add_edge("prepare_context", "generate_sql")
+    g.add_conditional_edges(
+        "prepare_context",
+        route_after_prepare_context,
+        {
+            "generate_sql": "generate_sql",
+            "classify_rewrite_intent": "classify_rewrite_intent",
+        },
+    )
     g.add_edge("generate_sql", "tick")
+    g.add_edge("classify_rewrite_intent", "rewrite_reflect")
+    g.add_edge("rewrite_reflect", "rewrite_sql")
+    g.add_edge("rewrite_sql", "tick")
 
     g.add_conditional_edges(
         "safety_check",
@@ -541,9 +720,45 @@ def get_time() -> str:
     return datetime.now().strftime("%y%m%d%H%M%S")
 
 
-def save_sql_txt(question: str, sql: str, out_path: Path):
-    content = f"Question: {question}\n\nSQL:\n{sql.strip()}\n"
-    out_path.write_text(content, encoding="utf-8")
+def save_sql_txt(question: str, sql: str, out_path: Path, meta: Optional[Dict[str, str]] = None):
+    lines = [f"Question: {question}", "", "SQL:", sql.strip(), ""]
+    if meta:
+        lines.append("META:")
+        for k, v in meta.items():
+            lines.append(f"- {k}: {v}")
+        lines.append("")
+    out_path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def make_empty_state(question: str, csv_path: Path) -> AgentState:
+    return {
+        "messages": [],
+        "question": question,
+        "schema": "",
+        "instruction": "",
+        "sql": "",
+        "result": "",
+        "error": "",
+        "attempts": 0,
+        "steps": 0,
+        "seen_sql": [],
+        "csv_path": csv_path,
+        "llm_generate_time": 0.0,
+        "llm_repair_time": 0.0,
+        "sql_execute_time": 0.0,
+        "rewrite_mode": "",
+        "rewrite_request": "",
+        "rewrite_guidance": "",
+        "previous_question": "",
+        "previous_sql": "",
+        "previous_result": "",
+        "reflection": "",
+        "rewrite_attempts": 0,
+        "rewrite_reflection_time": 0.0,
+        "llm_rewrite_time": 0.0,
+        "rewrite_intent_time": 0.0,
+        "cheat_sheet_general": "",
+    }
 
 
 # =========================
@@ -563,50 +778,63 @@ def main():
     cfg = Config(
         db_path=db_path,
         instruction_path=env_str("INSTRUCTION_PATH", "INSTRUCTION.md"),
-
         llm_backend=env_str("LLM_BACKEND", "openai"),
-
         model=env_str("OPENAI_MODEL", "gpt-4.1-mini"),
         temperature=env_float("OPENAI_TEMPERATURE", 0.0),
-
         openai_api_key=env_str("OPENAI_API_KEY", ""),
         openai_base_url=env_str("OPENAI_BASE_URL", ""),
-
-        text2sql_prompt_path=env_str("TEXT2SQL_PROMPT_PATH", "prompts/system_text2sql.md"),
-        repair_prompt_path=env_str("REPAIR_PROMPT_PATH", "prompts/system_repair.md"),
-
+        text2sql_prompt_path=env_str("TEXT2SQL_PROMPT_PATH", "text2sql_prompts/system_text2sql.md"),
+        repair_prompt_path=env_str("REPAIR_PROMPT_PATH", "text2sql_prompts/system_repair.md"),
+        rewrite_intent_prompt_path=env_str(
+            "REWRITE_INTENT_PROMPT_PATH", "text2sql_prompts/system_rewrite_intent.md"
+        ),
+        rewrite_reflect_prompt_path=env_str(
+            "REWRITE_REFLECT_PROMPT_PATH", "text2sql_prompts/system_rewrite_reflect.md"
+        ),
+        rewrite_sql_prompt_path=env_str(
+            "REWRITE_SQL_PROMPT_PATH", "text2sql_prompts/system_rewrite_sql.md"
+        ),
+        sql_cheat_general_path=env_str(
+            "SQL_CHEAT_GENERAL_PATH", "text2sql_prompts/SQL_cheating_sheets/general.md"
+        ),
         max_repair_attempts=env_int("MAX_REPAIR_ATTEMPTS", 3),
-        max_steps=env_int("MAX_STEPS", 10),
+        max_steps=env_int("MAX_STEPS", 12),
         max_same_sql_repeats=env_int("MAX_SAME_SQL_REPEATS", 1),
         max_rows=env_int("MAX_ROWS", 50),
-
         block_non_readonly_sql=env_bool("BLOCK_NON_READONLY_SQL", True),
         treat_refusal_result_as_error=env_bool("TREAT_REFUSAL_RESULT_AS_ERROR", True),
-
         output_dir=env_str("OUT_DIR", "results"),
     )
 
-    print("🔌 Checking prompt files...")
+    print("⚡Checking prompt files...")
     validate_text_resources(cfg)
 
-    print("🔌 Checking LLM connectivity/model availability...")
+    print("⚡Checking LLM connectivity/model availability...")
     validate_llm_ready(cfg)
 
     resources = load_runtime_resources(cfg)
     graph = make_graph(cfg, resources)
 
-    print(f"🔌 Connected to SQLite: {cfg.db_path}")
-    print(f"🔌 LLM backend: {cfg.llm_backend}")
-    print(f"🔌 Model: {cfg.model}")
+    print(f"⚡Connected to SQLite: {cfg.db_path}")
+    print(f"⚡LLM backend: {cfg.llm_backend}")
+    print(f"⚡Model: {cfg.model}")
     print(
-        f"🔌 Limits: MAX_REPAIR_ATTEMPTS={cfg.max_repair_attempts}, "
+        f"Limits: MAX_REPAIR_ATTEMPTS={cfg.max_repair_attempts}, "
         f"MAX_STEPS={cfg.max_steps}, "
         f"MAX_SAME_SQL_REPEATS={cfg.max_same_sql_repeats}"
     )
-    print("🔌 Type 'exit' to quit.\n")
+    print("⚡Type 'exit' to quit.")
+    print("⚡Rewrite commands:")
+    print("  e.g. (1) '[재작성 요청]' -> autonomous rewrite")
+    print("           '[Rewrite]' -> autonomous rewrite")
+    print("  e.g. (2) '[재작성 요청] 최신 1건만 보여줘!' -> guided rewrite")
+    print("           '[Rewrite] Show the recent 1 case only!' -> guided rewrite")
+    print()
 
-    out_dir = Path(cfg.output_dir)  # Path(env_str("OUT_DIR", "results"))
+    out_dir = Path(cfg.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    last_run: Optional[Dict[str, str]] = None
 
     while True:
         run_id = get_time()
@@ -619,28 +847,35 @@ def main():
         if q.lower() in {"exit", "quit"}:
             break
 
-        init_state: AgentState = {
-            "messages": [],
-            "question": q,
-            "schema": "",
-            "instruction": "",
-            "sql": "",
-            "result": "",
-            "error": "",
-            "attempts": 0,
-            "steps": 0,
-            "seen_sql": [],
-            "csv_path": csv_path,
-            # for debugging purpose ->
-            "llm_generate_time": 0.0,
-            "llm_repair_time": 0.0,
-            "sql_execute_time": 0.0,
-        }
+        init_state = make_empty_state(q, csv_path)
+
+        if is_rewrite_request(q):
+            if not last_run:
+                print("\n[ERROR] There are no previous execution results to rewrite. Please input the general query text first.\n")
+                continue
+
+            init_state["question"] = last_run.get("question", "")
+            init_state["rewrite_request"] = q
+            init_state["previous_question"] = last_run.get("question", "")
+            init_state["previous_sql"] = last_run.get("sql", "")
+            init_state["previous_result"] = last_run.get("result", "")
+            init_state["seen_sql"] = [last_run.get("sql", "")] if last_run.get("sql") else []
+        else:
+            init_state["question"] = q
 
         final_state = graph.invoke(init_state)
 
         sql_text = final_state.get("sql", "").strip()
-        save_sql_txt(q, sql_text, sql_path)
+        save_sql_txt(
+            final_state.get("question", q),
+            sql_text,
+            sql_path,
+            meta={
+                "rewrite_mode": final_state.get("rewrite_mode", "") or "normal",
+                "rewrite_guidance": final_state.get("rewrite_guidance", ""),
+                "reflection": final_state.get("reflection", ""),
+            },
+        )
 
         if sql_text:
             try:
@@ -654,6 +889,21 @@ def main():
                 final_state["error"] = (
                     final_state.get("error", "") + f"\n[csv save error] {e}"
                 ).strip()
+
+        last_run = {
+            "question": final_state.get("question", q),
+            "sql": final_state.get("sql", ""),
+            "result": final_state.get("result", ""),
+            "error": final_state.get("error", ""),
+        }
+
+        if final_state.get("rewrite_mode"):
+            print("\n--- REWRITE ---")
+            print(f"mode: {final_state.get('rewrite_mode', '')}")
+            if final_state.get("rewrite_guidance"):
+                print(f"guidance: {final_state.get('rewrite_guidance', '')}")
+            print("reflection:")
+            print(final_state.get("reflection", "(no reflection)"))
 
         print("\n--- SQL ---")
         print(final_state.get("sql", "").strip())
@@ -669,14 +919,18 @@ def main():
             print(final_state["error"])
             print(
                 f"(attempts={final_state.get('attempts', 0)}, "
+                f"rewrite_attempts={final_state.get('rewrite_attempts', 0)}, "
                 f"steps={final_state.get('steps', 0)})"
             )
 
         print("\n--- TIMING ---")
-        print(f"LLM generate time: {final_state.get('llm_generate_time', 0.0):.4f} sec")
-        print(f"LLM repair time:   {final_state.get('llm_repair_time', 0.0):.4f} sec")
-        print(f"SQL execute time:  {final_state.get('sql_execute_time', 0.0):.4f} sec")
-        print("\n")
+        print(f"LLM generate time:   {final_state.get('llm_generate_time', 0.0):.4f} sec")
+        print(f"LLM intent time:     {final_state.get('rewrite_intent_time', 0.0):.4f} sec")
+        print(f"LLM reflection time: {final_state.get('rewrite_reflection_time', 0.0):.4f} sec")
+        print(f"LLM rewrite time:    {final_state.get('llm_rewrite_time', 0.0):.4f} sec")
+        print(f"LLM repair time:     {final_state.get('llm_repair_time', 0.0):.4f} sec")
+        print(f"SQL execute time:    {final_state.get('sql_execute_time', 0.0):.4f} sec")
+        print()
 
 
 if __name__ == "__main__":
