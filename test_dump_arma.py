@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 import shutil
 
-from dump_arma.db_ingest import dump_arma_into_sql
+from dump_arma.db_ingest import dump_arma_into_sql_with_disk_stored_json_files
 
 
 if __name__ == "__main__":
@@ -25,4 +25,4 @@ if __name__ == "__main__":
             print(f'💽 Migrating Arma 3 metadata into SQLite3 database: Cancelled ❌')
             exit(0)
 
-    dump_arma_into_sql(db_url, json_dir)
+    dump_arma_into_sql_with_disk_stored_json_files(db_url, json_dir)

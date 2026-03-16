@@ -213,7 +213,7 @@ def parse_event_datetime(x):
     return str(x) if x is not None else None
 
 
-def dump_arma_into_sql(db_url: str = None, json_dir=None):
+def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=None):
     """
     Ingest Arma dump JSON files into SQLite.
 

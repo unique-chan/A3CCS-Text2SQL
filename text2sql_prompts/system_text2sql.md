@@ -12,3 +12,7 @@ Rules:
   - Use window functions LAG() OVER (PARTITION BY ... ORDER BY ...)
   - Use sqrt(dx*dx + dy*dy + dz*dz) / dt
   - If timestamp is ISO text, dt_seconds = (julianday(t)-julianday(t_prev))*86400.0
+- Friendly forces (side='b') and enemy forces (side='op') may not share the same snapshot time (datetime). Therefore, when computing the "current distance between friendly and enemy forces," use the most recent timestamp in the entire dataset as the reference time. 
+  - For each friendly and enemy group, select one row whose datetime is closest to this reference time. 
+  - Then compute the Euclidean distance using the selected coordinates (x-, y-, z- axis) (If z-axis is unavailable, use only x-, y- values). 
+  - The result should also include the actual timestamp selected for each group.

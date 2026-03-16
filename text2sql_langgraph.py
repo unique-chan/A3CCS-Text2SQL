@@ -3,20 +3,20 @@ import re
 import csv
 import sqlite3
 import requests
+import time
 
 from dataclasses import dataclass
 from datetime import datetime
 from operator import add
 from pathlib import Path
-from typing import Annotated, Any, Dict, List
+from typing import Annotated, Any, Dict, List, Tuple
 from typing_extensions import TypedDict
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import AnyMessage, HumanMessage, SystemMessage
 
-from langchain_huggingface import HuggingFacePipeline
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+import math
 
 from langgraph.graph import StateGraph, START, END
 
@@ -71,6 +71,7 @@ def load_optional_text(path: str) -> str:
 # =========================
 def _connect_sqlite(db_path: str) -> sqlite3.Connection:
     conn = sqlite3.connect(db_path)
+    conn.create_function("sqrt", 1, math.sqrt)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -224,6 +225,10 @@ class AgentState(TypedDict):
     steps: int
     seen_sql: List[str]
     csv_path: Path
+    # for debugging purpose ->
+    llm_generate_time: float
+    llm_repair_time: float
+    sql_execute_time: float
 
 
 @dataclass
@@ -231,16 +236,13 @@ class Config:
     db_path: str
     instruction_path: str
 
-    llm_backend: str  # "openai" or "local"
+    llm_backend: str  
 
     model: str
     temperature: float
 
     openai_api_key: str
     openai_base_url: str
-
-    local_model_path: str
-    local_max_new_tokens: int
 
     text2sql_prompt_path: str
     repair_prompt_path: str
@@ -317,24 +319,6 @@ def build_llm(cfg: Config):
             kwargs["base_url"] = cfg.openai_base_url
         return ChatOpenAI(**kwargs)
 
-    if cfg.llm_backend == "local":
-        model_name_or_path = cfg.local_model_path if cfg.local_model_path else cfg.model
-
-        tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name_or_path,
-            torch_dtype="auto",
-            device_map="auto",
-        )
-
-        pipe = pipeline(
-            "text-generation",
-            model=model,
-            tokenizer=tokenizer,
-            max_new_tokens=cfg.local_max_new_tokens,
-        )
-        return HuggingFacePipeline(pipeline=pipe)
-
     raise ValueError(f"Unsupported LLM_BACKEND: {cfg.llm_backend}")
 
 
@@ -369,22 +353,6 @@ def validate_llm_ready(cfg: Config):
             )
         return
 
-    if cfg.llm_backend == "local":
-        model_name_or_path = cfg.local_model_path if cfg.local_model_path else cfg.model
-
-        # local path explicitly given -> must exist
-        if cfg.local_model_path:
-            if not Path(cfg.local_model_path).exists():
-                raise RuntimeError(f"Local model path not found: {cfg.local_model_path}")
-            return
-
-        # otherwise cfg.model may be HF repo id or a local relative path
-        if Path(model_name_or_path).exists():
-            return
-
-        # HF repo id case: existence check skipped here
-        return
-
     raise RuntimeError(f"Unsupported LLM_BACKEND: {cfg.llm_backend}")
 
 
@@ -417,18 +385,27 @@ def make_graph(cfg: Config, resources: RuntimeResources):
 
     def node_generate_sql(state: AgentState) -> Dict[str, Any]:
         msgs = build_generate_messages(state, resources)
+
+        t0 = time.perf_counter()
         ai = llm.invoke(msgs)
         sql = extract_sql(ai.content)
+        llm_time = time.perf_counter() - t0
 
         repeat_err = _check_repeat_sql(state, sql)
         if repeat_err:
-            return {"messages": [ai], "sql": sql, "error": repeat_err}
+            return {
+                "messages": [ai], 
+                "sql": sql, 
+                "error": repeat_err,
+                "llm_generate_time": llm_time,
+            }
 
         return {
             "messages": [ai],
             "sql": sql,
             "error": "",
             "seen_sql": state.get("seen_sql", []) + [sql],
+            "llm_generate_time": llm_time,
         }
 
     def node_safety_check(state: AgentState) -> Dict[str, Any]:
@@ -443,12 +420,15 @@ def make_graph(cfg: Config, resources: RuntimeResources):
     def node_execute_sql(state: AgentState) -> Dict[str, Any]:
         csv_path = state["csv_path"]
         try:
+            t0 = time.perf_counter()
             out = run_and_save_sqlite(
                 cfg.db_path,
                 state["sql"],
                 csv_path=csv_path,
                 max_rows=cfg.max_rows,
             )
+            exec_time = time.perf_counter() - t0
+
 
             if cfg.treat_refusal_result_as_error and looks_like_refusal_result(out):
                 return {
@@ -456,14 +436,19 @@ def make_graph(cfg: Config, resources: RuntimeResources):
                     "error": "Refusal-style result detected; must attempt a real computation/query."
                 }
 
-            return {"result": out, "error": ""}
+            return {"result": out, "error": "", "sql_exec_time": exec_time}
         except Exception as e:
-            return {"result": "", "error": f"{type(e).__name__}: {e}"}
+            return {"result": "", "error": f"{type(e).__name__}: {e}", "sql_exec_time": 0.0}
 
     def node_repair_sql(state: AgentState) -> Dict[str, Any]:
         msgs = build_repair_messages(state, resources)
+
+        t0 = time.perf_counter()
         ai = llm.invoke(msgs)
         fixed = extract_sql(ai.content)
+        repair_time = time.perf_counter() - t0
+
+        total_repair_time = state.get("llm_repair_time", 0.0) + repair_time
 
         repeat_err = _check_repeat_sql(state, fixed)
         if repeat_err:
@@ -472,6 +457,8 @@ def make_graph(cfg: Config, resources: RuntimeResources):
                 "sql": fixed,
                 "attempts": state["attempts"] + 1,
                 "error": repeat_err,
+                "llm_repair_time": total_repair_time,
+
             }
 
         return {
@@ -480,6 +467,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             "attempts": state["attempts"] + 1,
             "error": "",
             "seen_sql": state.get("seen_sql", []) + [fixed],
+            "llm_repair_time": total_repair_time,
         }
 
     def route_after_tick(state: AgentState) -> str:
@@ -584,9 +572,6 @@ def main():
         openai_api_key=env_str("OPENAI_API_KEY", ""),
         openai_base_url=env_str("OPENAI_BASE_URL", ""),
 
-        local_model_path=env_str("LOCAL_MODEL_PATH", ""),
-        local_max_new_tokens=env_int("LOCAL_MAX_NEW_TOKENS", 512),
-
         text2sql_prompt_path=env_str("TEXT2SQL_PROMPT_PATH", "prompts/system_text2sql.md"),
         repair_prompt_path=env_str("REPAIR_PROMPT_PATH", "prompts/system_repair.md"),
 
@@ -646,6 +631,10 @@ def main():
             "steps": 0,
             "seen_sql": [],
             "csv_path": csv_path,
+            # for debugging purpose ->
+            "llm_generate_time": 0.0,
+            "llm_repair_time": 0.0,
+            "sql_execute_time": 0.0,
         }
 
         final_state = graph.invoke(init_state)
@@ -683,6 +672,10 @@ def main():
                 f"steps={final_state.get('steps', 0)})"
             )
 
+        print("\n--- TIMING ---")
+        print(f"LLM generate time: {final_state.get('llm_generate_time', 0.0):.4f} sec")
+        print(f"LLM repair time:   {final_state.get('llm_repair_time', 0.0):.4f} sec")
+        print(f"SQL execute time:  {final_state.get('sql_execute_time', 0.0):.4f} sec")
         print("\n")
 
 
