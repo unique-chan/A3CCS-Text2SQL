@@ -73,6 +73,7 @@ def load_optional_text(path: str) -> str:
 def _connect_sqlite(db_path: str) -> sqlite3.Connection:
     conn = sqlite3.connect(db_path)
     conn.create_function("sqrt", 1, math.sqrt)
+    conn.create_function("pow", 1, math.pow)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -220,23 +221,8 @@ def parse_rewrite_intent_payload(text: str) -> Tuple[str, str]:
     return rewrite_mode, rewrite_guidance
 
 
-def looks_like_refusal_result(result_text: str) -> bool:
-    s = result_text.lower()
-    keywords = [
-        "not possible",
-        "cannot",
-        "insufficient",
-        "schema does not",
-        "not provided",
-        "unable to",
-        "can't",
-        "no information",
-    ]
-    return any(k in s for k in keywords)
-
-
 def is_rewrite_request(text: str) -> bool:
-    return text.strip().startswith("[재작성 요청]") or text.strip().startswith("[Rewrite]")
+    return text.strip().startswith("[재작성]") or text.strip().startswith("[Rewrite]")
 
 
 # =========================
@@ -298,7 +284,6 @@ class Config:
     max_rows: int
 
     block_non_readonly_sql: bool
-    treat_refusal_result_as_error: bool
 
     output_dir: str
 
@@ -375,7 +360,7 @@ def build_rewrite_reflection_messages(state: AgentState, resources: RuntimeResou
         SystemMessage(f"OPTIONAL_USER_GUIDANCE:\n{state.get('rewrite_guidance', '') or '(none)'}"),
     ]
     msgs.extend(maybe_instruction_messages(state.get("instruction", "")))
-    msgs.append(HumanMessage(state.get("rewrite_request", "[재작성 요청]")))
+    msgs.append(HumanMessage(state.get("rewrite_request", "[재작성]")))
     return msgs
 
 
@@ -593,13 +578,6 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             )
             exec_time = time.perf_counter() - t0
 
-            if cfg.treat_refusal_result_as_error and looks_like_refusal_result(out):
-                return {
-                    "result": out,
-                    "error": "Refusal-style result detected; must attempt a real computation/query.",
-                    "sql_execute_time": exec_time,
-                }
-
             return {"result": out, "error": "", "sql_execute_time": exec_time}
         except Exception as e:
             return {"result": "", "error": f"{type(e).__name__}: {e}", "sql_execute_time": 0.0}
@@ -802,7 +780,6 @@ def main():
         max_same_sql_repeats=env_int("MAX_SAME_SQL_REPEATS", 1),
         max_rows=env_int("MAX_ROWS", 50),
         block_non_readonly_sql=env_bool("BLOCK_NON_READONLY_SQL", True),
-        treat_refusal_result_as_error=env_bool("TREAT_REFUSAL_RESULT_AS_ERROR", True),
         output_dir=env_str("OUT_DIR", "results"),
     )
 
@@ -825,9 +802,9 @@ def main():
     )
     print("⚡Type 'exit' to quit.")
     print("⚡Rewrite commands:")
-    print("  e.g. (1) '[재작성 요청]' -> autonomous rewrite")
+    print("  e.g. (1) '[재작성]' -> autonomous rewrite")
     print("           '[Rewrite]' -> autonomous rewrite")
-    print("  e.g. (2) '[재작성 요청] 최신 1건만 보여줘!' -> guided rewrite")
+    print("  e.g. (2) '[재작성] 최신 1건만 보여줘!' -> guided rewrite")
     print("           '[Rewrite] Show the recent 1 case only!' -> guided rewrite")
     print()
 
