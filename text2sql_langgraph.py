@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import os
 import re
 import csv
 import json
+import math
 import sqlite3
 import requests
 import time
@@ -13,7 +16,6 @@ from pathlib import Path
 from typing import Annotated, Any, Dict, List, Optional, Tuple
 from typing_extensions import TypedDict
 from dotenv import load_dotenv
-import math
 
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import AnyMessage, HumanMessage, SystemMessage
@@ -73,7 +75,7 @@ def load_optional_text(path: str) -> str:
 def _connect_sqlite(db_path: str) -> sqlite3.Connection:
     conn = sqlite3.connect(db_path)
     conn.create_function("sqrt", 1, math.sqrt)
-    conn.create_function("pow", 1, math.pow)
+    conn.create_function("pow", 2, math.pow)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -104,6 +106,21 @@ def get_schema_sqlite(db_path: str) -> str:
         conn.close()
 
 
+def get_schema_sqlite_cached(db_path: str, resources: "RuntimeResources") -> str:
+    db_file = Path(db_path)
+    if not db_file.exists():
+        raise FileNotFoundError(f"SQLite DB not found: {db_path}")
+
+    db_mtime = db_file.stat().st_mtime
+    if resources.cached_schema and resources.cached_schema_mtime == db_mtime:
+        return resources.cached_schema
+
+    schema = get_schema_sqlite(str(db_file))
+    resources.cached_schema = schema
+    resources.cached_schema_mtime = db_mtime
+    return schema
+
+
 def normalize_sql(s: str) -> str:
     s = s.strip().lower()
     s = re.sub(r"^\s*(--.*\n|/\*.*?\*/\s*)*", "", s, flags=re.S)
@@ -112,44 +129,47 @@ def normalize_sql(s: str) -> str:
     return s.strip()
 
 
-def is_safe_sql(sql: str, db_language='sqlite') -> bool:
+def validate_safe_sql(sql: str, db_language: str = "sqlite") -> Tuple[bool, str]:
     sql = normalize_sql(sql)
     try:
         parsed = sqlglot.parse(sql, read=db_language)
     except Exception as e:
-        print(f"[ERROR] SQL parse error: {e}")
-        return False
+        return False, f"SQL parse error: {e}"
 
     if len(parsed) != 1:
-        print("[ERROR] Multiple SQL statements are not allowed.")
-        return False
+        return False, "Multiple SQL statements are not allowed."
 
     stmt = parsed[0]
-
-    # Allow only SELECT or UNION-style query expressions
     allowed = (
         exp.Select,
         exp.Union,
         exp.Except,
         exp.Intersect,
-        exp.With,
     )
     if not isinstance(stmt, allowed):
-        print(f"[ERROR] Only read-only query expressions are allowed. Got: {type(stmt).__name__}")
-        return False
+        return False, f"Only read-only query expressions are allowed. Got: {type(stmt).__name__}"
 
-    # Reject dangerous nodes anywhere in AST
     dangerous_nodes = (
-        exp.Insert, exp.Update, exp.Delete, exp.Drop, exp.Alter,
-        exp.Create, exp.Command, exp.Transaction,
+        exp.Insert,
+        exp.Update,
+        exp.Delete,
+        exp.Drop,
+        exp.Alter,
+        exp.Create,
+        exp.Command,
+        exp.Transaction,
+        exp.Merge,
     )
     for node in stmt.walk():
         if isinstance(node, dangerous_nodes):
-            print(f"[ERROR] Dangerous SQL node detected: {type(node).__name__}")
-            return False
+            return False, f"Dangerous SQL node detected: {type(node).__name__}"
 
-    return True
-    # return sql.startswith("select") or sql.startswith("with")
+    return True, ""
+
+
+def is_safe_sql(sql: str, db_language: str = "sqlite") -> bool:
+    ok, _ = validate_safe_sql(sql, db_language=db_language)
+    return ok
 
 
 def run_and_save_sqlite(
@@ -256,8 +276,41 @@ def parse_rewrite_intent_payload(text: str) -> Tuple[str, str]:
     return rewrite_mode, rewrite_guidance
 
 
+def parse_semantic_verdict_payload(text: str) -> Tuple[str, str]:
+    raw = extract_json_block(text)
+    data = json.loads(raw)
+    verdict = str(data.get("verdict", "")).strip().upper()
+    reason = str(data.get("reason", "")).strip()
+    if verdict not in {"PASS", "FAIL"}:
+        raise ValueError(f"Invalid verdict: {verdict}")
+    return verdict, reason
+
+
 def is_rewrite_request(text: str) -> bool:
     return text.strip().startswith("[재작성]") or text.strip().startswith("[Rewrite]")
+
+
+def detect_result_quality_issue(question: str, sql: str, result: str) -> str:
+    q = question.lower()
+    s = sql.lower()
+    r = result.lower()
+
+    if r.startswith("error:"):
+        return ""
+
+    if "(0 rows)" in result and any(k in q for k in ["latest", "recent", "최신", "최근", "현재"]):
+        return "The query returned 0 rows for a latest/current request. Re-check time anchoring or filtering."
+
+    if any(k in q for k in ["count", "개수", "몇 개", "총 수", "합계", "total number"]) and "count(" not in s:
+        return "The question appears to require counting or aggregation, but the SQL does not use COUNT()."
+
+    if any(k in q for k in ["평균", "average", "avg"]) and "avg(" not in s:
+        return "The question appears to require an average, but the SQL does not use AVG()."
+
+    if any(k in q for k in ["최대", "가장 큰", "max", "top", "상위"]) and "max(" not in s and "order by" not in s:
+        return "The question appears to require top/max logic, but the SQL lacks MAX() or ORDER BY ranking logic."
+
+    return ""
 
 
 # =========================
@@ -271,6 +324,7 @@ class AgentState(TypedDict):
     sql: str
     result: str
     error: str
+    semantic_error: str
     attempts: int
     steps: int
     seen_sql: List[str]
@@ -278,6 +332,8 @@ class AgentState(TypedDict):
     llm_generate_time: float
     llm_repair_time: float
     sql_execute_time: float
+    semantic_check_time: float
+    llm_semantic_repair_time: float
 
     rewrite_mode: str
     rewrite_request: str
@@ -308,6 +364,8 @@ class Config:
 
     text2sql_prompt_path: str
     repair_prompt_path: str
+    semantic_check_prompt_path: str
+    semantic_repair_prompt_path: str
     rewrite_intent_prompt_path: str
     rewrite_reflect_prompt_path: str
     rewrite_sql_prompt_path: str
@@ -319,6 +377,7 @@ class Config:
     max_rows: int
 
     block_non_readonly_sql: bool
+    enable_semantic_check: bool
 
     output_dir: str
 
@@ -328,10 +387,15 @@ class RuntimeResources:
     schema_instruction: str
     system_text2sql: str
     system_repair: str
+    system_semantic_check: str
+    system_semantic_repair: str
     system_rewrite_intent: str
     system_rewrite_reflect: str
     system_rewrite_sql: str
     cheat_sheet_general: str
+    cached_schema: str = ""
+    cached_schema_mtime: float = -1.0
+
 
 # =========================
 # Prompt / message helpers
@@ -341,6 +405,8 @@ def load_runtime_resources(cfg: Config) -> RuntimeResources:
         schema_instruction=load_optional_text(cfg.schema_instruction_path),
         system_text2sql=load_required_text(cfg.text2sql_prompt_path),
         system_repair=load_required_text(cfg.repair_prompt_path),
+        system_semantic_check=load_required_text(cfg.semantic_check_prompt_path),
+        system_semantic_repair=load_required_text(cfg.semantic_repair_prompt_path),
         system_rewrite_intent=load_required_text(cfg.rewrite_intent_prompt_path),
         system_rewrite_reflect=load_required_text(cfg.rewrite_reflect_prompt_path),
         system_rewrite_sql=load_required_text(cfg.rewrite_sql_prompt_path),
@@ -348,10 +414,10 @@ def load_runtime_resources(cfg: Config) -> RuntimeResources:
     )
 
 
-def schema_schema_instruction_message(schema_instruction: str) -> List[AnyMessage]:
+def schema_instruction_message(schema_instruction: str) -> List[AnyMessage]:
     if not schema_instruction:
         return []
-    return [SystemMessage(f"INSTRUCTION:\n{schema_instruction}")]
+    return [SystemMessage(f"SCHEMA_INSTRUCTION:\n{schema_instruction}")]
 
 
 def build_generate_messages(state: AgentState, resources: RuntimeResources) -> List[AnyMessage]:
@@ -359,7 +425,7 @@ def build_generate_messages(state: AgentState, resources: RuntimeResources) -> L
         SystemMessage(resources.system_text2sql),
         SystemMessage(f"SCHEMA:\n{state['schema']}"),
     ]
-    msgs.extend(schema_schema_instruction_message(state.get("schema_instruction", "")))
+    msgs.extend(schema_instruction_message(state.get("schema_instruction", "")))
     msgs.append(HumanMessage(state["question"]))
     return msgs
 
@@ -371,8 +437,41 @@ def build_repair_messages(state: AgentState, resources: RuntimeResources) -> Lis
         SystemMessage(f"USER_QUESTION:\n{state['question']}"),
         SystemMessage(f"PREVIOUS_SQL:\n{state['sql']}"),
         SystemMessage(f"ERROR:\n{state['error']}"),
+        SystemMessage(
+            "SQL_CHEAT_SHEET_EXAMPLES:\n"
+            + (state.get("cheat_sheet_general", "") or resources.cheat_sheet_general or "(empty)")
+        ),
     ]
-    msgs.extend(schema_schema_instruction_message(state.get("schema_instruction", "")))
+    msgs.extend(schema_instruction_message(state.get("schema_instruction", "")))
+    return msgs
+
+
+def build_semantic_check_messages(state: AgentState, resources: RuntimeResources) -> List[AnyMessage]:
+    msgs: List[AnyMessage] = [
+        SystemMessage(resources.system_semantic_check),
+        SystemMessage(f"SCHEMA:\n{state['schema']}"),
+        SystemMessage(f"USER_QUESTION:\n{state['previous_question'] or state['question']}"),
+        SystemMessage(f"SQL:\n{state['sql']}"),
+        SystemMessage(f"RESULT:\n{state['result']}"),
+    ]
+    msgs.extend(schema_instruction_message(state.get("schema_instruction", "")))
+    return msgs
+
+
+def build_semantic_repair_messages(state: AgentState, resources: RuntimeResources) -> List[AnyMessage]:
+    msgs: List[AnyMessage] = [
+        SystemMessage(resources.system_semantic_repair),
+        SystemMessage(f"SCHEMA:\n{state['schema']}"),
+        SystemMessage(f"USER_QUESTION:\n{state['previous_question'] or state['question']}"),
+        SystemMessage(f"PREVIOUS_SQL:\n{state['sql']}"),
+        SystemMessage(f"PREVIOUS_RESULT:\n{state['result']}"),
+        SystemMessage(f"SEMANTIC_ERROR:\n{state.get('semantic_error', '')}"),
+        SystemMessage(
+            "SQL_CHEAT_SHEET_EXAMPLES:\n"
+            + (state.get("cheat_sheet_general", "") or resources.cheat_sheet_general or "(empty)")
+        ),
+    ]
+    msgs.extend(schema_instruction_message(state.get("schema_instruction", "")))
     return msgs
 
 
@@ -393,7 +492,7 @@ def build_rewrite_reflection_messages(state: AgentState, resources: RuntimeResou
         SystemMessage(f"REWRITE_MODE:\n{state.get('rewrite_mode', '')}"),
         SystemMessage(f"OPTIONAL_USER_GUIDANCE:\n{state.get('rewrite_guidance', '') or '(none)'}"),
     ]
-    msgs.extend(schema_schema_instruction_message(state.get("schema_instruction", "")))
+    msgs.extend(schema_instruction_message(state.get("schema_instruction", "")))
     msgs.append(HumanMessage(state.get("rewrite_request", "[재작성]")))
     return msgs
 
@@ -413,7 +512,7 @@ def build_rewrite_sql_messages(state: AgentState, resources: RuntimeResources) -
             + (state.get("cheat_sheet_general", "") or resources.cheat_sheet_general or "(empty)")
         ),
     ]
-    msgs.extend(schema_schema_instruction_message(state.get("schema_instruction", "")))
+    msgs.extend(schema_instruction_message(state.get("schema_instruction", "")))
     msgs.append(HumanMessage("Rewrite the SQL now."))
     return msgs
 
@@ -439,6 +538,8 @@ def build_llm(cfg: Config):
 def validate_text_resources(cfg: Config):
     load_required_text(cfg.text2sql_prompt_path)
     load_required_text(cfg.repair_prompt_path)
+    load_required_text(cfg.semantic_check_prompt_path)
+    load_required_text(cfg.semantic_repair_prompt_path)
     load_required_text(cfg.rewrite_intent_prompt_path)
     load_required_text(cfg.rewrite_reflect_prompt_path)
     load_required_text(cfg.rewrite_sql_prompt_path)
@@ -487,7 +588,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         return {"steps": steps}
 
     def node_prepare_context(state: AgentState) -> Dict[str, Any]:
-        schema = get_schema_sqlite(cfg.db_path)
+        schema = state.get("schema") or get_schema_sqlite_cached(cfg.db_path, resources)
         return {
             "schema": schema,
             "schema_instruction": resources.schema_instruction,
@@ -516,6 +617,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
                 "messages": [ai],
                 "sql": sql,
                 "error": repeat_err,
+                "semantic_error": "",
                 "llm_generate_time": llm_time,
             }
 
@@ -523,6 +625,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             "messages": [ai],
             "sql": sql,
             "error": "",
+            "semantic_error": "",
             "seen_sql": state.get("seen_sql", []) + [sql],
             "llm_generate_time": llm_time,
         }
@@ -546,8 +649,8 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             "rewrite_guidance": rewrite_guidance,
             "rewrite_intent_time": intent_time,
             "error": "",
+            "semantic_error": "",
         }
-
 
     def node_rewrite_reflect(state: AgentState) -> Dict[str, Any]:
         msgs = build_rewrite_reflection_messages(state, resources)
@@ -563,6 +666,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             "rewrite_attempts": state.get("rewrite_attempts", 0) + 1,
             "rewrite_reflection_time": state.get("rewrite_reflection_time", 0.0) + reflection_time,
             "error": "",
+            "semantic_error": "",
         }
 
     def node_rewrite_sql(state: AgentState) -> Dict[str, Any]:
@@ -580,6 +684,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
                 "messages": [ai],
                 "sql": sql,
                 "error": repeat_err,
+                "semantic_error": "",
                 "llm_rewrite_time": total_rewrite_time,
             }
 
@@ -587,6 +692,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             "messages": [ai],
             "sql": sql,
             "error": "",
+            "semantic_error": "",
             "seen_sql": state.get("seen_sql", []) + [sql],
             "llm_rewrite_time": total_rewrite_time,
         }
@@ -595,10 +701,12 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         if state.get("error") and "Step limit exceeded" in state["error"]:
             return {}
 
-        if cfg.block_non_readonly_sql and not is_safe_sql(state["sql"]):
-            return {"error": "Blocked non-read-only SQL. Only SELECT/WITH are allowed."}
+        if cfg.block_non_readonly_sql:
+            ok, reason = validate_safe_sql(state["sql"])
+            if not ok:
+                return {"error": f"Blocked unsafe SQL: {reason}", "semantic_error": ""}
 
-        return {"error": ""}
+        return {"error": "", "semantic_error": ""}
 
     def node_execute_sql(state: AgentState) -> Dict[str, Any]:
         csv_path = state["csv_path"]
@@ -612,9 +720,73 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             )
             exec_time = time.perf_counter() - t0
 
-            return {"result": out, "error": "", "sql_execute_time": exec_time}
+            if out.startswith("Error:"):
+                return {"result": "", "error": out, "semantic_error": "", "sql_execute_time": exec_time}
+
+            return {"result": out, "error": "", "semantic_error": "", "sql_execute_time": exec_time}
         except Exception as e:
-            return {"result": "", "error": f"{type(e).__name__}: {e}", "sql_execute_time": 0.0}
+            return {"result": "", "error": f"{type(e).__name__}: {e}", "semantic_error": "", "sql_execute_time": 0.0}
+
+    def node_semantic_check(state: AgentState) -> Dict[str, Any]:
+        heuristic_reason = detect_result_quality_issue(
+            state.get("previous_question") or state["question"],
+            state["sql"],
+            state.get("result", ""),
+        )
+        if heuristic_reason:
+            return {
+                "semantic_error": heuristic_reason,
+                "semantic_check_time": state.get("semantic_check_time", 0.0),
+            }
+
+        msgs = build_semantic_check_messages(state, resources)
+        t0 = time.perf_counter()
+        ai = llm.invoke(msgs)
+        dt = time.perf_counter() - t0
+
+        try:
+            verdict, reason = parse_semantic_verdict_payload(ai.content)
+        except Exception:
+            return {
+                "messages": [ai],
+                "semantic_error": "",
+                "semantic_check_time": state.get("semantic_check_time", 0.0) + dt,
+            }
+
+        return {
+            "messages": [ai],
+            "semantic_error": "" if verdict == "PASS" else (reason or "Semantic mismatch detected."),
+            "semantic_check_time": state.get("semantic_check_time", 0.0) + dt,
+        }
+
+    def node_semantic_repair_sql(state: AgentState) -> Dict[str, Any]:
+        msgs = build_semantic_repair_messages(state, resources)
+
+        t0 = time.perf_counter()
+        ai = llm.invoke(msgs)
+        fixed = extract_sql(ai.content)
+        repair_time = time.perf_counter() - t0
+
+        total_repair_time = state.get("llm_semantic_repair_time", 0.0) + repair_time
+        repeat_err = _check_repeat_sql(state, fixed)
+        if repeat_err:
+            return {
+                "messages": [ai],
+                "sql": fixed,
+                "attempts": state["attempts"] + 1,
+                "error": repeat_err,
+                "llm_semantic_repair_time": total_repair_time,
+            }
+
+        return {
+            "messages": [ai],
+            "sql": fixed,
+            "attempts": state["attempts"] + 1,
+            "error": "",
+            "semantic_error": "",
+            "seen_sql": state.get("seen_sql", []) + [fixed],
+            "llm_semantic_repair_time": total_repair_time,
+        }
 
     def node_repair_sql(state: AgentState) -> Dict[str, Any]:
         msgs = build_repair_messages(state, resources)
@@ -633,6 +805,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
                 "sql": fixed,
                 "attempts": state["attempts"] + 1,
                 "error": repeat_err,
+                "semantic_error": "",
                 "llm_repair_time": total_repair_time,
             }
 
@@ -641,6 +814,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             "sql": fixed,
             "attempts": state["attempts"] + 1,
             "error": "",
+            "semantic_error": "",
             "seen_sql": state.get("seen_sql", []) + [fixed],
             "llm_repair_time": total_repair_time,
         }
@@ -659,11 +833,26 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         return "repair_sql" if state.get("error") else "execute_sql"
 
     def route_after_execute(state: AgentState) -> str:
-        if not state.get("error"):
-            return END
-        if state["attempts"] >= cfg.max_repair_attempts:
-            return END
-        return "repair_sql"
+        if state.get("error"):
+            if state["attempts"] >= cfg.max_repair_attempts:
+                return END
+            return "repair_sql"
+        if cfg.enable_semantic_check:
+            return "semantic_check"
+        return END
+
+    def route_after_semantic_check(state: AgentState) -> str:
+        if state.get("error"):
+            if state["attempts"] >= cfg.max_repair_attempts:
+                return END
+            return "repair_sql"
+
+        if state.get("semantic_error"):
+            if state["attempts"] >= cfg.max_repair_attempts:
+                return END
+            return "semantic_repair_sql"
+
+        return END
 
     g = StateGraph(AgentState)
 
@@ -675,6 +864,8 @@ def make_graph(cfg: Config, resources: RuntimeResources):
     g.add_node("rewrite_sql", node_rewrite_sql)
     g.add_node("safety_check", node_safety_check)
     g.add_node("execute_sql", node_execute_sql)
+    g.add_node("semantic_check", node_semantic_check)
+    g.add_node("semantic_repair_sql", node_semantic_repair_sql)
     g.add_node("repair_sql", node_repair_sql)
 
     g.add_edge(START, "tick")
@@ -712,12 +903,24 @@ def make_graph(cfg: Config, resources: RuntimeResources):
     )
 
     g.add_edge("repair_sql", "tick")
+    g.add_edge("semantic_repair_sql", "tick")
 
     g.add_conditional_edges(
         "execute_sql",
         route_after_execute,
         {
             "repair_sql": "repair_sql",
+            "semantic_check": "semantic_check",
+            END: END,
+        },
+    )
+
+    g.add_conditional_edges(
+        "semantic_check",
+        route_after_semantic_check,
+        {
+            "repair_sql": "repair_sql",
+            "semantic_repair_sql": "semantic_repair_sql",
             END: END,
         },
     )
@@ -751,6 +954,7 @@ def make_empty_state(question: str, csv_path: Path) -> AgentState:
         "sql": "",
         "result": "",
         "error": "",
+        "semantic_error": "",
         "attempts": 0,
         "steps": 0,
         "seen_sql": [],
@@ -758,6 +962,8 @@ def make_empty_state(question: str, csv_path: Path) -> AgentState:
         "llm_generate_time": 0.0,
         "llm_repair_time": 0.0,
         "sql_execute_time": 0.0,
+        "semantic_check_time": 0.0,
+        "llm_semantic_repair_time": 0.0,
         "rewrite_mode": "",
         "rewrite_request": "",
         "rewrite_guidance": "",
@@ -797,6 +1003,12 @@ def main():
         openai_base_url=env_str("OPENAI_BASE_URL", ""),
         text2sql_prompt_path=env_str("TEXT2SQL_PROMPT_PATH", "text2sql_prompts/system_text2sql.md"),
         repair_prompt_path=env_str("REPAIR_PROMPT_PATH", "text2sql_prompts/system_repair.md"),
+        semantic_check_prompt_path=env_str(
+            "SEMANTIC_CHECK_PROMPT_PATH", "text2sql_prompts/system_semantic_check.md"
+        ),
+        semantic_repair_prompt_path=env_str(
+            "SEMANTIC_REPAIR_PROMPT_PATH", "text2sql_prompts/system_semantic_repair.md"
+        ),
         rewrite_intent_prompt_path=env_str(
             "REWRITE_INTENT_PROMPT_PATH", "text2sql_prompts/system_rewrite_intent.md"
         ),
@@ -814,6 +1026,7 @@ def main():
         max_same_sql_repeats=env_int("MAX_SAME_SQL_REPEATS", 1),
         max_rows=env_int("MAX_ROWS", 50),
         block_non_readonly_sql=env_bool("BLOCK_NON_READONLY_SQL", True),
+        enable_semantic_check=env_bool("ENABLE_SEMANTIC_CHECK", True),
         output_dir=env_str("OUT_DIR", "results"),
     )
 
@@ -830,10 +1043,11 @@ def main():
     print(f"⚡LLM backend: {cfg.llm_backend}")
     print(f"⚡Model: {cfg.model}")
     print(
-        f"Limits: MAX_REPAIR_ATTEMPTS={cfg.max_repair_attempts}, "
+        f"⚡Limits: MAX_REPAIR_ATTEMPTS={cfg.max_repair_attempts}, "
         f"MAX_STEPS={cfg.max_steps}, "
         f"MAX_SAME_SQL_REPEATS={cfg.max_same_sql_repeats}"
     )
+    print(f"⚡Semantic check enabled: {cfg.enable_semantic_check}")
     print("⚡Type 'exit' to quit.")
     print("⚡Rewrite commands:")
     print("  e.g. (1) '[재작성]' -> autonomous rewrite")
@@ -885,21 +1099,9 @@ def main():
                 "rewrite_mode": final_state.get("rewrite_mode", "") or "normal",
                 "rewrite_guidance": final_state.get("rewrite_guidance", ""),
                 "reflection": final_state.get("reflection", ""),
+                "semantic_error": final_state.get("semantic_error", ""),
             },
         )
-
-        if sql_text:
-            try:
-                run_and_save_sqlite(
-                    cfg.db_path,
-                    sql_text,
-                    csv_path,
-                    max_rows=cfg.max_rows,
-                )
-            except Exception as e:
-                final_state["error"] = (
-                    final_state.get("error", "") + f"\n[csv save error] {e}"
-                ).strip()
 
         last_run = {
             "question": final_state.get("question", q),
@@ -925,6 +1127,10 @@ def main():
         else:
             print("(no result)")
 
+        if final_state.get("semantic_error"):
+            print("\n--- SEMANTIC ERROR ---")
+            print(final_state["semantic_error"])
+
         if final_state.get("error"):
             print("\n--- ERROR ---")
             print(final_state["error"])
@@ -935,12 +1141,14 @@ def main():
             )
 
         print("\n--- TIMING ---")
-        print(f"LLM generate time:   {final_state.get('llm_generate_time', 0.0):.4f} sec")
-        print(f"LLM intent time:     {final_state.get('rewrite_intent_time', 0.0):.4f} sec")
-        print(f"LLM reflection time: {final_state.get('rewrite_reflection_time', 0.0):.4f} sec")
-        print(f"LLM rewrite time:    {final_state.get('llm_rewrite_time', 0.0):.4f} sec")
-        print(f"LLM repair time:     {final_state.get('llm_repair_time', 0.0):.4f} sec")
-        print(f"SQL execute time:    {final_state.get('sql_execute_time', 0.0):.4f} sec")
+        print(f"LLM generate time:         {final_state.get('llm_generate_time', 0.0):.4f} sec")
+        print(f"LLM intent time:           {final_state.get('rewrite_intent_time', 0.0):.4f} sec")
+        print(f"LLM reflection time:       {final_state.get('rewrite_reflection_time', 0.0):.4f} sec")
+        print(f"LLM rewrite time:          {final_state.get('llm_rewrite_time', 0.0):.4f} sec")
+        print(f"LLM repair time:           {final_state.get('llm_repair_time', 0.0):.4f} sec")
+        print(f"LLM semantic check time:   {final_state.get('semantic_check_time', 0.0):.4f} sec")
+        print(f"LLM semantic repair time:  {final_state.get('llm_semantic_repair_time', 0.0):.4f} sec")
+        print(f"SQL execute time:          {final_state.get('sql_execute_time', 0.0):.4f} sec")
         print()
 
 
