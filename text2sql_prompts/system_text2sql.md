@@ -23,3 +23,4 @@ if division by zero may occur, include appropriate safeguards such as NULLIF() o
   - For each friendly and enemy group, select one row whose datetime is closest to this reference time. 
   - Then compute the Euclidean distance using the selected coordinates (x-, y-, z- axis) (If z-axis is unavailable, use only x-, y- values). 
   - The result should also include the actual timestamp selected for each group.
+- DO NOT USE "LIMIT" when users do not request! show all results!!!

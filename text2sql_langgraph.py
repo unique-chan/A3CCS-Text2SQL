@@ -12,13 +12,13 @@ from operator import add
 from pathlib import Path
 from typing import Annotated, Any, Dict, List, Optional, Tuple
 from typing_extensions import TypedDict
-
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
-from langchain_core.messages import AnyMessage, HumanMessage, SystemMessage
-
 import math
 
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import AnyMessage, HumanMessage, SystemMessage
+import sqlglot
+from sqlglot import exp
 from langgraph.graph import StateGraph, START, END
 
 
@@ -112,9 +112,44 @@ def normalize_sql(s: str) -> str:
     return s.strip()
 
 
-def is_safe_sql(sql: str) -> bool:
-    s = normalize_sql(sql)
-    return s.startswith("select") or s.startswith("with")
+def is_safe_sql(sql: str, db_language='sqlite') -> bool:
+    sql = normalize_sql(sql)
+    try:
+        parsed = sqlglot.parse(sql, read=db_language)
+    except Exception as e:
+        print(f"[ERROR] SQL parse error: {e}")
+        return False
+
+    if len(parsed) != 1:
+        print("[ERROR] Multiple SQL statements are not allowed.")
+        return False
+
+    stmt = parsed[0]
+
+    # Allow only SELECT or UNION-style query expressions
+    allowed = (
+        exp.Select,
+        exp.Union,
+        exp.Except,
+        exp.Intersect,
+        exp.With,
+    )
+    if not isinstance(stmt, allowed):
+        print(f"[ERROR] Only read-only query expressions are allowed. Got: {type(stmt).__name__}")
+        return False
+
+    # Reject dangerous nodes anywhere in AST
+    dangerous_nodes = (
+        exp.Insert, exp.Update, exp.Delete, exp.Drop, exp.Alter,
+        exp.Create, exp.Command, exp.Transaction,
+    )
+    for node in stmt.walk():
+        if isinstance(node, dangerous_nodes):
+            print(f"[ERROR] Dangerous SQL node detected: {type(node).__name__}")
+            return False
+
+    return True
+    # return sql.startswith("select") or sql.startswith("with")
 
 
 def run_and_save_sqlite(
@@ -232,7 +267,7 @@ class AgentState(TypedDict):
     messages: Annotated[List[AnyMessage], add]
     question: str
     schema: str
-    instruction: str
+    schema_instruction: str
     sql: str
     result: str
     error: str
@@ -261,7 +296,7 @@ class AgentState(TypedDict):
 @dataclass
 class Config:
     db_path: str
-    instruction_path: str
+    schema_instruction_path: str
 
     llm_backend: str
 
@@ -290,7 +325,7 @@ class Config:
 
 @dataclass
 class RuntimeResources:
-    instruction: str
+    schema_instruction: str
     system_text2sql: str
     system_repair: str
     system_rewrite_intent: str
@@ -298,13 +333,12 @@ class RuntimeResources:
     system_rewrite_sql: str
     cheat_sheet_general: str
 
-
 # =========================
 # Prompt / message helpers
 # =========================
 def load_runtime_resources(cfg: Config) -> RuntimeResources:
     return RuntimeResources(
-        instruction=load_optional_text(cfg.instruction_path),
+        schema_instruction=load_optional_text(cfg.schema_instruction_path),
         system_text2sql=load_required_text(cfg.text2sql_prompt_path),
         system_repair=load_required_text(cfg.repair_prompt_path),
         system_rewrite_intent=load_required_text(cfg.rewrite_intent_prompt_path),
@@ -314,10 +348,10 @@ def load_runtime_resources(cfg: Config) -> RuntimeResources:
     )
 
 
-def maybe_instruction_messages(instruction: str) -> List[AnyMessage]:
-    if not instruction:
+def schema_schema_instruction_message(schema_instruction: str) -> List[AnyMessage]:
+    if not schema_instruction:
         return []
-    return [SystemMessage(f"INSTRUCTION:\n{instruction}")]
+    return [SystemMessage(f"INSTRUCTION:\n{schema_instruction}")]
 
 
 def build_generate_messages(state: AgentState, resources: RuntimeResources) -> List[AnyMessage]:
@@ -325,7 +359,7 @@ def build_generate_messages(state: AgentState, resources: RuntimeResources) -> L
         SystemMessage(resources.system_text2sql),
         SystemMessage(f"SCHEMA:\n{state['schema']}"),
     ]
-    msgs.extend(maybe_instruction_messages(state.get("instruction", "")))
+    msgs.extend(schema_schema_instruction_message(state.get("schema_instruction", "")))
     msgs.append(HumanMessage(state["question"]))
     return msgs
 
@@ -338,7 +372,7 @@ def build_repair_messages(state: AgentState, resources: RuntimeResources) -> Lis
         SystemMessage(f"PREVIOUS_SQL:\n{state['sql']}"),
         SystemMessage(f"ERROR:\n{state['error']}"),
     ]
-    msgs.extend(maybe_instruction_messages(state.get("instruction", "")))
+    msgs.extend(schema_schema_instruction_message(state.get("schema_instruction", "")))
     return msgs
 
 
@@ -359,7 +393,7 @@ def build_rewrite_reflection_messages(state: AgentState, resources: RuntimeResou
         SystemMessage(f"REWRITE_MODE:\n{state.get('rewrite_mode', '')}"),
         SystemMessage(f"OPTIONAL_USER_GUIDANCE:\n{state.get('rewrite_guidance', '') or '(none)'}"),
     ]
-    msgs.extend(maybe_instruction_messages(state.get("instruction", "")))
+    msgs.extend(schema_schema_instruction_message(state.get("schema_instruction", "")))
     msgs.append(HumanMessage(state.get("rewrite_request", "[재작성]")))
     return msgs
 
@@ -379,7 +413,7 @@ def build_rewrite_sql_messages(state: AgentState, resources: RuntimeResources) -
             + (state.get("cheat_sheet_general", "") or resources.cheat_sheet_general or "(empty)")
         ),
     ]
-    msgs.extend(maybe_instruction_messages(state.get("instruction", "")))
+    msgs.extend(schema_schema_instruction_message(state.get("schema_instruction", "")))
     msgs.append(HumanMessage("Rewrite the SQL now."))
     return msgs
 
@@ -408,7 +442,7 @@ def validate_text_resources(cfg: Config):
     load_required_text(cfg.rewrite_intent_prompt_path)
     load_required_text(cfg.rewrite_reflect_prompt_path)
     load_required_text(cfg.rewrite_sql_prompt_path)
-    load_optional_text(cfg.instruction_path)
+    load_optional_text(cfg.schema_instruction_path)
     load_optional_text(cfg.sql_cheat_general_path)
 
 
@@ -456,7 +490,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         schema = get_schema_sqlite(cfg.db_path)
         return {
             "schema": schema,
-            "instruction": resources.instruction,
+            "schema_instruction": resources.schema_instruction,
             "cheat_sheet_general": resources.cheat_sheet_general,
         }
 
@@ -713,7 +747,7 @@ def make_empty_state(question: str, csv_path: Path) -> AgentState:
         "messages": [],
         "question": question,
         "schema": "",
-        "instruction": "",
+        "schema_instruction": "",
         "sql": "",
         "result": "",
         "error": "",
@@ -755,7 +789,7 @@ def main():
 
     cfg = Config(
         db_path=db_path,
-        instruction_path=env_str("INSTRUCTION_PATH", "INSTRUCTION.md"),
+        schema_instruction_path=env_str("SCHEMA_INSTRUCTION_PATH", "text2sql_prompts/schema_instruction_main.md"),
         llm_backend=env_str("LLM_BACKEND", "openai"),
         model=env_str("OPENAI_MODEL", "gpt-4.1-mini"),
         temperature=env_float("OPENAI_TEMPERATURE", 0.0),
