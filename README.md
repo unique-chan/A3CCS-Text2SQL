@@ -41,7 +41,7 @@
   python test_dump_arma.py
   ~~~
 
-### Key Function
+### Key: How to use in my code?
 
   ~~~python
   from text2sql_langgraph import run_text2sql_query
