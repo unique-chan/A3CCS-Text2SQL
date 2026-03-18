@@ -41,7 +41,19 @@
   python test_dump_arma.py
   ~~~
 
-### Test 
+### Key Function
+
+  ~~~python
+  from text2sql_langgraph import run_text2sql_query
+  resp = run_text2sql_query('현재 아군과 적군 사이 최단 거리 유닛 리스트 top-10을 열거해라!')
+  if resp['ok']:
+    print(resp['result'])
+  else:
+    print(resp['error'])
+  ~~~
+
+
+### Test (Demo)
 
 - Remote LLM PC (Note: we use GPT OSS 20B)
   ~~~shell

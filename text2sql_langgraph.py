@@ -397,6 +397,13 @@ class RuntimeResources:
     cached_schema_mtime: float = -1.0
 
 
+@dataclass
+class Text2SQLRuntime:
+    cfg: Config
+    resources: RuntimeResources
+    graph: Any
+
+
 # =========================
 # Prompt / message helpers
 # =========================
@@ -979,10 +986,9 @@ def make_empty_state(question: str, csv_path: Path) -> AgentState:
     }
 
 
-# =========================
-# Main (CLI)
-# =========================
-def main():
+
+
+def build_config_from_env() -> Config:
     load_dotenv()
 
     db_url = env_str("DB_URL", "sqlite:///outputs/arma_sql/state.db")
@@ -993,7 +999,7 @@ def main():
     if not Path(db_path).exists():
         raise FileNotFoundError(f"DB not found: {db_path}\nRun: python test_dump_arma.py")
 
-    cfg = Config(
+    return Config(
         db_path=db_path,
         schema_instruction_path=env_str("SCHEMA_INSTRUCTION_PATH", "text2sql_prompts/schema_instruction_main.md"),
         llm_backend=env_str("LLM_BACKEND", "openai"),
@@ -1030,14 +1036,138 @@ def main():
         output_dir=env_str("OUT_DIR", "results"),
     )
 
-    print("⚡Checking prompt files...")
+
+_RUNTIME_CACHE: Optional[Text2SQLRuntime] = None
+
+
+def get_runtime(force_reload: bool = False) -> Text2SQLRuntime:
+    global _RUNTIME_CACHE
+
+    if _RUNTIME_CACHE is not None and not force_reload:
+        return _RUNTIME_CACHE
+
+    cfg = build_config_from_env()
     validate_text_resources(cfg)
-
-    print("⚡Checking LLM connectivity/model availability...")
     validate_llm_ready(cfg)
-
     resources = load_runtime_resources(cfg)
     graph = make_graph(cfg, resources)
+
+    _RUNTIME_CACHE = Text2SQLRuntime(cfg=cfg, resources=resources, graph=graph)
+    return _RUNTIME_CACHE
+
+
+def run_text2sql_query(question: str, runtime: Optional[Text2SQLRuntime] = None) -> Dict[str, Any]:
+    question = (question or "").strip()
+    if not question:
+        return {
+            "ok": False,
+            "question": question,
+            "sql": "",
+            "result": "",
+            "error": "Empty question.",
+            "semantic_error": "",
+            "rewrite_mode": "",
+            "rewrite_guidance": "",
+            "reflection": "",
+            "attempts": 0,
+            "rewrite_attempts": 0,
+            "steps": 0,
+            "timing": {},
+            "artifacts": {
+                "sql_path": "",
+                "csv_path": "",
+            },
+        }
+
+    try:
+        runtime = runtime or get_runtime()
+        out_dir = Path(runtime.cfg.output_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+
+        run_id = get_time()
+        sql_path = out_dir / f"{run_id}_sql.txt"
+        csv_path = out_dir / f"{run_id}_result.csv"
+
+        init_state = make_empty_state(question, csv_path)
+        final_state = runtime.graph.invoke(init_state)
+
+        sql_text = (final_state.get("sql") or "").strip()
+        semantic_error = (final_state.get("semantic_error") or "").strip()
+        error = (final_state.get("error") or "").strip()
+        result = (final_state.get("result") or "").strip()
+
+        save_sql_txt(
+            final_state.get("question", question),
+            sql_text,
+            sql_path,
+            meta={
+                "rewrite_mode": final_state.get("rewrite_mode", "") or "normal",
+                "rewrite_guidance": final_state.get("rewrite_guidance", ""),
+                "reflection": final_state.get("reflection", ""),
+                "semantic_error": semantic_error,
+            },
+        )
+
+        return {
+            "ok": not bool(error),
+            "question": final_state.get("question", question),
+            "sql": sql_text,
+            "result": result if result else "(no result)",
+            "error": error,
+            "semantic_error": semantic_error,
+            "rewrite_mode": final_state.get("rewrite_mode", "") or "normal",
+            "rewrite_guidance": final_state.get("rewrite_guidance", ""),
+            "reflection": final_state.get("reflection", ""),
+            "attempts": final_state.get("attempts", 0),
+            "rewrite_attempts": final_state.get("rewrite_attempts", 0),
+            "steps": final_state.get("steps", 0),
+            "timing": {
+                "llm_generate_time": final_state.get("llm_generate_time", 0.0),
+                "rewrite_intent_time": final_state.get("rewrite_intent_time", 0.0),
+                "rewrite_reflection_time": final_state.get("rewrite_reflection_time", 0.0),
+                "llm_rewrite_time": final_state.get("llm_rewrite_time", 0.0),
+                "llm_repair_time": final_state.get("llm_repair_time", 0.0),
+                "semantic_check_time": final_state.get("semantic_check_time", 0.0),
+                "llm_semantic_repair_time": final_state.get("llm_semantic_repair_time", 0.0),
+                "sql_execute_time": final_state.get("sql_execute_time", 0.0),
+            },
+            "artifacts": {
+                "sql_path": str(sql_path),
+                "csv_path": str(csv_path),
+            },
+        }
+    except Exception as e:
+        return {
+            "ok": False,
+            "question": question,
+            "sql": "",
+            "result": "",
+            "error": f"{type(e).__name__}: {e}",
+            "semantic_error": "",
+            "rewrite_mode": "",
+            "rewrite_guidance": "",
+            "reflection": "",
+            "attempts": 0,
+            "rewrite_attempts": 0,
+            "steps": 0,
+            "timing": {},
+            "artifacts": {
+                "sql_path": "",
+                "csv_path": "",
+            },
+        }
+
+
+# =========================
+# Main (CLI)
+# =========================
+def main():
+    print("⚡Checking prompt files...")
+    print("⚡Checking LLM connectivity/model availability...")
+
+    runtime = get_runtime(force_reload=True)
+    cfg = runtime.cfg
+    graph = runtime.graph
 
     print(f"⚡Connected to SQLite: {cfg.db_path}")
     print(f"⚡LLM backend: {cfg.llm_backend}")
