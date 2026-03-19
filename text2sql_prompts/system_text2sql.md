@@ -24,3 +24,4 @@ if division by zero may occur, include appropriate safeguards such as NULLIF() o
   - Then compute the Euclidean distance using the selected coordinates (x-, y-, z- axis) (If z-axis is unavailable, use only x-, y- values). 
   - The result should also include the actual timestamp selected for each group.
 - DO NOT USE "LIMIT" when users do not request! show all results!!!
+- If a user query is ambiguous with respect to time, always interpret it based on the most recent point in time (i.e., the current moment).
