@@ -121,6 +121,106 @@ def get_schema_sqlite_cached(db_path: str, resources: "RuntimeResources") -> str
     return schema
 
 
+def parse_bool_text(value: str) -> bool:
+    if value is None:
+        return False
+    return str(value).strip().lower() in {"1", "true", "yes", "y", "on"}
+
+
+def split_sql_statements(sql: str) -> List[str]:
+    parts = [x.strip() for x in sqlglot.parse(sql, read="sqlite")]
+    return [str(x).strip() for x in parts if str(x).strip()]
+
+
+def validate_view_registration_sql(sql: str) -> Tuple[bool, str]:
+    try:
+        parsed = sqlglot.parse(sql, read="sqlite")
+    except Exception as e:
+        return False, f"SQL parse error: {e}"
+
+    if len(parsed) != 1:
+        return False, "Only one CREATE VIEW statement is allowed per row."
+
+    stmt = parsed[0]
+    if not isinstance(stmt, exp.Create):
+        return False, f"Only CREATE VIEW is allowed. Got: {type(stmt).__name__}"
+
+    kind = str(stmt.args.get("kind") or "").upper()
+    if kind != "VIEW":
+        return False, f"Only CREATE VIEW is allowed. Got CREATE {kind or '(unknown)'}"
+
+    return True, ""
+
+
+def register_views_from_catalog_csv(db_path: str, csv_path: str) -> str:
+    csv_file = Path(csv_path)
+    if not csv_file.exists():
+        return f"View registration skipped: catalog CSV not found ({csv_path})"
+
+    with csv_file.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames or []
+        required = {"view_name", "create_sql"}
+        missing = sorted(required - set(fieldnames))
+        if missing:
+            raise ValueError(
+                f"View catalog CSV is missing required columns: {', '.join(missing)}"
+            )
+
+        rows = list(reader)
+
+    def row_key(row: Dict[str, str]) -> Tuple[int, str]:
+        try:
+            order = int((row.get("init_order") or "").strip() or "999999")
+        except ValueError:
+            order = 999999
+        return (order, (row.get("view_name") or "").strip())
+
+    rows.sort(key=row_key)
+
+    applied: List[str] = []
+    skipped: List[str] = []
+
+    conn = _connect_sqlite(db_path)
+    try:
+        cur = conn.cursor()
+        for idx, row in enumerate(rows, start=2):
+            view_name = (row.get("view_name") or "").strip()
+            create_sql = (row.get("create_sql") or "").strip()
+            enabled_raw = (row.get("enabled") or "1").strip()
+            drop_if_exists = parse_bool_text((row.get("drop_if_exists") or "1").strip())
+
+            if not view_name and not create_sql:
+                continue
+            if not view_name:
+                raise ValueError(f"Row {idx}: view_name is empty.")
+            if not create_sql:
+                raise ValueError(f"Row {idx}: create_sql is empty for view '{view_name}'.")
+            if enabled_raw and not parse_bool_text(enabled_raw):
+                skipped.append(f"{view_name} (disabled)")
+                continue
+
+            ok, reason = validate_view_registration_sql(create_sql)
+            if not ok:
+                raise ValueError(f"Row {idx} ({view_name}): {reason}")
+
+            if drop_if_exists:
+                cur.execute(f'DROP VIEW IF EXISTS "{view_name}"')
+            cur.execute(create_sql)
+            applied.append(view_name)
+
+        conn.commit()
+    finally:
+        conn.close()
+
+    if applied:
+        return f"View registration completed! registered={len(applied)}"
+        # return f"View registration completed! registered={len(applied)} [{', '.join(applied)}]"
+    if skipped:
+        return f"View registration completed! registered=0 skipped={len(skipped)}"
+    return "View registration completed! registered=0"
+
+
 def normalize_sql(s: str) -> str:
     s = s.strip().lower()
     s = re.sub(r"^\s*(--.*\n|/\*.*?\*/\s*)*", "", s, flags=re.S)
@@ -370,6 +470,8 @@ class Config:
     rewrite_reflect_prompt_path: str
     rewrite_sql_prompt_path: str
     sql_cheat_general_path: str
+    view_catalog_path: str
+    view_catalog_csv_path: str
 
     max_repair_attempts: int
     max_steps: int
@@ -393,6 +495,8 @@ class RuntimeResources:
     system_rewrite_reflect: str
     system_rewrite_sql: str
     cheat_sheet_general: str
+    view_catalog: str
+    view_registration_summary: str = ""
     cached_schema: str = ""
     cached_schema_mtime: float = -1.0
 
@@ -418,6 +522,7 @@ def load_runtime_resources(cfg: Config) -> RuntimeResources:
         system_rewrite_reflect=load_required_text(cfg.rewrite_reflect_prompt_path),
         system_rewrite_sql=load_required_text(cfg.rewrite_sql_prompt_path),
         cheat_sheet_general=load_optional_text(cfg.sql_cheat_general_path),
+        view_catalog=load_optional_text(cfg.view_catalog_path),
     )
 
 
@@ -427,12 +532,19 @@ def schema_instruction_message(schema_instruction: str) -> List[AnyMessage]:
     return [SystemMessage(f"SCHEMA_INSTRUCTION:\n{schema_instruction}")]
 
 
+def view_catalog_message(view_catalog: str) -> List[AnyMessage]:
+    if not view_catalog:
+        return []
+    return [SystemMessage(f"VIEW_CATALOG:\n{view_catalog}")]
+
+
 def build_generate_messages(state: AgentState, resources: RuntimeResources) -> List[AnyMessage]:
     msgs: List[AnyMessage] = [
         SystemMessage(resources.system_text2sql),
         SystemMessage(f"SCHEMA:\n{state['schema']}"),
     ]
     msgs.extend(schema_instruction_message(state.get("schema_instruction", "")))
+    msgs.extend(view_catalog_message(resources.view_catalog))
     msgs.append(HumanMessage(state["question"]))
     return msgs
 
@@ -450,6 +562,7 @@ def build_repair_messages(state: AgentState, resources: RuntimeResources) -> Lis
         ),
     ]
     msgs.extend(schema_instruction_message(state.get("schema_instruction", "")))
+    msgs.extend(view_catalog_message(resources.view_catalog))
     return msgs
 
 
@@ -520,6 +633,7 @@ def build_rewrite_sql_messages(state: AgentState, resources: RuntimeResources) -
         ),
     ]
     msgs.extend(schema_instruction_message(state.get("schema_instruction", "")))
+    msgs.extend(view_catalog_message(resources.view_catalog))
     msgs.append(HumanMessage("Rewrite the SQL now."))
     return msgs
 
@@ -552,6 +666,8 @@ def validate_text_resources(cfg: Config):
     load_required_text(cfg.rewrite_sql_prompt_path)
     load_optional_text(cfg.schema_instruction_path)
     load_optional_text(cfg.sql_cheat_general_path)
+    load_optional_text(cfg.view_catalog_path)
+    load_optional_text(cfg.view_catalog_csv_path)
 
 
 def validate_llm_ready(cfg: Config):
@@ -1027,6 +1143,12 @@ def build_config_from_env() -> Config:
         sql_cheat_general_path=env_str(
             "SQL_CHEAT_GENERAL_PATH", "text2sql_prompts/SQL_cheating_sheets/general.md"
         ),
+        view_catalog_path=env_str(
+            "VIEW_CATALOG_PATH", "text2sql_prompts/SQL_cheating_sheets/view_catalog.md"
+        ),
+        view_catalog_csv_path=env_str(
+            "VIEW_CATALOG_CSV_PATH", "text2sql_prompts/SQL_cheating_sheets/view_catalog.csv"
+        ),
         max_repair_attempts=env_int("MAX_REPAIR_ATTEMPTS", 3),
         max_steps=env_int("MAX_STEPS", 12),
         max_same_sql_repeats=env_int("MAX_SAME_SQL_REPEATS", 1),
@@ -1050,6 +1172,9 @@ def get_runtime(force_reload: bool = False) -> Text2SQLRuntime:
     validate_text_resources(cfg)
     validate_llm_ready(cfg)
     resources = load_runtime_resources(cfg)
+    registration_summary = register_views_from_catalog_csv(cfg.db_path, cfg.view_catalog_csv_path)
+    resources.view_registration_summary = registration_summary
+    print(f"⚡{registration_summary}")
     graph = make_graph(cfg, resources)
 
     _RUNTIME_CACHE = Text2SQLRuntime(cfg=cfg, resources=resources, graph=graph)
@@ -1178,6 +1303,8 @@ def main():
         f"MAX_SAME_SQL_REPEATS={cfg.max_same_sql_repeats}"
     )
     print(f"⚡Semantic check enabled: {cfg.enable_semantic_check}")
+    print(f"⚡View catalog CSV: {cfg.view_catalog_csv_path}")
+    print(f"⚡View catalog MD: {cfg.view_catalog_path}")
     print("⚡Type 'exit' to quit.")
     print("⚡Rewrite commands:")
     print("  e.g. (1) '[재작성]' -> autonomous rewrite")
