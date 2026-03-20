@@ -41,7 +41,7 @@
   python test_dump_arma.py
   ~~~
 
-### Key: How to use in my code?
+### How to use?
 
   ~~~python
   from text2sql_langgraph import run_text2sql_query
@@ -53,11 +53,11 @@
   ~~~
 
 
-### Test (Demo)
+### Test (Live demo)
 
 - Remote LLM PC (Note: we use GPT OSS 20B)
   ~~~shell
-  cd models
+  cd mymodels
   vllm serve ./gpt-oss-20b --host 0.0.0.0 --port 8000
   ~~~
   - Tip: The below commands should return "HTTP/1.1 200 OK" in your remote PC!
