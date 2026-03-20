@@ -214,7 +214,7 @@ def register_views_from_catalog_csv(db_path: str, csv_path: str) -> str:
         conn.close()
 
     if applied:
-        return f"View registration completed! registered={len(applied)} [{', '.join(applied)}]"
+        return f"View registration completed! registered={len(applied)}"
     if skipped:
         return f"View registration completed! registered=0 skipped={len(skipped)}"
     return "View registration completed! registered=0"
@@ -1299,11 +1299,9 @@ def main():
     print(
         f"⚡Limits: MAX_REPAIR_ATTEMPTS={cfg.max_repair_attempts}, "
         f"MAX_STEPS={cfg.max_steps}, "
-        f"MAX_SAME_SQL_REPEATS={cfg.max_same_sql_repeats}"
+        f"MAX_SAME_SQL_REPEATS={cfg.max_same_sql_repeats}, "
+        f"Semantic-check-before-answering enabled: {cfg.enable_semantic_check}"
     )
-    print(f"⚡Semantic check enabled: {cfg.enable_semantic_check}")
-    print(f"⚡View catalog CSV: {cfg.view_catalog_csv_path}")
-    print(f"⚡View catalog MD: {cfg.view_catalog_path}")
     print("⚡Type 'exit' to quit.")
     print("⚡Rewrite commands:")
     print("  e.g. (1) '[재작성]' -> autonomous rewrite")
@@ -1398,14 +1396,18 @@ def main():
             )
 
         print("\n--- TIMING ---")
-        print(f"LLM generate time:         {final_state.get('llm_generate_time', 0.0):.4f} sec")
-        print(f"LLM intent time:           {final_state.get('rewrite_intent_time', 0.0):.4f} sec")
-        print(f"LLM reflection time:       {final_state.get('rewrite_reflection_time', 0.0):.4f} sec")
-        print(f"LLM rewrite time:          {final_state.get('llm_rewrite_time', 0.0):.4f} sec")
-        print(f"LLM repair time:           {final_state.get('llm_repair_time', 0.0):.4f} sec")
-        print(f"LLM semantic check time:   {final_state.get('semantic_check_time', 0.0):.4f} sec")
-        print(f"LLM semantic repair time:  {final_state.get('llm_semantic_repair_time', 0.0):.4f} sec")
-        print(f"SQL execute time:          {final_state.get('sql_execute_time', 0.0):.4f} sec")
+        print(f"LLM generate:                           {final_state.get('llm_generate_time', 0.0):.4f} sec")
+        print(f"LLM repair to handle SQL-runtime error: {final_state.get('llm_repair_time', 0.0):.4f} sec")
+        if final_state.get('semantic_check_time'):
+            print("*** Before providing final answer ->")
+            print(f"LLM semantic check:                 {final_state.get('semantic_check_time', 0.0):.4f} sec")
+            print(f"LLM semantic repair:                {final_state.get('llm_semantic_repair_time', 0.0):.4f} sec")
+        if final_state.get('rewrite_intent_time'):
+            print("*** For handling user's rewriting request ->")
+            print(f"LLM rewrite:                        {final_state.get('llm_rewrite_time', 0.0):.4f} sec")
+            print(f"LLM reflection intent analysis:     {final_state.get('rewrite_intent_time', 0.0):.4f} sec")
+            print(f"LLM reflection:                     {final_state.get('rewrite_reflection_time', 0.0):.4f} sec")
+        print(f"SQL execute time:                       {final_state.get('sql_execute_time', 0.0):.4f} sec")
         print()
 
 
