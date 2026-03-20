@@ -118,12 +118,12 @@ class EventEDC(Base):
     datetime: Mapped[str | None] = mapped_column(String)          
     side: Mapped[str] = mapped_column(String, primary_key=True)
     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
-    keyname: Mapped[str] = mapped_column(String)
+    # keyname: Mapped[str] = mapped_column(String)
     groupname: Mapped[str | None] = mapped_column(String)
     targetunit: Mapped[str | None] = mapped_column(String)
     newknowsabout: Mapped[float | None] = mapped_column(Float)
     oldknowsabout: Mapped[float | None] = mapped_column(Float)
-    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+    # paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
 Index("ix_eventedc_snapshot_side_time", EventEDC.snapshotid, EventEDC.side, EventEDC.datetime)
@@ -135,7 +135,7 @@ class EventF(Base):
     datetime: Mapped[str | None] = mapped_column(String)
     side: Mapped[str] = mapped_column(String, primary_key=True)
     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
-    keyname: Mapped[str] = mapped_column(String)
+    # keyname: Mapped[str] = mapped_column(String)
     unit: Mapped[str | None] = mapped_column(String)               
     weapon: Mapped[str | None] = mapped_column(String)
     muzzle: Mapped[str | None] = mapped_column(String)
@@ -144,7 +144,7 @@ class EventF(Base):
     ammotype: Mapped[str | None] = mapped_column(String) # magazine
     # projectile: Mapped[str | None] = mapped_column(String)
     gunner: Mapped[str | None] = mapped_column(String)                
-    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+    # paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
 Index("ix_eventf_snapshot_side_time", EventF.snapshotid, EventF.side, EventF.datetime)
@@ -156,7 +156,7 @@ class EventD(Base):
     datetime: Mapped[str | None] = mapped_column(String)
     side: Mapped[str] = mapped_column(String, primary_key=True)
     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
-    keyname: Mapped[str] = mapped_column(String)
+    # keyname: Mapped[str] = mapped_column(String)
     targetunit: Mapped[str | None] = mapped_column(String)                
     # hitselection: Mapped[str | None] = mapped_column(String)
     damage: Mapped[float | None] = mapped_column(Float)
@@ -164,7 +164,8 @@ class EventD(Base):
     hitpoint: Mapped[str | None] = mapped_column(String)       
     shooter: Mapped[str | None] = mapped_column(String)                   
     # projecttile: Mapped[str | None] = mapped_column(String)
-    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+    weapon: Mapped[str | None] = mapped_column(String)  
+    # paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
 Index("ix_eventd_snapshot_side_time", EventD.snapshotid, EventD.side, EventD.datetime)
@@ -176,12 +177,12 @@ class EventK(Base):
     datetime: Mapped[str | None] = mapped_column(String)
     side: Mapped[str] = mapped_column(String, primary_key=True)
     seq: Mapped[int] = mapped_column(Integer, primary_key=True)
-    keyname: Mapped[str] = mapped_column(String)
+    # keyname: Mapped[str] = mapped_column(String)
     targetunit: Mapped[str | None] = mapped_column(String)
     killer: Mapped[str | None] = mapped_column(String)
-    instigator: Mapped[str | None] = mapped_column(String)
+    # instigator: Mapped[str | None] = mapped_column(String)
     # useeffects: Mapped[int | None] = mapped_column(Integer)
-    paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
+    # paramsjson: Mapped[str] = mapped_column(Text, nullable=False)
 
 
 Index("ix_eventk_snapshot_side_time", EventK.snapshotid, EventK.side, EventK.datetime)

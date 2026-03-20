@@ -469,13 +469,13 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                             snapshotid=sid,
                                             side=side,
                                             seq=seq,
-                                            keyname=keyname,
+                                            # keyname=keyname,
                                             datetime=start_iso,
                                             groupname=group,
                                             targetunit=targetunit,
                                             newknowsabout=newknowsabout,
                                             oldknowsabout=oldknowsabout,
-                                            paramsjson=paramsjson,
+                                            # paramsjson=paramsjson,
                                         )
                                     )
 
@@ -484,10 +484,10 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                 unit = params[0] if len(params) > 0 else None
                                 weapon = params[1] if len(params) > 1 else None
                                 muzzle = params[2] if len(params) > 2 else None
-                                mode = params[3] if len(params) > 3 else None
-                                ammo = params[4] if len(params) > 4 else None
+                                # mode = params[3] if len(params) > 3 else None
+                                # ammo = params[4] if len(params) > 4 else None
                                 magazine = params[5] if len(params) > 5 else None
-                                projectile = params[6] if len(params) > 6 else None
+                                # projectile = params[6] if len(params) > 6 else None
                                 gunner = params[7] if len(params) > 7 else None
                                 session.add(
                                     EventF(
@@ -495,7 +495,7 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                         datetime=start_iso,
                                         side=side,
                                         seq=seq,
-                                        keyname=keyname,
+                                        # keyname=keyname,
                                         unit=unit,
                                         weapon=weapon,
                                         muzzle=muzzle,
@@ -504,25 +504,33 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                         ammotype=magazine,
                                         # projectile=projectile,
                                         gunner=gunner,
-                                        paramsjson=paramsjson,
+                                        # paramsjson=paramsjson,
                                     )
                                 )
 
                             # event_dammaged ->
                             elif etype == "d":
                                 unit = params[0] if len(params) > 0 else None
-                                hitselection = params[1] if len(params) > 1 else None
+                                # hitselection = params[1] if len(params) > 1 else None
                                 damage = _to_float_or_none(params[2]) if len(params) > 2 else None
-                                hitpartindex = _to_int_or_none(params[3]) if len(params) > 3 else None
+                                # hitpartindex = _to_int_or_none(params[3]) if len(params) > 3 else None
                                 hitpoint = params[4] if len(params) > 4 else None
                                 shooter = params[5] if len(params) > 5 else None
-                                projecttile = params[6] if len(params) > 6 else None
+                                if len(params) > 6:
+                                    weapon = params[6].split(' ')
+                                    if len(weapon) == 3:
+                                        # e.g., "1798896: tracer_red.p3d rhs_ammo_3ubr11" -> rhs_ammo_3ubr11
+                                        weapon = weapon[-1]
+                                    else:
+                                        # e.g., "<NULL-object>"
+                                        weapon = 'Unknown'
+                                # projecttile = params[6] if len(params) > 6 else None
                                 session.add(
                                     EventD(
                                         snapshotid=sid,
                                         side=side,
                                         seq=seq,
-                                        keyname=keyname,
+                                        # keyname=keyname,
                                         datetime=start_iso,
                                         targetunit=unit,
                                         # hitselection=hitselection,
@@ -530,8 +538,9 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                         # hitpartindex=hitpartindex,
                                         hitpoint=hitpoint,
                                         shooter=shooter,
+                                        weapon=weapon,
                                         # projecttile=projecttile,
-                                        paramsjson=paramsjson,
+                                        # paramsjson=paramsjson,
                                     )
                                 )
 
@@ -539,22 +548,22 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                             elif etype == "k":
                                 unit = params[0] if len(params) > 0 else None
                                 killer = params[1] if len(params) > 1 else None
-                                instigator = params[2] if len(params) > 2 else None
-                                useeffects = None
-                                if len(params) > 3:
-                                    useeffects = 1 if bool(params[3]) else 0
+                                # instigator = params[2] if len(params) > 2 else None
+                                # useeffects = None
+                                # if len(params) > 3:
+                                #     useeffects = 1 if bool(params[3]) else 0
                                 session.add(
                                     EventK(
                                         snapshotid=sid,
                                         side=side,
                                         seq=seq,
-                                        keyname=keyname,
+                                        # keyname=keyname,
                                         datetime=start_iso,
                                         targetunit=unit,
                                         killer=killer,
-                                        instigator=instigator,
+                                        # instigator=instigator,
                                         # useeffects=useeffects,
-                                        paramsjson=paramsjson,
+                                        # paramsjson=paramsjson,
                                     )
                                 )
 
