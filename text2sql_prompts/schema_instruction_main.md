@@ -210,7 +210,7 @@
   - `targetunit`: 피격 대상으로, 탄을 맞는 사람 혹은 장비. (유의사항: unit이라고 변수명은 되어 있으나, vehicle 차량 장비도 저장될 수 있음!)
   - `shooter`: 가해자(발사/공격 주체).
   - `damage`: (현재 스냅샷 시점의) 각 유닛 혹은 장비의 손상 정도. (0 이상 1 이하의 값, 0에 가까울 수록 "피해가 없다", 1에 가까울수록 "피해가 매우 크다"를 의미)
-  - `weapon`: `Unknown`일 경우, 가해자가 사용한 무기를 모르는 것을 의미. 그 외 문자열은 특정 무기를 지칭.
+  - `weapon`: 가해자가 사용한 무기.
 - 예시: event_dammaged 테이블에 저장된 최상단 레코드는?
     ~~~sql
     select snapshotid, datetime, side, seq, targetunit, shooter, damage, weapon from event_dammaged limit 1;
