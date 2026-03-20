@@ -367,7 +367,7 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                 posy=vy,
                                 posz=vz,
                                 damage=v.get("damage", 0.0),
-                                hitpointjson=dumps(hp_obj),
+                                # hitpointjson=dumps(hp_obj),
                             )
                         )
 
@@ -514,7 +514,7 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                 # hitselection = params[1] if len(params) > 1 else None
                                 damage = _to_float_or_none(params[2]) if len(params) > 2 else None
                                 # hitpartindex = _to_int_or_none(params[3]) if len(params) > 3 else None
-                                hitpoint = params[4] if len(params) > 4 else None
+                                # hitpoint = params[4] if len(params) > 4 else None
                                 shooter = params[5] if len(params) > 5 else None
                                 if len(params) > 6:
                                     weapon = params[6].split(' ')
@@ -536,7 +536,7 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                         # hitselection=hitselection,
                                         damage=damage,
                                         # hitpartindex=hitpartindex,
-                                        hitpoint=hitpoint,
+                                        # hitpoint=hitpoint,
                                         shooter=shooter,
                                         weapon=weapon,
                                         # projecttile=projecttile,

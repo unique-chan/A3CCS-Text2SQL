@@ -63,7 +63,6 @@
   - `posy`: (현재 스냅샷 시점의) 각 차량의 위치의 y좌표.
   - `posz`: (현재 스냅샷 시점의) 각 차량의 위치의 z좌표.
   - `damage`: (현재 스냅샷 시점의) 각 차량의 손상 정도. (0 이상 1 이하의 값, 0에 가까울 수록 "피해가 없다", 1에 가까울수록 "피해가 매우 크다"를 의미)
-  - `hitpointjson`: 디버깅 용도. Text2SQL 시 필요한 컬럼이 아니므로, 무시할 것.
 - 예시: vehicles 테이블에 저장된 최상단 레코드는?
     ~~~sql
     select snapshotid, datetime, side, vehiclename, groupname, vehicletype, posx, posy, posz, damage from vehicles limit 1;
@@ -211,16 +210,15 @@
   - `targetunit`: 피격 대상으로, 탄을 맞는 사람 혹은 장비. (유의사항: unit이라고 변수명은 되어 있으나, vehicle 차량 장비도 저장될 수 있음!)
   - `shooter`: 가해자(발사/공격 주체).
   - `damage`: (현재 스냅샷 시점의) 각 유닛 혹은 장비의 손상 정도. (0 이상 1 이하의 값, 0에 가까울 수록 "피해가 없다", 1에 가까울수록 "피해가 매우 크다"를 의미)
-  - `hitpoint`: (현재 스냅샷 시점의) 각 유닛 혹은 차량의 특정 부위.
   - `weapon`: `Unknown`일 경우, 가해자가 사용한 무기를 모르는 것을 의미. 그 외 문자열은 특정 무기를 지칭.
 - 예시: event_dammaged 테이블에 저장된 최상단 레코드는?
     ~~~sql
-    select snapshotid, datetime, side, seq, targetunit, shooter, damage, hitpoint, weapon from event_dammaged limit 1;
+    select snapshotid, datetime, side, seq, targetunit, shooter, damage, weapon from event_dammaged limit 1;
     ~~~
-    | snapshotid | datetime | side | seq | targetunit | shooter | damage | hitpoint | weapon |
+    | snapshotid | datetime | side | seq | targetunit | shooter | damage | weapon |
     |---|---|---|---:|---|---|---:|---|---|
-    | 31a9d799-1470-43e5-ab31-7bd36e5aba66 | 2026-03-03T14:08:31.547 | op | 0 | op_1_i3_3_u4 | b_1_m2_2_v1 | 0.0216315 | hitdiaphragm | rhs_ammo_M829A3 |
-    - 🔍해석: 2026년 3월 3일 14시 8분경, 적군 (op) op__1_i3_3_u4 장비가 우리 아군 (b)의 b_1_m2_2_v1 장비에 의해 hitdiaphragm 부위에 약 2%의 피해를 입혔다. (diaphragm은 횡격막을 의미함.) 적군이 사용한 무기는 rhs_ammo_M829A3이다.
+    | 31a9d799-1470-43e5-ab31-7bd36e5aba66 | 2026-03-03T14:08:31.547 | op | 0 | op_1_i3_3_u4 | b_1_m2_2_v1 | 0.0216315 | rhs_ammo_M829A3 |
+    - 🔍해석: 2026년 3월 3일 14시 8분경, 적군 (op) op__1_i3_3_u4 장비가 우리 아군 (b)의 b_1_m2_2_v1 장비에 의해 약 2%의 피해를 입었다. 적군이 사용한 무기는 rhs_ammo_M829A3이다.
 
 
 ### event_killed 테이블

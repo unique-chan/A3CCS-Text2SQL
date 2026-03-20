@@ -64,7 +64,7 @@ class Vehicle(Base):
     posy: Mapped[float | None] = mapped_column(Float)
     posz: Mapped[float | None] = mapped_column(Float)             
     damage: Mapped[float | None] = mapped_column(Float)
-    hitpointjson: Mapped[str | None] = mapped_column(Text)        
+    # hitpointjson: Mapped[str | None] = mapped_column(Text)        
 
 
 Index("ix_vehicles_snapshot_side_group", Vehicle.snapshotid, Vehicle.side, Vehicle.groupname)
@@ -161,7 +161,7 @@ class EventD(Base):
     # hitselection: Mapped[str | None] = mapped_column(String)
     damage: Mapped[float | None] = mapped_column(Float)
     # hitpartindex: Mapped[int | None] = mapped_column(Integer)
-    hitpoint: Mapped[str | None] = mapped_column(String)       
+    # hitpoint: Mapped[str | None] = mapped_column(String)       
     shooter: Mapped[str | None] = mapped_column(String)                   
     # projecttile: Mapped[str | None] = mapped_column(String)
     weapon: Mapped[str | None] = mapped_column(String)  
