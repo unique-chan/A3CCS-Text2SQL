@@ -520,10 +520,12 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                     weapon = params[6].split(' ')
                                     if len(weapon) == 3:
                                         # e.g., "1798896: tracer_red.p3d rhs_ammo_3ubr11" -> rhs_ammo_3ubr11
-                                        weapon = weapon[-1]
+                                        weapon = weapon[-1].strip()
+                                        if weapon == "":
+                                            continue
                                     else:
                                         # e.g., "<NULL-object>"
-                                        weapon = 'Unknown'
+                                        continue
                                 # projecttile = params[6] if len(params) > 6 else None
                                 session.add(
                                     EventD(
