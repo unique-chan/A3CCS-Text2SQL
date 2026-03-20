@@ -25,3 +25,5 @@ if division by zero may occur, include appropriate safeguards such as NULLIF() o
   - The result should also include the actual timestamp selected for each group.
 - DO NOT USE "LIMIT" when users do not request! show all results!!!
 - If a user query is ambiguous with respect to time, always interpret it based on the most recent point in time (i.e., the current moment).
+- 우선, view_catalog를 보고, view로 간단하게 질의를 만들 수 있으면, view를 최대한 활용하세요! 억지로 table 여러개를 스스로 join하려고 애쓰지 말고!
+- 특별한 사용자 요구 조건이 없는 한, 테이블에서 `snapshotid` 컬럼은 표시하지 않는다.

@@ -165,13 +165,11 @@
   - `snapshotid`: 각 스냅샷에 부여된 고유의 식별 ID.
   - `datetime`: 현재 스냅샷 (현재 `snapshotid`)의 일시 (ISO8601 포맷 준수: {YYYY}-{MM}-{DD}T-{HH}-{MM}-{SS}.SSS 꼴) (예로, 2026-03-03T14:04:54.605는 2026년 3월 3일 14시 4분 54초 605밀리초)
   - `side`: `b` 또는 `op` 값이 저장됨. 아군 (`b`) 및 적군 (`op`)을 구분하기 위한 식별자.
-  - `seq`: 같은 스냅샷/팀 내에서 이벤트 배열의 순번(중복 시간 대비용). (Text2SQL 시 꼭 필요한 컬럼은 아니므로, 가급적 사용 제한.)
+  - `seq`: 같은 스냅샷/팀 내에서 이벤트 배열의 순번(중복 시간 대비용). 
   - `groupname`: f"{side}_{company}_{platoon}_{squad}" 꼴의 문자열.  
   - `targetunit`: 관심 대상 타겟. (유의사항: unit이라고 변수명은 되어 있으나, vehicle 차량 장비도 저장될 수 있음!)
   - `oldknowsabout`: 변경 이전 knowsAbout 값. (0 이상 4 이하, 0에 가까울 수록 "거의 모른다/인지하지 못한다", 4에 가까울수록 "매우 잘 안다/정확히 인지한다". 실무적으로 **1 이상이면 ‘어느 정도 알고 있다(인지가 형성됨)’**로 볼 수 있음.)
   - `newknowsabout`: 변경 이후 knowsAbout 값.
-  - `keyname`: 디버깅 용도. Text2SQL 시 필요한 컬럼이 아니므로, 무시할 것.
-  - `paramsjson`: 디버깅 용도. Text2SQL 시 필요한 컬럼이 아니므로, 무시할 것.
 - 예시: event_knowsaboutchanged 테이블에 저장된 최상단 레코드는?
     ~~~sql
     select snapshotid, datetime, side, seq, groupname, targetunit, newknowsabout, oldknowsabout from event_knowsaboutchanged limit 1;
@@ -188,13 +186,11 @@
   - `snapshotid`: 각 스냅샷에 부여된 고유의 식별 ID.
   - `datetime`: 현재 스냅샷 (현재 `snapshotid`)의 일시 (ISO8601 포맷 준수: {YYYY}-{MM}-{DD}T-{HH}-{MM}-{SS}.SSS 꼴) (예로, 2026-03-03T14:04:54.605는 2026년 3월 3일 14시 4분 54초 605밀리초)
   - `side`: `b` 또는 `op` 값이 저장됨. 아군 (`b`) 및 적군 (`op`)을 구분하기 위한 식별자. 이 테이블에서 특정 행의 `side`가 `b`일 경우, 아군의 사격/발사 기록 중 하나임을 의미.
-  - `seq`: 같은 스냅샷/팀 내에서 이벤트 배열의 순번(중복 시간 대비용). (Text2SQL 시 꼭 필요한 컬럼은 아니므로, 가급적 사용 제한.)
+  - `seq`: 같은 스냅샷/팀 내에서 이벤트 배열의 순번(중복 시간 대비용). 
   - `unit`: (유의사항: unit이라고 변수명은 되어 있으나, vehicle 차량 장비도 저장될 수 있음!)만약 `gunner`와 `unit`이 일치할 경우, `unit`이 차량에서 하차하여, 발사/사격 행위를 실시하였음을 의미. (아닐 경우, `gunner`가 탑승한 차량을 의미하며, `gunner`가 `unit` 차량에 탑승하여 발사/사격 행위 실시.) 
   - `gunner`: 사격자 (발사 주체). 쏜 사람. 
   - `ammotype`: 탄종.
   - `muzzle`: 포구 유형.
-  - `keyname`: 디버깅 용도. Text2SQL 시 필요한 컬럼이 아니므로, 무시할 것.
-  - `paramsjson`: 디버깅 용도. Text2SQL 시 필요한 컬럼이 아니므로, 무시할 것.
 - 예시: event_fired 테이블에 저장된 최상단 레코드는?
     ~~~sql
     select snapshotid, datetime, side, seq, unit, weapon, muzzle, ammotype, gunner from event_fired limit 1;
@@ -202,7 +198,7 @@
     | snapshotid | datetime | side | seq | unit | weapon | muzzle | ammotype | gunner |
     |---|---|---|---:|---|---|---|---|---|
     | 31a9d799-1470-43e5-ab31-7bd36e5aba66 | 2026-03-03T14:08:31.547 | b | 0 | b_1_m2_2_v1 | RHS_weap_M242BC | HE | rhs_mag_230Rnd_25mm_M242_HEI | b_1_m2_2_u2 |
-    - 🔍해석: 2026년 3월 3일 14시 8분경, 아군 (b) b_1_m2_2_u2는 b_1_m2_2_v1 차량에 탑승한 뒤, RHS_weap_M242BC 탄약을 이용하여 발사하였다. (이 발사 행위로 인해 피해를 입은 유닛/차량이 누구인지는 다른 테이블을 조회해야 함.)
+    - 🔍해석: 2026년 3월 3일 14시 8분경, 아군 (b) b_1_m2_2_u2는 b_1_m2_2_v1 차량에 탑승한 뒤, RHS_weap_M242BC 탄약을 이용하여 발사하였다. 
 
 
 ### event_dammaged 테이블
@@ -211,21 +207,20 @@
   - `snapshotid`: 각 스냅샷에 부여된 고유의 식별 ID.
   - `datetime`: 현재 스냅샷 (현재 `snapshotid`)의 일시 (ISO8601 포맷 준수: {YYYY}-{MM}-{DD}T-{HH}-{MM}-{SS}.SSS 꼴) (예로, 2026-03-03T14:04:54.605는 2026년 3월 3일 14시 4분 54초 605밀리초)
   - `side`: `b` 또는 `op` 값이 저장됨. 아군 (`b`) 및 적군 (`op`)을 구분하기 위한 식별자. 이 테이블에서 특정 행의 `side`가 `b`일 경우, 아군이 피해를 입은 기록 중 하나임을 의미.
-  - `seq`: 같은 스냅샷/팀 내에서 이벤트 배열의 순번(중복 시간 대비용). (Text2SQL 시 꼭 필요한 컬럼은 아니므로, 가급적 사용 제한.)
+  - `seq`: 같은 스냅샷/팀 내에서 이벤트 배열의 순번(중복 시간 대비용). 
   - `targetunit`: 피격 대상으로, 탄을 맞는 사람 혹은 장비. (유의사항: unit이라고 변수명은 되어 있으나, vehicle 차량 장비도 저장될 수 있음!)
   - `shooter`: 가해자(발사/공격 주체).
   - `damage`: (현재 스냅샷 시점의) 각 유닛 혹은 장비의 손상 정도. (0 이상 1 이하의 값, 0에 가까울 수록 "피해가 없다", 1에 가까울수록 "피해가 매우 크다"를 의미)
   - `hitpoint`: (현재 스냅샷 시점의) 각 유닛 혹은 차량의 특정 부위.
-  - `keyname`: 디버깅 용도. Text2SQL 시 필요한 컬럼이 아니므로, 무시할 것.
-  - `paramsjson`: 디버깅 용도. Text2SQL 시 필요한 컬럼이 아니므로, 무시할 것.
+  - `weapon`: `Unknown`일 경우, 가해자가 사용한 무기를 모르는 것을 의미. 그 외 문자열은 특정 무기를 지칭.
 - 예시: event_dammaged 테이블에 저장된 최상단 레코드는?
     ~~~sql
-    select snapshotid, datetime, side, seq, targetunit, shooter, damage, hitpoint from event_dammaged limit 1;
+    select snapshotid, datetime, side, seq, targetunit, shooter, damage, hitpoint, weapon from event_dammaged limit 1;
     ~~~
-    | snapshotid | datetime | side | seq | targetunit | shooter | damage | hitpoint |
-    |---|---|---|---:|---|---|---:|---|
-    | 31a9d799-1470-43e5-ab31-7bd36e5aba66 | 2026-03-03T14:08:31.547 | op | 0 | op_1_i3_3_u4 | b_1_m2_2_v1 | 0.0216315 | hitdiaphragm |
-    - 🔍해석: 2026년 3월 3일 14시 8분경, 적군 (op) op__1_i3_3_u4 장비가 우리 아군 (b)의 b_1_m2_2_v1 장비에 의해 hitdiaphragm 부위에 약 2%의 피해를 입혔다. (diaphragm은 횡격막을 의미함.)
+    | snapshotid | datetime | side | seq | targetunit | shooter | damage | hitpoint | weapon |
+    |---|---|---|---:|---|---|---:|---|---|
+    | 31a9d799-1470-43e5-ab31-7bd36e5aba66 | 2026-03-03T14:08:31.547 | op | 0 | op_1_i3_3_u4 | b_1_m2_2_v1 | 0.0216315 | hitdiaphragm | rhs_ammo_M829A3 |
+    - 🔍해석: 2026년 3월 3일 14시 8분경, 적군 (op) op__1_i3_3_u4 장비가 우리 아군 (b)의 b_1_m2_2_v1 장비에 의해 hitdiaphragm 부위에 약 2%의 피해를 입혔다. (diaphragm은 횡격막을 의미함.) 적군이 사용한 무기는 rhs_ammo_M829A3이다.
 
 
 ### event_killed 테이블
@@ -234,12 +229,9 @@
   - `snapshotid`: 각 스냅샷에 부여된 고유의 식별 ID.
   - `datetime`: 현재 스냅샷 (현재 `snapshotid`)의 일시 (ISO8601 포맷 준수: {YYYY}-{MM}-{DD}T-{HH}-{MM}-{SS}.SSS 꼴) (예로, 2026-03-03T14:04:54.605는 2026년 3월 3일 14시 4분 54초 605밀리초)
   - `side`: `b` 또는 `op` 값이 저장됨. 아군 (`b`) 및 적군 (`op`)을 구분하기 위한 식별자. 이 테이블에서 특정 행의 `side`가 `b`일 경우, 아군이 사망한 기록 중 하나임을 의미.
-  - `seq`: 같은 스냅샷/팀 내에서 이벤트 배열의 순번(중복 시간 대비용). (Text2SQL 시 꼭 필요한 컬럼은 아니므로, 가급적 사용 제한.)
+  - `seq`: 같은 스냅샷/팀 내에서 이벤트 배열의 순번(중복 시간 대비용). 
   - `targetunit`: 피해자. 사망한 대상 (사람 혹은 장비). (유의사항: unit이라고 변수명은 되어 있으나, vehicle 차량 장비도 저장될 수 있음!)
   - `killer`: 직접적으로 죽인 사람 혹은 장비.
-  - `instigator`: killer를 조종/유발한 사람 혹은 장비.
-  - `keyname`: 디버깅 용도. Text2SQL 시 필요한 컬럼이 아니므로, 무시할 것.
-  - `paramsjson`: 디버깅 용도. Text2SQL 시 필요한 컬럼이 아니므로, 무시할 것.
 - 예시: event_killed 테이블에 저장된 최상단 레코드는?
     ~~~sql
     select snapshotid, datetime, side, seq, targetunit, killer, instigator from event_killed limit 1;

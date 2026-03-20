@@ -1,14 +1,5 @@
 # View Catalog
 
-이 문서는 LLM이 우선적으로 사용할 수 있는 미리 정의된 SQLite view를 설명한다.
-
-운영 규칙:
-- side='b' 는 아군, side='op' 는 적군이다.
-- current 는 각 테이블에서 해당 side 기준 MAX(datetime) 시점을 뜻한다.
-- initial 은 각 테이블에서 해당 side 기준 MIN(datetime) 시점을 뜻한다.
-- unit_count / vehicle_count view는 바로 count 결과를 반환하므로 추가 집계 없이 바로 조회할 수 있다.
-- *_units / *_vehicles view는 상세 목록용 view다.
-
 ## v_current_friendly_units
 - Purpose: 현재 시점 아군 유닛 상세 목록
 - Key columns: ref_datetime, unitname, groupname, unittype, posx, posy, posz, damage, objectparent
