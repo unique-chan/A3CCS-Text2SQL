@@ -1294,8 +1294,7 @@ def main():
     graph = runtime.graph
 
     print(f"⚡Connected to SQLite: {cfg.db_path}")
-    print(f"⚡LLM backend: {cfg.llm_backend}")
-    print(f"⚡Model: {cfg.model}")
+    print(f"⚡LLM backend: {cfg.llm_backend} {cfg.model}")
     print(
         f"⚡Limits: MAX_REPAIR_ATTEMPTS={cfg.max_repair_attempts}, "
         f"MAX_STEPS={cfg.max_steps}, "
