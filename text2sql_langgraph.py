@@ -479,6 +479,7 @@ class Config:
 
     block_non_readonly_sql: bool
     enable_semantic_check: bool
+    enable_rewrite: bool
 
     output_dir: str
 
@@ -515,11 +516,21 @@ def load_runtime_resources(cfg: Config) -> RuntimeResources:
         schema_instruction=load_optional_text(cfg.schema_instruction_path),
         system_text2sql=load_required_text(cfg.text2sql_prompt_path),
         system_repair=load_required_text(cfg.repair_prompt_path),
-        system_semantic_check=load_required_text(cfg.semantic_check_prompt_path),
-        system_semantic_repair=load_required_text(cfg.semantic_repair_prompt_path),
-        system_rewrite_intent=load_required_text(cfg.rewrite_intent_prompt_path),
-        system_rewrite_reflect=load_required_text(cfg.rewrite_reflect_prompt_path),
-        system_rewrite_sql=load_required_text(cfg.rewrite_sql_prompt_path),
+        system_semantic_check=(
+            load_required_text(cfg.semantic_check_prompt_path) if cfg.enable_semantic_check else ""
+        ),
+        system_semantic_repair=(
+            load_required_text(cfg.semantic_repair_prompt_path) if cfg.enable_semantic_check else ""
+        ),
+        system_rewrite_intent=(
+            load_required_text(cfg.rewrite_intent_prompt_path) if cfg.enable_rewrite else ""
+        ),
+        system_rewrite_reflect=(
+            load_required_text(cfg.rewrite_reflect_prompt_path) if cfg.enable_rewrite else ""
+        ),
+        system_rewrite_sql=(
+            load_required_text(cfg.rewrite_sql_prompt_path) if cfg.enable_rewrite else ""
+        ),
         cheat_sheet_general=load_optional_text(cfg.sql_cheat_general_path),
         view_catalog=load_optional_text(cfg.view_catalog_path),
     )
@@ -658,11 +669,13 @@ def build_llm(cfg: Config):
 def validate_text_resources(cfg: Config):
     load_required_text(cfg.text2sql_prompt_path)
     load_required_text(cfg.repair_prompt_path)
-    load_required_text(cfg.semantic_check_prompt_path)
-    load_required_text(cfg.semantic_repair_prompt_path)
-    load_required_text(cfg.rewrite_intent_prompt_path)
-    load_required_text(cfg.rewrite_reflect_prompt_path)
-    load_required_text(cfg.rewrite_sql_prompt_path)
+    if cfg.enable_semantic_check:
+        load_required_text(cfg.semantic_check_prompt_path)
+        load_required_text(cfg.semantic_repair_prompt_path)
+    if cfg.enable_rewrite:
+        load_required_text(cfg.rewrite_intent_prompt_path)
+        load_required_text(cfg.rewrite_reflect_prompt_path)
+        load_required_text(cfg.rewrite_sql_prompt_path)
     load_optional_text(cfg.schema_instruction_path)
     load_optional_text(cfg.sql_cheat_general_path)
     load_optional_text(cfg.view_catalog_path)
@@ -947,7 +960,9 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         return "prepare_context" if not state.get("schema") else "safety_check"
 
     def route_after_prepare_context(state: AgentState) -> str:
-        return "classify_rewrite_intent" if state.get("rewrite_request") else "generate_sql"
+        if cfg.enable_rewrite and state.get("rewrite_request"):
+            return "classify_rewrite_intent"
+        return "generate_sql"
 
     def route_after_safety(state: AgentState) -> str:
         if state.get("error") and "Step limit exceeded" in state["error"]:
@@ -1154,6 +1169,7 @@ def build_config_from_env() -> Config:
         max_rows=env_int("MAX_ROWS", 50),
         block_non_readonly_sql=env_bool("BLOCK_NON_READONLY_SQL", True),
         enable_semantic_check=env_bool("ENABLE_SEMANTIC_CHECK", True),
+        enable_rewrite=env_bool("ENABLE_REWRITE", True),
         output_dir=env_str("OUT_DIR", "results"),
     )
 
@@ -1205,6 +1221,23 @@ def run_text2sql_query(question: str, runtime: Optional[Text2SQLRuntime] = None)
 
     try:
         runtime = runtime or get_runtime()
+        if is_rewrite_request(question) and not runtime.cfg.enable_rewrite:
+            return {
+                "ok": False,
+                "question": question,
+                "sql": "",
+                "result": "",
+                "error": "Rewrite command is disabled by ENABLE_REWRITE=0.",
+                "semantic_error": "",
+                "rewrite_mode": "",
+                "rewrite_guidance": "",
+                "reflection": "",
+                "attempts": 0,
+                "rewrite_attempts": 0,
+                "steps": 0,
+                "timing": {},
+                "artifacts": {"sql_path": "", "csv_path": ""},
+            }
         out_dir = Path(runtime.cfg.output_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1299,14 +1332,16 @@ def main():
         f"⚡Limits: MAX_REPAIR_ATTEMPTS={cfg.max_repair_attempts}, "
         f"MAX_STEPS={cfg.max_steps}, "
         f"MAX_SAME_SQL_REPEATS={cfg.max_same_sql_repeats}, "
-        f"Semantic-check-before-answering enabled: {cfg.enable_semantic_check}"
+        f"Semantic-check-before-answering enabled: {cfg.enable_semantic_check}, "
+        f"Rewrite enabled: {cfg.enable_rewrite}"
     )
     print("⚡Type 'exit' to quit.")
-    print("⚡Rewrite commands:")
-    print("  e.g. (1) '[재작성]' -> autonomous rewrite")
-    print("           '[Rewrite]' -> autonomous rewrite")
-    print("  e.g. (2) '[재작성] 최신 1건만 보여줘!' -> guided rewrite")
-    print("           '[Rewrite] Show the recent 1 case only!' -> guided rewrite")
+    if cfg.enable_rewrite:
+        print("⚡Rewrite commands:")
+        print("  e.g. (1) '[재작성]' -> autonomous rewrite")
+        print("           '[Rewrite]' -> autonomous rewrite")
+        print("  e.g. (2) '[재작성] 최신 1건만 보여줘!' -> guided rewrite")
+        print("           '[Rewrite] Show the recent 1 case only!' -> guided rewrite")
     print()
 
     out_dir = Path(cfg.output_dir)
