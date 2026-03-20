@@ -169,22 +169,18 @@ def register_views_from_catalog_csv(db_path: str, csv_path: str) -> str:
 
         rows = list(reader)
 
-    def row_key(row: Dict[str, str]) -> Tuple[int, str]:
-        try:
-            order = int((row.get("init_order") or "").strip() or "999999")
-        except ValueError:
-            order = 999999
-        return (order, (row.get("view_name") or "").strip())
-
-    rows.sort(key=row_key)
-
     applied: List[str] = []
     skipped: List[str] = []
 
     conn = _connect_sqlite(db_path)
     try:
         cur = conn.cursor()
-        for idx, row in enumerate(rows, start=2):
+
+        # CSV 데이터 행 순서 그대로 등록
+        # data_row_idx=1 이 CSV 첫 번째 데이터 행
+        for data_row_idx, row in enumerate(rows, start=1):
+            csv_line_no = data_row_idx + 1  # 헤더 포함 실제 줄 번호 느낌으로 쓰기 위함
+
             view_name = (row.get("view_name") or "").strip()
             create_sql = (row.get("create_sql") or "").strip()
             enabled_raw = (row.get("enabled") or "1").strip()
@@ -193,19 +189,23 @@ def register_views_from_catalog_csv(db_path: str, csv_path: str) -> str:
             if not view_name and not create_sql:
                 continue
             if not view_name:
-                raise ValueError(f"Row {idx}: view_name is empty.")
+                raise ValueError(f"CSV line {csv_line_no}: view_name is empty.")
             if not create_sql:
-                raise ValueError(f"Row {idx}: create_sql is empty for view '{view_name}'.")
+                raise ValueError(
+                    f"CSV line {csv_line_no}: create_sql is empty for view '{view_name}'."
+                )
+
             if enabled_raw and not parse_bool_text(enabled_raw):
                 skipped.append(f"{view_name} (disabled)")
                 continue
 
             ok, reason = validate_view_registration_sql(create_sql)
             if not ok:
-                raise ValueError(f"Row {idx} ({view_name}): {reason}")
+                raise ValueError(f"CSV line {csv_line_no} ({view_name}): {reason}")
 
             if drop_if_exists:
                 cur.execute(f'DROP VIEW IF EXISTS "{view_name}"')
+
             cur.execute(create_sql)
             applied.append(view_name)
 
@@ -214,8 +214,7 @@ def register_views_from_catalog_csv(db_path: str, csv_path: str) -> str:
         conn.close()
 
     if applied:
-        return f"View registration completed! registered={len(applied)}"
-        # return f"View registration completed! registered={len(applied)} [{', '.join(applied)}]"
+        return f"View registration completed! registered={len(applied)} [{', '.join(applied)}]"
     if skipped:
         return f"View registration completed! registered=0 skipped={len(skipped)}"
     return "View registration completed! registered=0"
@@ -1327,6 +1326,7 @@ def main():
         if not q:
             continue
         if q.lower() in {"exit", "quit"}:
+            print('➜] Terminated. Have a nice day!')
             break
 
         init_state = make_empty_state(q, csv_path)

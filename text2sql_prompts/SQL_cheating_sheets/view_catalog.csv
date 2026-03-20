@@ -1,5 +1,5 @@
-﻿enabled,init_order,view_name,drop_if_exists,note,create_sql
-1,10,v_current_friendly_units,1,현재 시점 아군 유닛 상세,"CREATE VIEW v_current_friendly_units AS
+﻿enabled,view_name,drop_if_exists,note,create_sql
+1,v_current_friendly_units,1,현재 시점 아군 유닛 상세,"CREATE VIEW v_current_friendly_units AS
 WITH anchor AS (
     SELECT MAX(datetime) AS ref_datetime
     FROM units
@@ -20,7 +20,7 @@ SELECT
 FROM units u
 JOIN anchor a ON u.datetime = a.ref_datetime
 WHERE u.side = 'b' "
-1,20,v_initial_friendly_units,1,최초 시점 아군 유닛 상세,"CREATE VIEW v_initial_friendly_units AS
+1,v_initial_friendly_units,1,최초 시점 아군 유닛 상세,"CREATE VIEW v_initial_friendly_units AS
 WITH anchor AS (
     SELECT MIN(datetime) AS ref_datetime
     FROM units
@@ -41,7 +41,7 @@ SELECT
 FROM units u
 JOIN anchor a ON u.datetime = a.ref_datetime
 WHERE u.side = 'b' "
-1,30,v_current_enemy_units,1,현재 시점 적군 유닛 상세,"CREATE VIEW v_current_enemy_units AS
+1,v_current_enemy_units,1,현재 시점 적군 유닛 상세,"CREATE VIEW v_current_enemy_units AS
 WITH anchor AS (
     SELECT MAX(datetime) AS ref_datetime
     FROM units
@@ -62,7 +62,7 @@ SELECT
 FROM units u
 JOIN anchor a ON u.datetime = a.ref_datetime
 WHERE u.side = 'op' "
-1,40,v_initial_enemy_units,1,최초 시점 적군 유닛 상세,"CREATE VIEW v_initial_enemy_units AS
+1,v_initial_enemy_units,1,최초 시점 적군 유닛 상세,"CREATE VIEW v_initial_enemy_units AS
 WITH anchor AS (
     SELECT MIN(datetime) AS ref_datetime
     FROM units
@@ -83,31 +83,31 @@ SELECT
 FROM units u
 JOIN anchor a ON u.datetime = a.ref_datetime
 WHERE u.side = 'op' "
-1,50,v_current_friendly_unit_count,1,현재 아군 유닛 개수,"CREATE VIEW v_current_friendly_unit_count AS
+1,v_current_friendly_unit_count,1,현재 아군 유닛 개수,"CREATE VIEW v_current_friendly_unit_count AS
 SELECT
     ref_datetime,
     COUNT(*) AS unit_count
 FROM v_current_friendly_units
 GROUP BY ref_datetime "
-1,60,v_initial_friendly_unit_count,1,원래 아군 유닛 개수,"CREATE VIEW v_initial_friendly_unit_count AS
+1,v_initial_friendly_unit_count,1,원래 아군 유닛 개수,"CREATE VIEW v_initial_friendly_unit_count AS
 SELECT
     ref_datetime,
     COUNT(*) AS unit_count
 FROM v_initial_friendly_units
 GROUP BY ref_datetime "
-1,70,v_current_enemy_unit_count,1,현재 적군 유닛 개수,"CREATE VIEW v_current_enemy_unit_count AS
+1,v_current_enemy_unit_count,1,현재 적군 유닛 개수,"CREATE VIEW v_current_enemy_unit_count AS
 SELECT
     ref_datetime,
     COUNT(*) AS unit_count
 FROM v_current_enemy_units
 GROUP BY ref_datetime "
-1,80,v_initial_enemy_unit_count,1,원래 적군 유닛 개수,"CREATE VIEW v_initial_enemy_unit_count AS
+1,v_initial_enemy_unit_count,1,원래 적군 유닛 개수,"CREATE VIEW v_initial_enemy_unit_count AS
 SELECT
     ref_datetime,
     COUNT(*) AS unit_count
 FROM v_initial_enemy_units
 GROUP BY ref_datetime "
-1,90,v_current_friendly_vehicles,1,현재 아군 장비 상세,"CREATE VIEW v_current_friendly_vehicles AS
+1,v_current_friendly_vehicles,1,현재 아군 장비 상세,"CREATE VIEW v_current_friendly_vehicles AS
 WITH anchor AS (
     SELECT MAX(datetime) AS ref_datetime
     FROM vehicles
@@ -128,7 +128,7 @@ SELECT
 FROM vehicles v
 JOIN anchor a ON v.datetime = a.ref_datetime
 WHERE v.side = 'b' "
-1,100,v_initial_friendly_vehicles,1,최초 시점 아군 장비 상세,"CREATE VIEW v_initial_friendly_vehicles AS
+1,v_initial_friendly_vehicles,1,최초 시점 아군 장비 상세,"CREATE VIEW v_initial_friendly_vehicles AS
 WITH anchor AS (
     SELECT MIN(datetime) AS ref_datetime
     FROM vehicles
@@ -149,7 +149,7 @@ SELECT
 FROM vehicles v
 JOIN anchor a ON v.datetime = a.ref_datetime
 WHERE v.side = 'b' "
-1,110,v_current_enemy_vehicles,1,현재 적군 장비 상세,"CREATE VIEW v_current_enemy_vehicles AS
+1,v_current_enemy_vehicles,1,현재 적군 장비 상세,"CREATE VIEW v_current_enemy_vehicles AS
 WITH anchor AS (
     SELECT MAX(datetime) AS ref_datetime
     FROM vehicles
@@ -170,7 +170,7 @@ SELECT
 FROM vehicles v
 JOIN anchor a ON v.datetime = a.ref_datetime
 WHERE v.side = 'op' "
-1,120,v_initial_enemy_vehicles,1,최초 시점 적군 장비 상세,"CREATE VIEW v_initial_enemy_vehicles AS
+1,v_initial_enemy_vehicles,1,최초 시점 적군 장비 상세,"CREATE VIEW v_initial_enemy_vehicles AS
 WITH anchor AS (
     SELECT MIN(datetime) AS ref_datetime
     FROM vehicles
@@ -191,25 +191,25 @@ SELECT
 FROM vehicles v
 JOIN anchor a ON v.datetime = a.ref_datetime
 WHERE v.side = 'op' "
-1,130,v_current_friendly_vehicle_count,1,현재 아군 장비 개수,"CREATE VIEW v_current_friendly_vehicle_count AS
+1,v_current_friendly_vehicle_count,1,현재 아군 장비 개수,"CREATE VIEW v_current_friendly_vehicle_count AS
 SELECT
     ref_datetime,
     COUNT(*) AS vehicle_count
 FROM v_current_friendly_vehicles
 GROUP BY ref_datetime "
-1,140,v_initial_friendly_vehicle_count,1,원래 아군 장비 개수,"CREATE VIEW v_initial_friendly_vehicle_count AS
+1,v_initial_friendly_vehicle_count,1,원래 아군 장비 개수,"CREATE VIEW v_initial_friendly_vehicle_count AS
 SELECT
     ref_datetime,
     COUNT(*) AS vehicle_count
 FROM v_initial_friendly_vehicles
 GROUP BY ref_datetime "
-1,150,v_current_enemy_vehicle_count,1,현재 적군 장비 개수,"CREATE VIEW v_current_enemy_vehicle_count AS
+1,v_current_enemy_vehicle_count,1,현재 적군 장비 개수,"CREATE VIEW v_current_enemy_vehicle_count AS
 SELECT
     ref_datetime,
     COUNT(*) AS vehicle_count
 FROM v_current_enemy_vehicles
 GROUP BY ref_datetime "
-1,160,v_initial_enemy_vehicle_count,1,원래 적군 장비 개수,"CREATE VIEW v_initial_enemy_vehicle_count AS
+1,v_initial_enemy_vehicle_count,1,원래 적군 장비 개수,"CREATE VIEW v_initial_enemy_vehicle_count AS
 SELECT
     ref_datetime,
     COUNT(*) AS vehicle_count
