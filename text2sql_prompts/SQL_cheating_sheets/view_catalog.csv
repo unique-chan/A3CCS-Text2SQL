@@ -215,4 +215,603 @@ SELECT
     COUNT(*) AS vehicle_count
 FROM v_initial_enemy_vehicles
 GROUP BY ref_datetime "
+1,v_current_friendly_enemy_group_distance,1,현재 아군 그룹과 적군 그룹 간 거리,"CREATE VIEW v_current_friendly_enemy_group_distance AS
+WITH
+anchor AS (
+    SELECT MAX(datetime) AS ref_datetime
+    FROM snapshots
+    WHERE datetime IS NOT NULL
+),
+friendly_group_centroid AS (
+    SELECT
+        u.groupname,
+        u.datetime,
+        AVG(u.posx) AS centroid_posx,
+        AVG(u.posy) AS centroid_posy,
+        AVG(u.posz) AS centroid_posz
+    FROM units u
+    WHERE u.side = 'b'
+    GROUP BY u.groupname, u.datetime
+),
+enemy_group_centroid AS (
+    SELECT
+        u.groupname,
+        u.datetime,
+        AVG(u.posx) AS centroid_posx,
+        AVG(u.posy) AS centroid_posy,
+        AVG(u.posz) AS centroid_posz
+    FROM units u
+    WHERE u.side = 'op'
+    GROUP BY u.groupname, u.datetime
+),
+friendly_current AS (
+    SELECT
+        fg.groupname,
+        fg.datetime,
+        fg.centroid_posx,
+        fg.centroid_posy,
+        fg.centroid_posz,
+        ROW_NUMBER() OVER (
+            PARTITION BY fg.groupname
+            ORDER BY ABS(julianday(fg.datetime) - julianday(a.ref_datetime)), fg.datetime DESC
+        ) AS rn
+    FROM friendly_group_centroid fg
+    CROSS JOIN anchor a
+),
+enemy_current AS (
+    SELECT
+        eg.groupname,
+        eg.datetime,
+        eg.centroid_posx,
+        eg.centroid_posy,
+        eg.centroid_posz,
+        ROW_NUMBER() OVER (
+            PARTITION BY eg.groupname
+            ORDER BY ABS(julianday(eg.datetime) - julianday(a.ref_datetime)), eg.datetime DESC
+        ) AS rn
+    FROM enemy_group_centroid eg
+    CROSS JOIN anchor a
+)
+SELECT
+    a.ref_datetime,
+    f.groupname AS friendly_groupname,
+    f.datetime AS friendly_datetime,
+    f.centroid_posx AS friendly_posx,
+    f.centroid_posy AS friendly_posy,
+    f.centroid_posz AS friendly_posz,
+    e.groupname AS enemy_groupname,
+    e.datetime AS enemy_datetime,
+    e.centroid_posx AS enemy_posx,
+    e.centroid_posy AS enemy_posy,
+    e.centroid_posz AS enemy_posz,
+    sqrt(
+        (f.centroid_posx - e.centroid_posx) * (f.centroid_posx - e.centroid_posx) +
+        (f.centroid_posy - e.centroid_posy) * (f.centroid_posy - e.centroid_posy) +
+        (COALESCE(f.centroid_posz, 0.0) - COALESCE(e.centroid_posz, 0.0)) *
+        (COALESCE(f.centroid_posz, 0.0) - COALESCE(e.centroid_posz, 0.0))
+    ) AS distance_3d
+FROM anchor a
+JOIN friendly_current f ON f.rn = 1
+JOIN enemy_current e ON e.rn = 1
+ORDER BY distance_3d ASC, friendly_groupname, enemy_groupname "
+1,v_current_friendly_enemy_unit_distance,1,현재 아군 유닛과 적군 유닛 간 거리,"CREATE VIEW v_current_friendly_enemy_unit_distance AS
+WITH
+anchor AS (
+    SELECT MAX(datetime) AS ref_datetime
+    FROM snapshots
+    WHERE datetime IS NOT NULL
+),
+friendly_current AS (
+    SELECT
+        u.unitname,
+        u.groupname,
+        u.unittype,
+        u.datetime,
+        u.posx,
+        u.posy,
+        u.posz,
+        ROW_NUMBER() OVER (
+            PARTITION BY u.unitname
+            ORDER BY ABS(julianday(u.datetime) - julianday(a.ref_datetime)), u.datetime DESC
+        ) AS rn
+    FROM units u
+    CROSS JOIN anchor a
+    WHERE u.side = 'b'
+),
+enemy_current AS (
+    SELECT
+        u.unitname,
+        u.groupname,
+        u.unittype,
+        u.datetime,
+        u.posx,
+        u.posy,
+        u.posz,
+        ROW_NUMBER() OVER (
+            PARTITION BY u.unitname
+            ORDER BY ABS(julianday(u.datetime) - julianday(a.ref_datetime)), u.datetime DESC
+        ) AS rn
+    FROM units u
+    CROSS JOIN anchor a
+    WHERE u.side = 'op'
+)
+SELECT
+    a.ref_datetime,
+    f.unitname AS friendly_unitname,
+    f.groupname AS friendly_groupname,
+    f.unittype AS friendly_unittype,
+    f.datetime AS friendly_datetime,
+    f.posx AS friendly_posx,
+    f.posy AS friendly_posy,
+    f.posz AS friendly_posz,
+    e.unitname AS enemy_unitname,
+    e.groupname AS enemy_groupname,
+    e.unittype AS enemy_unittype,
+    e.datetime AS enemy_datetime,
+    e.posx AS enemy_posx,
+    e.posy AS enemy_posy,
+    e.posz AS enemy_posz,
+    sqrt(
+        (f.posx - e.posx) * (f.posx - e.posx) +
+        (f.posy - e.posy) * (f.posy - e.posy) +
+        (COALESCE(f.posz, 0.0) - COALESCE(e.posz, 0.0)) *
+        (COALESCE(f.posz, 0.0) - COALESCE(e.posz, 0.0))
+    ) AS distance_3d
+FROM anchor a
+JOIN friendly_current f ON f.rn = 1
+JOIN enemy_current e ON e.rn = 1
+ORDER BY distance_3d ASC, friendly_unitname, enemy_unitname "
+1,v_current_friendly_enemy_vehicle_distance,1,현재 아군 장비와 적군 장비 간 거리,"CREATE VIEW v_current_friendly_enemy_vehicle_distance AS
+WITH
+anchor AS (
+    SELECT MAX(datetime) AS ref_datetime
+    FROM snapshots
+    WHERE datetime IS NOT NULL
+),
+friendly_current AS (
+    SELECT
+        v.vehiclename,
+        v.groupname,
+        v.vehicletype,
+        v.datetime,
+        v.posx,
+        v.posy,
+        v.posz,
+        ROW_NUMBER() OVER (
+            PARTITION BY v.vehiclename
+            ORDER BY ABS(julianday(v.datetime) - julianday(a.ref_datetime)), v.datetime DESC
+        ) AS rn
+    FROM vehicles v
+    CROSS JOIN anchor a
+    WHERE v.side = 'b'
+),
+enemy_current AS (
+    SELECT
+        v.vehiclename,
+        v.groupname,
+        v.vehicletype,
+        v.datetime,
+        v.posx,
+        v.posy,
+        v.posz,
+        ROW_NUMBER() OVER (
+            PARTITION BY v.vehiclename
+            ORDER BY ABS(julianday(v.datetime) - julianday(a.ref_datetime)), v.datetime DESC
+        ) AS rn
+    FROM vehicles v
+    CROSS JOIN anchor a
+    WHERE v.side = 'op'
+)
+SELECT
+    a.ref_datetime,
+    f.vehiclename AS friendly_vehiclename,
+    f.groupname AS friendly_groupname,
+    f.vehicletype AS friendly_vehicletype,
+    f.datetime AS friendly_datetime,
+    f.posx AS friendly_posx,
+    f.posy AS friendly_posy,
+    f.posz AS friendly_posz,
+    e.vehiclename AS enemy_vehiclename,
+    e.groupname AS enemy_groupname,
+    e.vehicletype AS enemy_vehicletype,
+    e.datetime AS enemy_datetime,
+    e.posx AS enemy_posx,
+    e.posy AS enemy_posy,
+    e.posz AS enemy_posz,
+    sqrt(
+        (f.posx - e.posx) * (f.posx - e.posx) +
+        (f.posy - e.posy) * (f.posy - e.posy) +
+        (COALESCE(f.posz, 0.0) - COALESCE(e.posz, 0.0)) *
+        (COALESCE(f.posz, 0.0) - COALESCE(e.posz, 0.0))
+    ) AS distance_3d
+FROM anchor a
+JOIN friendly_current f ON f.rn = 1
+JOIN enemy_current e ON e.rn = 1
+ORDER BY distance_3d ASC, friendly_vehiclename, enemy_vehiclename "
+1,v_friendly_unit_speed_trend,1,아군 유닛 속도 변화 추이 (최신 시간대부터),"CREATE VIEW v_friendly_unit_speed_trend AS
+WITH movement AS (
+    SELECT
+        unitname,
+        groupname,
+        unittype,
+        datetime,
+        posx,
+        posy,
+        posz,
+        LAG(datetime) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_datetime,
+        LAG(posx) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_posx,
+        LAG(posy) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_posy,
+        LAG(posz) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_posz
+    FROM units
+    WHERE side = 'b'
+),
+speed_base AS (
+    SELECT
+        unitname,
+        groupname,
+        unittype,
+        datetime,
+        prev_datetime,
+        posx,
+        posy,
+        posz,
+        prev_posx,
+        prev_posy,
+        prev_posz,
+        (julianday(datetime) - julianday(prev_datetime)) * 86400.0 AS dt_seconds,
+        sqrt(
+            (posx - prev_posx) * (posx - prev_posx) +
+            (posy - prev_posy) * (posy - prev_posy) +
+            (COALESCE(posz, 0.0) - COALESCE(prev_posz, 0.0)) *
+            (COALESCE(posz, 0.0) - COALESCE(prev_posz, 0.0))
+        ) AS distance_delta
+    FROM movement
+    WHERE prev_datetime IS NOT NULL
+),
+speed_calc AS (
+    SELECT
+        unitname,
+        groupname,
+        unittype,
+        datetime,
+        prev_datetime,
+        dt_seconds,
+        distance_delta,
+        CASE
+            WHEN dt_seconds IS NULL OR ABS(dt_seconds) < 1e-9 THEN NULL
+            ELSE distance_delta / dt_seconds
+        END AS speed_per_sec
+    FROM speed_base
+)
+SELECT
+    unitname,
+    groupname,
+    unittype,
+    datetime,
+    prev_datetime,
+    dt_seconds,
+    distance_delta,
+    speed_per_sec,
+    LAG(speed_per_sec) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_speed_per_sec,
+    speed_per_sec - LAG(speed_per_sec) OVER (PARTITION BY unitname ORDER BY datetime) AS speed_change_per_sec
+FROM speed_calc
+ORDER BY datetime DESC, unitname "
+1,v_friendly_vehicle_speed_trend,1,아군 장비 속도 변화 추이 (최신 시간대부터),"CREATE VIEW v_friendly_vehicle_speed_trend AS
+WITH movement AS (
+    SELECT
+        vehiclename,
+        groupname,
+        vehicletype,
+        datetime,
+        posx,
+        posy,
+        posz,
+        LAG(datetime) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_datetime,
+        LAG(posx) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_posx,
+        LAG(posy) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_posy,
+        LAG(posz) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_posz
+    FROM vehicles
+    WHERE side = 'b'
+),
+speed_base AS (
+    SELECT
+        vehiclename,
+        groupname,
+        vehicletype,
+        datetime,
+        prev_datetime,
+        posx,
+        posy,
+        posz,
+        prev_posx,
+        prev_posy,
+        prev_posz,
+        (julianday(datetime) - julianday(prev_datetime)) * 86400.0 AS dt_seconds,
+        sqrt(
+            (posx - prev_posx) * (posx - prev_posx) +
+            (posy - prev_posy) * (posy - prev_posy) +
+            (COALESCE(posz, 0.0) - COALESCE(prev_posz, 0.0)) *
+            (COALESCE(posz, 0.0) - COALESCE(prev_posz, 0.0))
+        ) AS distance_delta
+    FROM movement
+    WHERE prev_datetime IS NOT NULL
+),
+speed_calc AS (
+    SELECT
+        vehiclename,
+        groupname,
+        vehicletype,
+        datetime,
+        prev_datetime,
+        dt_seconds,
+        distance_delta,
+        CASE
+            WHEN dt_seconds IS NULL OR ABS(dt_seconds) < 1e-9 THEN NULL
+            ELSE distance_delta / dt_seconds
+        END AS speed_per_sec
+    FROM speed_base
+)
+SELECT
+    vehiclename,
+    groupname,
+    vehicletype,
+    datetime,
+    prev_datetime,
+    dt_seconds,
+    distance_delta,
+    speed_per_sec,
+    LAG(speed_per_sec) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_speed_per_sec,
+    speed_per_sec - LAG(speed_per_sec) OVER (PARTITION BY vehiclename ORDER BY datetime) AS speed_change_per_sec
+FROM speed_calc
+ORDER BY datetime DESC, vehiclename "
+1,v_enemy_unit_speed_trend,1,적군 유닛 속도 변화 추이 (최신 시간대부터),"CREATE VIEW v_enemy_unit_speed_trend AS
+WITH movement AS (
+    SELECT
+        unitname,
+        groupname,
+        unittype,
+        datetime,
+        posx,
+        posy,
+        posz,
+        LAG(datetime) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_datetime,
+        LAG(posx) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_posx,
+        LAG(posy) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_posy,
+        LAG(posz) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_posz
+    FROM units
+    WHERE side = 'op'
+),
+speed_base AS (
+    SELECT
+        unitname,
+        groupname,
+        unittype,
+        datetime,
+        prev_datetime,
+        posx,
+        posy,
+        posz,
+        prev_posx,
+        prev_posy,
+        prev_posz,
+        (julianday(datetime) - julianday(prev_datetime)) * 86400.0 AS dt_seconds,
+        sqrt(
+            (posx - prev_posx) * (posx - prev_posx) +
+            (posy - prev_posy) * (posy - prev_posy) +
+            (COALESCE(posz, 0.0) - COALESCE(prev_posz, 0.0)) *
+            (COALESCE(posz, 0.0) - COALESCE(prev_posz, 0.0))
+        ) AS distance_delta
+    FROM movement
+    WHERE prev_datetime IS NOT NULL
+),
+speed_calc AS (
+    SELECT
+        unitname,
+        groupname,
+        unittype,
+        datetime,
+        prev_datetime,
+        dt_seconds,
+        distance_delta,
+        CASE
+            WHEN dt_seconds IS NULL OR ABS(dt_seconds) < 1e-9 THEN NULL
+            ELSE distance_delta / dt_seconds
+        END AS speed_per_sec
+    FROM speed_base
+)
+SELECT
+    unitname,
+    groupname,
+    unittype,
+    datetime,
+    prev_datetime,
+    dt_seconds,
+    distance_delta,
+    speed_per_sec,
+    LAG(speed_per_sec) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_speed_per_sec,
+    speed_per_sec - LAG(speed_per_sec) OVER (PARTITION BY unitname ORDER BY datetime) AS speed_change_per_sec
+FROM speed_calc
+ORDER BY datetime DESC, unitname "
+1,v_enemy_vehicle_speed_trend,1,적군 장비 속도 변화 추이 (최신 시간대부터),"CREATE VIEW v_enemy_vehicle_speed_trend AS
+WITH movement AS (
+    SELECT
+        vehiclename,
+        groupname,
+        vehicletype,
+        datetime,
+        posx,
+        posy,
+        posz,
+        LAG(datetime) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_datetime,
+        LAG(posx) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_posx,
+        LAG(posy) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_posy,
+        LAG(posz) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_posz
+    FROM vehicles
+    WHERE side = 'op'
+),
+speed_base AS (
+    SELECT
+        vehiclename,
+        groupname,
+        vehicletype,
+        datetime,
+        prev_datetime,
+        posx,
+        posy,
+        posz,
+        prev_posx,
+        prev_posy,
+        prev_posz,
+        (julianday(datetime) - julianday(prev_datetime)) * 86400.0 AS dt_seconds,
+        sqrt(
+            (posx - prev_posx) * (posx - prev_posx) +
+            (posy - prev_posy) * (posy - prev_posy) +
+            (COALESCE(posz, 0.0) - COALESCE(prev_posz, 0.0)) *
+            (COALESCE(posz, 0.0) - COALESCE(prev_posz, 0.0))
+        ) AS distance_delta
+    FROM movement
+    WHERE prev_datetime IS NOT NULL
+),
+speed_calc AS (
+    SELECT
+        vehiclename,
+        groupname,
+        vehicletype,
+        datetime,
+        prev_datetime,
+        dt_seconds,
+        distance_delta,
+        CASE
+            WHEN dt_seconds IS NULL OR ABS(dt_seconds) < 1e-9 THEN NULL
+            ELSE distance_delta / dt_seconds
+        END AS speed_per_sec
+    FROM speed_base
+)
+SELECT
+    vehiclename,
+    groupname,
+    vehicletype,
+    datetime,
+    prev_datetime,
+    dt_seconds,
+    distance_delta,
+    speed_per_sec,
+    LAG(speed_per_sec) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_speed_per_sec,
+    speed_per_sec - LAG(speed_per_sec) OVER (PARTITION BY vehiclename ORDER BY datetime) AS speed_change_per_sec
+FROM speed_calc
+ORDER BY datetime DESC, vehiclename "
+1,v_friendly_unit_ammo_trend,1,아군 유닛별 탄약량 변화 추이 (최신 시간대부터),"CREATE VIEW v_friendly_unit_ammo_trend AS
+WITH ammo_total AS (
+    SELECT
+        unitname,
+        datetime,
+        SUM(COALESCE(count, 0)) AS total_ammo_count
+    FROM units_ammo
+    WHERE side = 'b'
+    GROUP BY unitname, datetime
+),
+ammo_delta AS (
+    SELECT
+        unitname,
+        datetime,
+        total_ammo_count,
+        LAG(datetime) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_datetime,
+        LAG(total_ammo_count) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_total_ammo_count
+    FROM ammo_total
+)
+SELECT
+    unitname,
+    datetime,
+    prev_datetime,
+    total_ammo_count,
+    prev_total_ammo_count,
+    total_ammo_count - prev_total_ammo_count AS ammo_change
+FROM ammo_delta
+ORDER BY datetime DESC, unitname "
+1,v_friendly_vehicle_ammo_trend,1,아군 장비별 탄약량 변화 추이 (최신 시간대부터),"CREATE VIEW v_friendly_vehicle_ammo_trend AS
+WITH ammo_total AS (
+    SELECT
+        vehiclename,
+        datetime,
+        SUM(COALESCE(count, 0)) AS total_ammo_count
+    FROM vehicles_ammo
+    WHERE side = 'b'
+    GROUP BY vehiclename, datetime
+),
+ammo_delta AS (
+    SELECT
+        vehiclename,
+        datetime,
+        total_ammo_count,
+        LAG(datetime) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_datetime,
+        LAG(total_ammo_count) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_total_ammo_count
+    FROM ammo_total
+)
+SELECT
+    vehiclename,
+    datetime,
+    prev_datetime,
+    total_ammo_count,
+    prev_total_ammo_count,
+    total_ammo_count - prev_total_ammo_count AS ammo_change
+FROM ammo_delta
+ORDER BY datetime DESC, vehiclename "
+1,v_enemy_unit_ammo_trend,1,적군 유닛별 탄약량 변화 추이 (최신 시간대부터),"CREATE VIEW v_enemy_unit_ammo_trend AS
+WITH ammo_total AS (
+    SELECT
+        unitname,
+        datetime,
+        SUM(COALESCE(count, 0)) AS total_ammo_count
+    FROM units_ammo
+    WHERE side = 'op'
+    GROUP BY unitname, datetime
+),
+ammo_delta AS (
+    SELECT
+        unitname,
+        datetime,
+        total_ammo_count,
+        LAG(datetime) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_datetime,
+        LAG(total_ammo_count) OVER (PARTITION BY unitname ORDER BY datetime) AS prev_total_ammo_count
+    FROM ammo_total
+)
+SELECT
+    unitname,
+    datetime,
+    prev_datetime,
+    total_ammo_count,
+    prev_total_ammo_count,
+    total_ammo_count - prev_total_ammo_count AS ammo_change
+FROM ammo_delta
+ORDER BY datetime DESC, unitname "
+1,v_enemy_vehicle_ammo_trend,1,적군 장비별 탄약량 변화 추이 (최신 시간대부터),"CREATE VIEW v_enemy_vehicle_ammo_trend AS
+WITH ammo_total AS (
+    SELECT
+        vehiclename,
+        datetime,
+        SUM(COALESCE(count, 0)) AS total_ammo_count
+    FROM vehicles_ammo
+    WHERE side = 'op'
+    GROUP BY vehiclename, datetime
+),
+ammo_delta AS (
+    SELECT
+        vehiclename,
+        datetime,
+        total_ammo_count,
+        LAG(datetime) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_datetime,
+        LAG(total_ammo_count) OVER (PARTITION BY vehiclename ORDER BY datetime) AS prev_total_ammo_count
+    FROM ammo_total
+)
+SELECT
+    vehiclename,
+    datetime,
+    prev_datetime,
+    total_ammo_count,
+    prev_total_ammo_count,
+    total_ammo_count - prev_total_ammo_count AS ammo_change
+FROM ammo_delta
+ORDER BY datetime DESC, vehiclename "
+,,,,
+,,,,
 ,,,,
