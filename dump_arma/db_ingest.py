@@ -5,6 +5,7 @@ from datetime import datetime
 import orjson
 from tqdm import tqdm
 from sqlalchemy import select
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 
 from .db_util import make_engine, make_session_factory
 from .db_schema import (
@@ -87,6 +88,15 @@ def _to_float_or_none(x):
         return float(x)
     except Exception:
         return None
+
+
+def add_ignore(session, model, **kwargs):
+    """
+    SQLite 전용:
+    UNIQUE / PK 충돌이 나면 해당 row insert를 무시한다.
+    """
+    stmt = sqlite_insert(model).values(**kwargs).prefix_with("OR IGNORE")
+    session.execute(stmt)
 
 
 def normalize_ammo_items(ammo_obj):
@@ -259,14 +269,14 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                     if "start_time" in ei0:
                         start_iso = time_list_to_iso(ei0["start_time"])
 
-                session.add(
-                    Snapshot(
-                        snapshotid=sid,
-                        sourcefile=f.name,
-                        sha256=sha,
-                        datetime=start_iso,
-                        rawjson=dumps(raw_json_file),
-                    )
+                add_ignore(
+                    session,
+                    Snapshot,
+                    snapshotid=sid,
+                    sourcefile=f.name,
+                    sha256=sha,
+                    datetime=start_iso,
+                    rawjson=dumps(raw_json_file),
                 )
 
                 # --------------------
@@ -291,21 +301,21 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                         lx, ly, lz = safe_pos3(g.get("leaderpos", []))
                         wx, wy = safe_waypoint_xy(g.get("waypointpos", []))
 
-                        session.add(
-                            Group(
-                                snapshotid=sid,
-                                datetime=start_iso,
-                                side=side,
-                                company=company,
-                                platoon=platoon,
-                                squad=squad,
-                                groupname=gc,
-                                leaderposx=lx,
-                                leaderposy=ly,
-                                leaderposz=lz,
-                                waypointposx=wx,
-                                waypointposy=wy,
-                            )
+                        add_ignore(
+                            session,
+                            Group,
+                            snapshotid=sid,
+                            datetime=start_iso,
+                            side=side,
+                            company=company,
+                            platoon=platoon,
+                            squad=squad,
+                            groupname=gc,
+                            leaderposx=lx,
+                            leaderposy=ly,
+                            leaderposz=lz,
+                            waypointposx=wx,
+                            waypointposy=wy,
                         )
 
                     # units + units_ammo
@@ -316,34 +326,34 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
 
                         ux, uy, uz = safe_pos3(u.get("pos", []))
 
-                        if '_' in uname:
-                            session.add(
-                                Unit(
-                                    snapshotid=sid,
-                                    side=side,
-                                    unitname=uname,
-                                    datetime=start_iso,
-                                    groupname="_".join(uname.split("_")[:4]),
-                                    unittype=u.get("unittype"),
-                                    posx=ux,
-                                    posy=uy,
-                                    posz=uz,
-                                    damage=u.get("damage", 0.0),
-                                    objectparent=u.get("objectparent"),
-                                )
+                        if "_" in uname:
+                            add_ignore(
+                                session,
+                                Unit,
+                                snapshotid=sid,
+                                side=side,
+                                unitname=uname,
+                                datetime=start_iso,
+                                groupname="_".join(uname.split("_")[:4]),
+                                unittype=u.get("unittype"),
+                                posx=ux,
+                                posy=uy,
+                                posz=uz,
+                                damage=u.get("damage", 0.0),
+                                objectparent=u.get("objectparent"),
                             )
 
                         ammo_agg = aggregate_ammo(normalize_ammo_items(u.get("ammo", [])))
                         for ammotype, count_sum in ammo_agg.items():
-                            session.add(
-                                UnitAmmo(
-                                    snapshotid=sid,
-                                    side=side,
-                                    datetime=start_iso,
-                                    unitname=uname,
-                                    ammotype=ammotype,
-                                    count=count_sum,
-                                )
+                            add_ignore(
+                                session,
+                                UnitAmmo,
+                                snapshotid=sid,
+                                side=side,
+                                datetime=start_iso,
+                                unitname=uname,
+                                ammotype=ammotype,
+                                count=count_sum,
                             )
 
                     # vehicles + vehicles_ammo + vehicle_hitpoints
@@ -355,33 +365,33 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                         vx, vy, vz = safe_pos3(v.get("pos", []))
                         hp_obj = v.get("hitpoint", [])
 
-                        session.add(
-                            Vehicle(
-                                snapshotid=sid,
-                                datetime=start_iso,
-                                side=side,
-                                vehiclename=vname,
-                                groupname="_".join(vname.split("_")[:4]),
-                                vehicletype=v.get("vehicletype"),
-                                posx=vx,
-                                posy=vy,
-                                posz=vz,
-                                damage=v.get("damage", 0.0),
-                                # hitpointjson=dumps(hp_obj),
-                            )
+                        add_ignore(
+                            session,
+                            Vehicle,
+                            snapshotid=sid,
+                            datetime=start_iso,
+                            side=side,
+                            vehiclename=vname,
+                            groupname="_".join(vname.split("_")[:4]),
+                            vehicletype=v.get("vehicletype"),
+                            posx=vx,
+                            posy=vy,
+                            posz=vz,
+                            damage=v.get("damage", 0.0),
+                            # hitpointjson=dumps(hp_obj),
                         )
 
                         ammo_agg = aggregate_ammo(normalize_ammo_items(v.get("ammo", [])))
                         for ammotype, count_sum in ammo_agg.items():
-                            session.add(
-                                VehicleAmmo(
-                                    snapshotid=sid,
-                                    datetime=start_iso,
-                                    side=side,
-                                    vehiclename=vname,
-                                    ammotype=ammotype,
-                                    count=count_sum,
-                                )
+                            add_ignore(
+                                session,
+                                VehicleAmmo,
+                                snapshotid=sid,
+                                datetime=start_iso,
+                                side=side,
+                                vehiclename=vname,
+                                ammotype=ammotype,
+                                count=count_sum,
                             )
 
                         # hitpoints (3 x n -> keep rows 0 and 2), dedup by hitpoint name (last wins)
@@ -390,15 +400,15 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                             hp_map[hp_name] = dmg
 
                         for hp_name, dmg in hp_map.items():
-                            session.add(
-                                VehicleHitpoint(
-                                    snapshotid=sid,
-                                    datetime=start_iso,
-                                    side=side,
-                                    vehiclename=vname,
-                                    hitpoint=hp_name,
-                                    damage=dmg,
-                                )
+                            add_ignore(
+                                session,
+                                VehicleHitpoint,
+                                snapshotid=sid,
+                                datetime=start_iso,
+                                side=side,
+                                vehiclename=vname,
+                                hitpoint=hp_name,
+                                damage=dmg,
                             )
 
                 # --------------------
@@ -414,7 +424,7 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
 
                         # side from key prefix: "B_event_EDC" -> "b", "OP_event_D" -> "op"
                         side = keyname.split("_", 1)[0].lower()
-                        keyname = keyname.lower() 
+                        keyname = keyname.lower()
 
                         # event type suffix
                         up = keyname.upper()
@@ -435,7 +445,7 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                             if not isinstance(e, list) or len(e) == 0:
                                 continue
 
-                            datetime = parse_event_datetime(e[0])
+                            event_datetime = parse_event_datetime(e[0])
                             params = e[1:]
                             paramsjson = dumps(params)
 
@@ -443,40 +453,44 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                             # if etype == "ed":
                             #     group = params[0] if len(params) > 0 else None
                             #     newtarget = params[1] if len(params) > 1 else None
-                            #     session.add(
-                            #         EventED(
-                            #             snapshotid=sid,
-                            #             side=side,
-                            #             seq=seq,
-                            #             keyname=keyname,
-                            #             datetime=start_iso,
-                            #             group=group,
-                            #             newtarget=newtarget,
-                            #             paramsjson=paramsjson,
-                            #         )
+                            #     add_ignore(
+                            #         session,
+                            #         EventED,
+                            #         snapshotid=sid,
+                            #         side=side,
+                            #         seq=seq,
+                            #         keyname=keyname,
+                            #         datetime=event_datetime,
+                            #         group=group,
+                            #         newtarget=newtarget,
+                            #         paramsjson=paramsjson,
                             #     )
 
-                            #event_knowsaboutchanged ->
+                            # event_knowsaboutchanged ->
                             if etype == "edc":
                                 group = params[0] if len(params) > 0 else None
                                 targetunit = params[1] if len(params) > 1 else None
                                 newknowsabout = _to_float_or_none(params[2]) if len(params) > 2 else None
                                 oldknowsabout = _to_float_or_none(params[3]) if len(params) > 3 else None
 
-                                if targetunit is not None and '_' in targetunit and ( targetunit.startswith("b_") or targetunit.startswith("op_") ):
-                                    session.add(
-                                        EventEDC(
-                                            snapshotid=sid,
-                                            side=side,
-                                            seq=seq,
-                                            # keyname=keyname,
-                                            datetime=start_iso,
-                                            groupname=group,
-                                            targetunit=targetunit,
-                                            newknowsabout=newknowsabout,
-                                            oldknowsabout=oldknowsabout,
-                                            # paramsjson=paramsjson,
-                                        )
+                                if (
+                                    targetunit is not None
+                                    and "_" in targetunit
+                                    and (targetunit.startswith("b_") or targetunit.startswith("op_"))
+                                ):
+                                    add_ignore(
+                                        session,
+                                        EventEDC,
+                                        snapshotid=sid,
+                                        side=side,
+                                        # seq=seq,
+                                        # keyname=keyname,
+                                        datetime=event_datetime,
+                                        groupname=group,
+                                        targetunit=targetunit,
+                                        newknowsabout=newknowsabout,
+                                        oldknowsabout=oldknowsabout,
+                                        # paramsjson=paramsjson,
                                     )
 
                             # event_fired ->
@@ -489,23 +503,24 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                 magazine = params[5] if len(params) > 5 else None
                                 # projectile = params[6] if len(params) > 6 else None
                                 gunner = params[7] if len(params) > 7 else None
-                                session.add(
-                                    EventF(
-                                        snapshotid=sid,
-                                        datetime=start_iso,
-                                        side=side,
-                                        seq=seq,
-                                        # keyname=keyname,
-                                        unit=unit,
-                                        weapon=weapon,
-                                        muzzle=muzzle,
-                                        # mode=mode,
-                                        # ammo=ammo,
-                                        ammotype=magazine,
-                                        # projectile=projectile,
-                                        gunner=gunner,
-                                        # paramsjson=paramsjson,
-                                    )
+
+                                add_ignore(
+                                    session,
+                                    EventF,
+                                    snapshotid=sid,
+                                    datetime=event_datetime,
+                                    side=side,
+                                    # seq=seq,
+                                    # keyname=keyname,
+                                    unit=unit,
+                                    weapon=weapon,
+                                    muzzle=muzzle,
+                                    # mode=mode,
+                                    # ammo=ammo,
+                                    ammotype=magazine,
+                                    # projectile=projectile,
+                                    gunner=gunner,
+                                    # paramsjson=paramsjson,
                                 )
 
                             # event_dammaged ->
@@ -514,36 +529,45 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                 # hitselection = params[1] if len(params) > 1 else None
                                 damage = _to_float_or_none(params[2]) if len(params) > 2 else None
                                 # hitpartindex = _to_int_or_none(params[3]) if len(params) > 3 else None
-                                # hitpoint = params[4] if len(params) > 4 else None
-                                shooter = params[5] if len(params) > 5 else None
-                                if len(params) > 6:
-                                    weapon = params[6].split(' ')
-                                    if len(weapon) == 3:
-                                        # e.g., "1798896: tracer_red.p3d rhs_ammo_3ubr11" -> rhs_ammo_3ubr11
-                                        weapon = weapon[-1].strip()
+                                hitpoint = params[4] if len(params) > 4 else None
+                                
+                                shooter = None
+                                if len(params) > 5 and params[5] is not None:
+                                    if params[5].strip() in ["", "<NULL-object>"]:
+                                        continue
+                                    else:
+                                        shooter = params[5]
+                                
+                                weapon = None
+                                if len(params) > 6 and params[6] is not None:
+                                    weapon_parts = str(params[6]).split(" ")
+                                    if len(weapon_parts) == 3:
+                                        # e.g., "1798896: tracer_red.p3d rhs_ammo_3ubr11"
+                                        weapon = weapon_parts[-1].strip()
                                         if weapon == "":
                                             continue
                                     else:
                                         # e.g., "<NULL-object>"
                                         continue
-                                # projecttile = params[6] if len(params) > 6 else None
-                                session.add(
-                                    EventD(
-                                        snapshotid=sid,
-                                        side=side,
-                                        seq=seq,
-                                        # keyname=keyname,
-                                        datetime=start_iso,
-                                        targetunit=unit,
-                                        # hitselection=hitselection,
-                                        damage=damage,
-                                        # hitpartindex=hitpartindex,
-                                        # hitpoint=hitpoint,
-                                        shooter=shooter,
-                                        weapon=weapon,
-                                        # projecttile=projecttile,
-                                        # paramsjson=paramsjson,
-                                    )
+
+                                # projectile = params[6] if len(params) > 6 else None
+                                add_ignore(
+                                    session,
+                                    EventD,
+                                    snapshotid=sid,
+                                    side=side,
+                                    # seq=seq,
+                                    # keyname=keyname,
+                                    datetime=event_datetime,
+                                    targetunit=unit,
+                                    # hitselection=hitselection,
+                                    damage=damage,
+                                    # hitpartindex=hitpartindex,
+                                    hitpoint=hitpoint,
+                                    shooter=shooter,
+                                    weapon=weapon,
+                                    # projectile=projectile,
+                                    # paramsjson=paramsjson,
                                 )
 
                             # event_killed ->
@@ -554,19 +578,20 @@ def dump_arma_into_sql_with_disk_stored_json_files(db_url: str = None, json_dir=
                                 # useeffects = None
                                 # if len(params) > 3:
                                 #     useeffects = 1 if bool(params[3]) else 0
-                                session.add(
-                                    EventK(
-                                        snapshotid=sid,
-                                        side=side,
-                                        seq=seq,
-                                        # keyname=keyname,
-                                        datetime=start_iso,
-                                        targetunit=unit,
-                                        killer=killer,
-                                        # instigator=instigator,
-                                        # useeffects=useeffects,
-                                        # paramsjson=paramsjson,
-                                    )
+
+                                add_ignore(
+                                    session,
+                                    EventK,
+                                    snapshotid=sid,
+                                    side=side,
+                                    # seq=seq,
+                                    # keyname=keyname,
+                                    datetime=event_datetime,
+                                    targetunit=unit,
+                                    killer=killer,
+                                    # instigator=instigator,
+                                    # useeffects=useeffects,
+                                    # paramsjson=paramsjson,
                                 )
 
                 session.commit()
