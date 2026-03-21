@@ -812,6 +812,32 @@ SELECT
     total_ammo_count - prev_total_ammo_count AS ammo_change
 FROM ammo_delta
 ORDER BY datetime DESC, vehiclename "
-,,,,
-,,,,
-,,,,
+1,event_dammaged_dedup,1,"Canonical damage-event view deduplicated by (datetime, shooter, targetunit)","CREATE VIEW event_dammaged_dedup AS
+SELECT
+    datetime AS event_time,
+    shooter,
+    targetunit,
+    COUNT(*) AS raw_row_count 
+FROM event_dammaged
+GROUP BY
+    datetime,
+    shooter,
+    targetunit;"
+1,event_dammaged_by_attacker,1,Attacker-side aggregation over deduplicated events,"CREATE VIEW event_dammaged_by_attacker AS
+SELECT
+    event_time,
+    shooter AS attacker,
+    COUNT(DISTINCT targetunit) AS victim_count
+FROM event_dammaged_dedup
+GROUP BY
+    event_time,
+    shooter;"
+1,event_dammaged_by_victim,1,Victim-side aggregation over deduplicated events,"CREATE VIEW event_dammaged_by_victim AS
+SELECT
+    event_time,
+    targetunit AS victim,
+    COUNT(DISTINCT shooter) AS attack_count
+FROM event_dammaged_dedup
+GROUP BY
+    event_time,
+    targetunit;"

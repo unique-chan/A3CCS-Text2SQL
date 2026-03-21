@@ -208,14 +208,15 @@
   - `shooter`: 가해자(발사/공격 주체).
   - `damage`: (현재 스냅샷 시점의) 각 유닛 혹은 장비의 손상 정도. (0 이상 1 이하의 값, 0에 가까울 수록 "피해가 없다", 1에 가까울수록 "피해가 매우 크다"를 의미)
   - `weapon`: 가해자가 사용한 무기.
+  - `hitpoint`: 피해자가 부상 입은 부위.
 - 예시: event_dammaged 테이블에 저장된 최상단 레코드는?
     ~~~sql
-    select snapshotid, datetime, side, targetunit, shooter, damage, weapon from event_dammaged limit 1;
+    select snapshotid, datetime, side, targetunit, shooter, damage, weapon, hitpoint from event_dammaged limit 1;
     ~~~
-    | snapshotid | datetime | side | targetunit | shooter | damage | weapon |
-    |---|---:|---|---|---:|---|---|
-    | 31a9d799-1470-43e5-ab31-7bd36e5aba66 | 2026-03-03T14:08:31.547 | op | 0 | op_1_i3_3_u4 | b_1_m2_2_v1 | 0.0216315 | rhs_ammo_M829A3 |
-    - 🔍해석: 2026년 3월 3일 14시 8분경, 적군 (op) op__1_i3_3_u4 장비가 우리 아군 (b)의 b_1_m2_2_v1 장비에 의해 약 2%의 피해를 입었다. 적군이 사용한 무기는 rhs_ammo_M829A3이다.
+    | snapshotid | datetime | side | targetunit | shooter | damage | weapon | hitpoint |
+    |---|---:|---|---|---:|---|---|---|
+    | 31a9d799-1470-43e5-ab31-7bd36e5aba66 | 2026-03-03T14:08:31.547 | op | 0 | op_1_i3_3_u4 | b_1_m2_2_v1 | 0.0216315 | rhs_ammo_M829A3 | hitdiaphragm |
+    - 🔍해석: 2026년 3월 3일 14시 8분경, 적군 (op) op__1_i3_3_u4 유닛 (병사)이 우리 아군 (b)의 b_1_m2_2_v1 장비에 의해 hitdiaphragm 부위에 약 2%의 피해를 입었다. (참고로, diaphragm은 횡격막을 의미함.) 적군이 사용한 무기는 rhs_ammo_M829A3이다.
 
 
 ### event_killed 테이블

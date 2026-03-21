@@ -68,6 +68,30 @@ def load_optional_text(path: str) -> str:
         return ""
     return p.read_text(encoding="utf-8").strip()
 
+def shorten_text(text: Any, max_chars: int) -> str:
+    s = "" if text is None else str(text)
+    if max_chars <= 0 or len(s) <= max_chars:
+        return s
+    return s[: max_chars - 3] + "..."
+
+
+def verbose_log_error(cfg: "Config", stage: str, *, error: str = "", semantic_error: str = "", sql: str = "", duration_sec: Optional[float] = None) -> None:
+    if getattr(cfg, "verbose", 0) < 1:
+        return
+
+    pieces = [f"[VERBOSE][{stage}]"]
+    if error:
+        pieces.append(f"error={shorten_text(error, cfg.trace_max_chars)}")
+    if semantic_error:
+        pieces.append(f"semantic_error={shorten_text(semantic_error, cfg.trace_max_chars)}")
+    if sql:
+        pieces.append(f"sql={shorten_text(sql, cfg.trace_max_chars)}")
+    if duration_sec is not None:
+        pieces.append(f"duration_sec={duration_sec:.4f}")
+
+    print(" | ".join(pieces))
+
+
 
 # =========================
 # DB helpers
@@ -482,6 +506,8 @@ class Config:
     enable_rewrite: bool
 
     output_dir: str
+    verbose: int
+    trace_max_chars: int
 
 
 @dataclass
@@ -748,6 +774,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
 
         repeat_err = _check_repeat_sql(state, sql)
         if repeat_err:
+            verbose_log_error(cfg, "generate_sql", error=repeat_err, sql=sql, duration_sec=llm_time)
             return {
                 "messages": [ai],
                 "sql": sql,
@@ -815,6 +842,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         repeat_err = _check_repeat_sql(state, sql)
         total_rewrite_time = state.get("llm_rewrite_time", 0.0) + rewrite_time
         if repeat_err:
+            verbose_log_error(cfg, "rewrite_sql", error=repeat_err, sql=sql, duration_sec=rewrite_time)
             return {
                 "messages": [ai],
                 "sql": sql,
@@ -839,7 +867,9 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         if cfg.block_non_readonly_sql:
             ok, reason = validate_safe_sql(state["sql"])
             if not ok:
-                return {"error": f"Blocked unsafe SQL: {reason}", "semantic_error": ""}
+                err = f"Blocked unsafe SQL: {reason}"
+                verbose_log_error(cfg, "safety_check", error=err, sql=state.get("sql", ""))
+                return {"error": err, "semantic_error": ""}
 
         return {"error": "", "semantic_error": ""}
 
@@ -856,11 +886,14 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             exec_time = time.perf_counter() - t0
 
             if out.startswith("Error:"):
+                verbose_log_error(cfg, "execute_sql", error=out, sql=state.get("sql", ""), duration_sec=exec_time)
                 return {"result": "", "error": out, "semantic_error": "", "sql_execute_time": exec_time}
 
             return {"result": out, "error": "", "semantic_error": "", "sql_execute_time": exec_time}
         except Exception as e:
-            return {"result": "", "error": f"{type(e).__name__}: {e}", "semantic_error": "", "sql_execute_time": 0.0}
+            err = f"{type(e).__name__}: {e}"
+            verbose_log_error(cfg, "execute_sql", error=err, sql=state.get("sql", ""), duration_sec=0.0)
+            return {"result": "", "error": err, "semantic_error": "", "sql_execute_time": 0.0}
 
     def node_semantic_check(state: AgentState) -> Dict[str, Any]:
         heuristic_reason = detect_result_quality_issue(
@@ -869,6 +902,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
             state.get("result", ""),
         )
         if heuristic_reason:
+            verbose_log_error(cfg, "semantic_check", semantic_error=heuristic_reason, sql=state.get("sql", ""), duration_sec=state.get("semantic_check_time", 0.0))
             return {
                 "semantic_error": heuristic_reason,
                 "semantic_check_time": state.get("semantic_check_time", 0.0),
@@ -888,9 +922,12 @@ def make_graph(cfg: Config, resources: RuntimeResources):
                 "semantic_check_time": state.get("semantic_check_time", 0.0) + dt,
             }
 
+        semantic_error = "" if verdict == "PASS" else (reason or "Semantic mismatch detected.")
+        if semantic_error:
+            verbose_log_error(cfg, "semantic_check", semantic_error=semantic_error, sql=state.get("sql", ""), duration_sec=dt)
         return {
             "messages": [ai],
-            "semantic_error": "" if verdict == "PASS" else (reason or "Semantic mismatch detected."),
+            "semantic_error": semantic_error,
             "semantic_check_time": state.get("semantic_check_time", 0.0) + dt,
         }
 
@@ -905,6 +942,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
         total_repair_time = state.get("llm_semantic_repair_time", 0.0) + repair_time
         repeat_err = _check_repeat_sql(state, fixed)
         if repeat_err:
+            verbose_log_error(cfg, "semantic_repair_sql", error=repeat_err, sql=fixed, duration_sec=repair_time)
             return {
                 "messages": [ai],
                 "sql": fixed,
@@ -935,6 +973,7 @@ def make_graph(cfg: Config, resources: RuntimeResources):
 
         repeat_err = _check_repeat_sql(state, fixed)
         if repeat_err:
+            verbose_log_error(cfg, "repair_sql", error=repeat_err, sql=fixed, duration_sec=repair_time)
             return {
                 "messages": [ai],
                 "sql": fixed,
@@ -1171,6 +1210,8 @@ def build_config_from_env() -> Config:
         enable_semantic_check=env_bool("ENABLE_SEMANTIC_CHECK", True),
         enable_rewrite=env_bool("ENABLE_REWRITE", True),
         output_dir=env_str("OUT_DIR", "results"),
+        verbose=env_int("VERBOSE", 0),
+        trace_max_chars=env_int("TRACE_MAX_CHARS", 1200),
     )
 
 
@@ -1333,7 +1374,8 @@ def main():
         f"MAX_STEPS={cfg.max_steps}, "
         f"MAX_SAME_SQL_REPEATS={cfg.max_same_sql_repeats}, "
         f"Semantic-check-before-answering enabled: {cfg.enable_semantic_check}, "
-        f"Rewrite enabled: {cfg.enable_rewrite}"
+        f"Rewrite enabled: {cfg.enable_rewrite}, "
+        f"VERBOSE={cfg.verbose}, TRACE_MAX_CHARS={cfg.trace_max_chars}"
     )
     print("⚡Type 'exit' to quit.")
     if cfg.enable_rewrite:

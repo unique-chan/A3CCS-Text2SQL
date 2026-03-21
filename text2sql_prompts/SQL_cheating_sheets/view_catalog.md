@@ -146,6 +146,20 @@
 - Use when: 적군 장비 탄약 소모 추적, 최근 탄약 감소량 확인, 차량별 잔여 탄약 추세 분석
 - Notes: vehicles_ammo에서 동일 장비의 모든 탄종 count를 합산한 total_ammo_count 기준
 
+## event_dammaged_dedup
+- Purpose: `event_dammaged` 원본 로그에서 동일 `(datetime, shooter, targetunit)` 조합을 하나의 논리적 damage event로 정규화한 뷰
+- Key columns: event_time, shooter, targetunit, raw_row_count
+
+## event_dammaged_by_attacker
+- Purpose: `event_dammaged_dedup`를 기준으로 시각별 attacker 활동을 집계한 뷰
+- Key columns: event_time, attacker, victim_count
+- Use when: 시간 범위 기준 공격 이벤트 수 집계
+
+## event_dammaged_by_victim
+- Purpose: `event_dammaged_dedup`를 기준으로 시각별 victim 피격 상황을 집계한 뷰
+- Key columns: event_time, victim, attack_count
+- Use when: 시간 범위 기준 피해 이벤트 수 집계
+
 
 ## 뷰 우선 활용 가이드
 
@@ -153,6 +167,7 @@
 - 특히 현재 시점 아군/적군 간 거리, 속도 변화 추이, 탄약량 변화 추이는 아래 뷰를 우선 검토한다.
 - 사용자가 "현재"를 물으면, 별도 시점 조건이 없는 한 **가장 최신 시점** 기준으로 해석한다.
 - 사용자가 "추이"를 물으면, 특별한 요구가 없는 한 **최신 시간대부터 (`datetime DESC`)** 보여주는 질의를 선호한다.
+- 시간대별 attacker/victim 랭킹 등의 event_Dammaged 테이블에서의 집계가 필요하면, `event_dammaged_by_attacker` 혹은 `event_dammaged_by_victim`를 사용한다.
 
 ### 거리 관련 추천 뷰
 - `v_current_friendly_enemy_group_distance`
@@ -193,9 +208,14 @@
 - `ammo_change = total_ammo_count - prev_total_ammo_count`
   - 음수면 탄약 소모, 양수면 탄약 보충/적재 가능성을 의미한다.
 
+### Damage event 관련 추천 뷰
+- `event_dammaged_by_attacker`
+- `event_dammaged_by_victim`
+
+
 ### 예시 질의 패턴
 
-#### 예시 1) 현재 아군 그룹별 가장 가까운 적군 그룹은?
+#### 현재 아군 그룹별 가장 가까운 적군 그룹은?
 ```sql
 WITH ranked AS (
     SELECT
@@ -221,7 +241,7 @@ WHERE rn = 1
 ORDER BY distance_3d ASC, friendly_groupname;
 ```
 
-#### 예시 2) 현재 아군 유닛별 가장 가까운 적군 유닛은?
+#### 현재 아군 유닛별 가장 가까운 적군 유닛은?
 ```sql
 WITH ranked AS (
     SELECT
@@ -243,7 +263,7 @@ WHERE rn = 1
 ORDER BY distance_3d ASC, friendly_unitname;
 ```
 
-#### 예시 3) 현재 아군 장비별 가장 가까운 적군 장비는?
+#### 현재 아군 장비별 가장 가까운 적군 장비는?
 ```sql
 WITH ranked AS (
     SELECT
@@ -265,7 +285,7 @@ WHERE rn = 1
 ORDER BY distance_3d ASC, friendly_vehiclename;
 ```
 
-#### 예시 4) 특정 아군 유닛의 최근 속도 변화 추이
+#### 특정 아군 유닛의 최근 속도 변화 추이
 ```sql
 SELECT
     unitname,
@@ -282,7 +302,7 @@ WHERE unitname = 'b_1_m2_1_u1'
 ORDER BY datetime DESC;
 ```
 
-#### 예시 5) 특정 적군 장비의 최근 속도 변화 추이
+#### 특정 적군 장비의 최근 속도 변화 추이
 ```sql
 SELECT
     vehiclename,
@@ -299,7 +319,7 @@ WHERE vehiclename = 'op_1_i3_1_v1'
 ORDER BY datetime DESC;
 ```
 
-#### 예시 6) 특정 아군 유닛의 탄약량 변화 추이
+#### 특정 아군 유닛의 탄약량 변화 추이
 ```sql
 SELECT
     unitname,
@@ -313,7 +333,7 @@ WHERE unitname = 'b_1_m2_1_u1'
 ORDER BY datetime DESC;
 ```
 
-#### 예시 7) 특정 적군 장비의 탄약량 변화 추이
+#### 특정 적군 장비의 탄약량 변화 추이
 ```sql
 SELECT
     vehiclename,
@@ -325,4 +345,17 @@ SELECT
 FROM v_enemy_vehicle_ammo_trend
 WHERE vehiclename = 'op_1_i3_1_v1'
 ORDER BY datetime DESC;
+```
+
+
+#### 최근 1분 간 공격을 수행하여 아군에게 피해를 입힌 적군 및 공격 횟수?
+```sql
+SELECT
+    shooter,
+    COUNT(*) AS attack_count
+FROM event_dammaged
+WHERE side = 'op'
+  AND datetime >= datetime((SELECT MAX(datetime) FROM event_dammaged), '-1 minute')
+GROUP BY shooter
+ORDER BY attack_count DESC, shooter;
 ```
