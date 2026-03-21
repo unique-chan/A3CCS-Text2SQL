@@ -220,7 +220,7 @@
 
 
 ### event_killed 테이블
-- 교전 중, 특정 스냅샷 시점에서 발생한 **사망/격파 (Killed) 이벤트**를 기록. 누가 (`killer`/`instigator`) 누구 (`targetunit`)를 언제 (`datetime`) 죽였는지에 대한 정보.
+- 교전 중, 특정 스냅샷 시점에서 발생한 **사망/격파 (Killed) 이벤트**를 기록. 누가 (`killer`) 누구 (`targetunit`)를 언제 (`datetime`) 죽였는지에 대한 정보.
 - 컬럼
   - `snapshotid`: 각 스냅샷에 부여된 고유의 식별 ID.
   - `datetime`: 현재 스냅샷 (현재 `snapshotid`)의 일시 (ISO8601 포맷 준수: {YYYY}-{MM}-{DD}T-{HH}-{MM}-{SS}.SSS 꼴) (예로, 2026-03-03T14:04:54.605는 2026년 3월 3일 14시 4분 54초 605밀리초)
@@ -229,9 +229,9 @@
   - `killer`: 직접적으로 죽인 사람 혹은 장비.
 - 예시: event_killed 테이블에 저장된 최상단 레코드는?
     ~~~sql
-    select snapshotid, datetime, side, targetunit, killer, instigator from event_killed limit 1;
+    select snapshotid, datetime, side, targetunit, killer from event_killed limit 1;
     ~~~
-    | snapshotid | datetime | side | targetunit | killer | instigator |
-    |---|---|---:|---|---|---|
-    | 31a9d799-1470-43e5-ab31-7bd36e5aba66 | 2026-03-03T14:08:31.547 | op | op_1_i3_3_u2 | b_1_m2_2_v1 | b_1_m2_2_u2 |
-    - 🔍해석: 2026년 3월 3일 14시 8분경, 우리 아군 (b) b_1_m2_2_u2이 조종한 b_1_m2_2_v1 장비가 적군 (op)의 유닛 (병사) op_1_i3_3_u2을 사살했다.
+    | snapshotid | datetime | side | targetunit | killer |
+    |---|---|---:|---|---|
+    | 31a9d799-1470-43e5-ab31-7bd36e5aba66 | 2026-03-03T14:08:31.547 | op | op_1_i3_3_u2 | b_1_m2_2_v1 |
+    - 🔍해석: 2026년 3월 3일 14시 8분경, 우리 아군 (b) b_1_m2_2_v1 장비가 적군 (op)의 유닛 (병사) op_1_i3_3_u2을 사살했다.
