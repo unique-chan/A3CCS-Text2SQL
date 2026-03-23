@@ -1,0 +1,82 @@
+flowchart LR
+    classDef entry fill:#e8f0fe,stroke:#4a90e2,stroke-width:1.5px;
+    classDef gen fill:#e8f8f0,stroke:#2e8b57,stroke-width:1.5px;
+    classDef rewrite fill:#fff4e6,stroke:#d9822b,stroke-width:1.5px;
+    classDef exec fill:#f3e8ff,stroke:#8e44ad,stroke-width:1.5px;
+    classDef recovery fill:#fdecec,stroke:#c0392b,stroke-width:1.5px;
+    classDef exit fill:#eeeeee,stroke:#666666,stroke-width:1.5px;
+
+    subgraph ENTRY
+        START(["START"])
+        tick["tick"]
+    end
+    class START entry;
+    class tick entry;
+
+    subgraph GENERATION
+        prepare_context["prepare_context"]
+        classify_rewrite_intent["classify_rewrite_intent"]
+        generate_sql["generate_sql"]
+    end
+    class prepare_context gen;
+    class classify_rewrite_intent gen;
+    class generate_sql gen;
+
+    subgraph REWRITE
+        rewrite_reflect["rewrite_reflect"]
+        rewrite_sql["rewrite_sql"]
+    end
+    class rewrite_reflect rewrite;
+    class rewrite_sql rewrite;
+
+    subgraph EXECUTION
+        safety_check["safety_check"]
+        execute_sql["execute_sql"]
+        semantic_check["semantic_check"]
+    end
+    class safety_check exec;
+    class execute_sql exec;
+    class semantic_check exec;
+
+    subgraph RECOVERY
+        repair_sql["repair_sql"]
+        semantic_repair_sql["semantic_repair_sql"]
+    end
+    class repair_sql recovery;
+    class semantic_repair_sql recovery;
+
+    subgraph EXIT
+        END(["END"])
+    end
+    class END exit;
+
+    START ==> tick
+    tick ==> prepare_context
+    prepare_context ==> generate_sql
+    generate_sql ==> tick
+    tick ==> safety_check
+    safety_check ==> execute_sql
+    execute_sql ==> semantic_check
+    semantic_check ==> END
+
+    classify_rewrite_intent --> rewrite_reflect
+    rewrite_reflect --> rewrite_sql
+    rewrite_sql --> tick
+    repair_sql --> tick
+    semantic_repair_sql --> tick
+    tick -->|"prepare context"| prepare_context
+    tick -->|"go to safety check"| safety_check
+    tick -->|"step limit exceeded"| END
+    prepare_context -->|"generate"| generate_sql
+    prepare_context -->|"classify rewrite intent"| classify_rewrite_intent
+    safety_check -->|"execute sql"| execute_sql
+    safety_check -->|"repair"| repair_sql
+    safety_check -->|"step limit exceeded"| END
+    execute_sql -->|"error"| repair_sql
+    execute_sql -->|"semantic on"| semantic_check
+    execute_sql -->|"error AND attempts exhausted OR default"| END
+    semantic_check -->|"error"| repair_sql
+    semantic_check -->|"semantic error"| semantic_repair_sql
+    semantic_check -->|"error AND attempts exhausted OR semantic error AND attempts exhausted OR default"| END
+    repair_sql -. retry .-> tick
+    semantic_repair_sql -. retry .-> tick

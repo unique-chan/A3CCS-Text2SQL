@@ -1,0 +1,36 @@
+flowchart TD
+    END(["END"])
+    START(["START"])
+    classify_rewrite_intent["classify_rewrite_intent"]
+    execute_sql["execute_sql"]
+    generate_sql["generate_sql"]
+    prepare_context["prepare_context"]
+    repair_sql["repair_sql"]
+    rewrite_reflect["rewrite_reflect"]
+    rewrite_sql["rewrite_sql"]
+    safety_check["safety_check"]
+    semantic_check["semantic_check"]
+    semantic_repair_sql["semantic_repair_sql"]
+    tick["tick"]
+
+    START --> tick
+    generate_sql --> tick
+    classify_rewrite_intent --> rewrite_reflect
+    rewrite_reflect --> rewrite_sql
+    rewrite_sql --> tick
+    repair_sql --> tick
+    semantic_repair_sql --> tick
+    tick -->|"prepare context"| prepare_context
+    tick -->|"go to safety check"| safety_check
+    tick -->|"step limit exceeded"| END
+    prepare_context -->|"generate"| generate_sql
+    prepare_context -->|"classify rewrite intent"| classify_rewrite_intent
+    safety_check -->|"execute sql"| execute_sql
+    safety_check -->|"repair"| repair_sql
+    safety_check -->|"step limit exceeded"| END
+    execute_sql -->|"error"| repair_sql
+    execute_sql -->|"semantic check enabled"| semantic_check
+    execute_sql -->|"error AND attempt limit reached OR otherwise"| END
+    semantic_check -->|"error"| repair_sql
+    semantic_check -->|"semantic error"| semantic_repair_sql
+    semantic_check -->|"error AND attempt limit reached OR semantic error AND attempt limit reached OR otherwise"| END
