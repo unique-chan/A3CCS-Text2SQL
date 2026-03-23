@@ -1,361 +1,518 @@
-# View Catalog
+# View Reference
 
-## v_current_friendly_units
-- Purpose: 현재 시점 아군 유닛 상세 목록
-- Key columns: ref_datetime, unitname, groupname, unittype, posx, posy, posz, damage, objectparent
-- Use when: 현재 아군 유닛 목록, 현재 아군 위치, 현재 아군 상태
+본 문서는 현재 catalog에 포함된 전체 뷰에 대한 설명문입니다.  
+변경 이력이나 기존 뷰 대비 차이점은 적지 않고, 각 뷰의 역할과 해석 기준만 정리합니다.
 
-## v_initial_friendly_units
-- Purpose: 최초 시점 아군 유닛 상세 목록
-- Key columns: ref_datetime, unitname, groupname, unittype, posx, posy, posz, damage, objectparent
-- Use when: 원래 아군 유닛 목록, 최초 아군 배치
+---
 
-## v_current_enemy_units
-- Purpose: 현재 시점 적군 유닛 상세 목록
-- Key columns: ref_datetime, unitname, groupname, unittype, posx, posy, posz, damage, objectparent
-- Use when: 현재 적군 유닛 목록, 현재 적군 위치, 현재 적군 상태
+## 1. `v_units_snapshot`
 
-## v_initial_enemy_units
-- Purpose: 최초 시점 적군 유닛 상세 목록
-- Key columns: ref_datetime, unitname, groupname, unittype, posx, posy, posz, damage, objectparent
-- Use when: 원래 적군 유닛 목록, 최초 적군 배치
+유닛 스냅샷 상세 조회용 뷰입니다.  
+아군(`b`)과 적군(`op`) 각각에 대해 초기 시점(`initial`)과 현재 시점(`current`)의 유닛 상태를 하나의 뷰에서 제공합니다.
 
-## v_current_friendly_unit_count
-- Purpose: 현재 아군 유닛 수
-- Key columns: ref_datetime, unit_count
-- Use when: 현재 아군 유닛 개수, 현재 남은 아군 병력 수
+### 목적
+- 기준 시점 유닛 상태 조회
+- 초기/현재 비교
+- 아군/적군 비교
+- 상세 위치, 타입, 손상 상태 확인
 
-## v_initial_friendly_unit_count
-- Purpose: 최초 아군 유닛 수
-- Key columns: ref_datetime, unit_count
-- Use when: 원래 아군 유닛 개수, 시작 시점 아군 병력 수
+### 기준
+- `phase='initial'`: 각 진영의 최소 `datetime`
+- `phase='current'`: 각 진영의 최대 `datetime`
 
-## v_current_enemy_unit_count
-- Purpose: 현재 적군 유닛 수
-- Key columns: ref_datetime, unit_count
-- Use when: 현재 적군 유닛 개수, 현재 남은 적군 병력 수
+### 주요 컬럼
+- `phase`
+- `snapshotid`
+- `ref_datetime`
+- `side`
+- `unitname`
+- `groupname`
+- `unittype`
+- `posx`, `posy`, `posz`
+- `damage`
+- `objectparent`
 
-## v_initial_enemy_unit_count
-- Purpose: 최초 적군 유닛 수
-- Key columns: ref_datetime, unit_count
-- Use when: 원래 적군 유닛 개수, 시작 시점 적군 병력 수
+### 해석
+행 하나는 특정 기준 시점에 선택된 개별 유닛 상태를 의미합니다.
 
-## v_current_friendly_vehicles
-- Purpose: 현재 시점 아군 장비 상세 목록
-- Key columns: ref_datetime, vehiclename, groupname, vehicletype, posx, posy, posz, damage
-- Use when: 현재 아군 장비 목록, 현재 아군 차량 상태, 현재 아군 장비 위치
+---
 
-## v_initial_friendly_vehicles
-- Purpose: 최초 시점 아군 장비 상세 목록
-- Key columns: ref_datetime, vehiclename, groupname, vehicletype, posx, posy, posz, damage
-- Use when: 원래 아군 장비 목록, 시작 시점 아군 차량 배치
+## 2. `v_units_snapshot_count`
 
-## v_current_enemy_vehicles
-- Purpose: 현재 시점 적군 장비 상세 목록
-- Key columns: ref_datetime, vehiclename, groupname, vehicletype, posx, posy, posz, damage
-- Use when: 현재 적군 장비 목록, 현재 적군 차량 상태, 현재 적군 장비 위치
+유닛 스냅샷 집계 뷰입니다.  
+`v_units_snapshot`를 기준으로 시점과 진영별 유닛 수를 제공합니다.
 
-## v_initial_enemy_vehicles
-- Purpose: 최초 시점 적군 장비 상세 목록
-- Key columns: ref_datetime, vehiclename, groupname, vehicletype, posx, posy, posz, damage
-- Use when: 원래 적군 장비 목록, 시작 시점 적군 차량 배치
+### 목적
+- 병력 규모 요약
+- 초기/현재 수량 비교
+- 진영별 수량 비교
+- 대시보드용 카운트 제공
 
-## v_current_friendly_vehicle_count
-- Purpose: 현재 아군 장비 수
-- Key columns: ref_datetime, vehicle_count
-- Use when: 현재 아군 장비 개수, 현재 아군 차량 수
+### 주요 컬럼
+- `phase`
+- `side`
+- `ref_datetime`
+- `unit_count`
 
-## v_initial_friendly_vehicle_count
-- Purpose: 최초 아군 장비 수
-- Key columns: ref_datetime, vehicle_count
-- Use when: 원래 아군 장비 개수, 시작 시점 아군 차량 수
+### 해석
+행 하나는 특정 `phase`와 `side` 조합에 대한 총 유닛 수입니다.
 
-## v_current_enemy_vehicle_count
-- Purpose: 현재 적군 장비 수
-- Key columns: ref_datetime, vehicle_count
-- Use when: 현재 적군 장비 개수, 현재 적군 차량 수
+---
 
-## v_initial_enemy_vehicle_count
-- Purpose: 최초 적군 장비 수
-- Key columns: ref_datetime, vehicle_count
-- Use when: 원래 적군 장비 개수, 시작 시점 적군 차량 수
+## 3. `v_vehicles_snapshot`
 
-## v_current_friendly_enemy_group_distance
-- Purpose: 현재 시점 기준 아군 그룹 centroid와 적군 그룹 centroid 간의 쌍별 거리
-- Key columns: ref_datetime, friendly_groupname, friendly_datetime, friendly_posx, friendly_posy, friendly_posz, enemy_groupname, enemy_datetime, enemy_posx, enemy_posy, enemy_posz, distance_3d
-- Use when: 현재 아군 그룹과 적군 그룹의 상대 거리, 가장 가까운 적군 그룹 탐색, 그룹 간 근접도 비교
-- Notes: groups 테이블에는 적군 정보가 없으므로, units 테이블의 그룹별 평균 위치(centroid)로 아군/적군 그룹 위치를 구성
+장비 스냅샷 상세 조회용 뷰입니다.  
+아군(`b`)과 적군(`op`) 각각에 대해 초기 시점과 현재 시점의 장비 상태를 하나의 뷰에서 제공합니다.
 
-## v_current_friendly_enemy_unit_distance
-- Purpose: 현재 시점 기준 아군 유닛과 적군 유닛 간의 쌍별 거리
-- Key columns: ref_datetime, friendly_unitname, friendly_groupname, friendly_unittype, friendly_datetime, enemy_unitname, enemy_groupname, enemy_unittype, enemy_datetime, distance_3d
-- Use when: 현재 아군 병사와 적군 병사 간 거리, 가장 가까운 적군 유닛 탐색, 유닛 단위 접촉 분석
-- Notes: 전체 데이터의 MAX(datetime)을 기준 시각으로 두고, 각 유닛별로 그 시각에 가장 가까운 레코드 1건을 사용
+### 목적
+- 기준 시점 장비 상태 조회
+- 초기/현재 장비 비교
+- 진영별 장비 배치 확인
+- 손상 및 위치 확인
 
-## v_current_friendly_enemy_vehicle_distance
-- Purpose: 현재 시점 기준 아군 장비와 적군 장비 간의 쌍별 거리
-- Key columns: ref_datetime, friendly_vehiclename, friendly_groupname, friendly_vehicletype, friendly_datetime, enemy_vehiclename, enemy_groupname, enemy_vehicletype, enemy_datetime, distance_3d
-- Use when: 현재 아군 장비와 적군 장비 간 거리, 가장 가까운 적군 장비 탐색, 차량/장비 간 근접도 비교
-- Notes: 전체 데이터의 MAX(datetime)을 기준 시각으로 두고, 각 장비별로 그 시각에 가장 가까운 레코드 1건을 사용
+### 기준
+- `phase='initial'`: 각 진영의 최소 `datetime`
+- `phase='current'`: 각 진영의 최대 `datetime`
 
-## v_friendly_unit_speed_trend
-- Purpose: 아군 유닛별 속도 시계열 추이
-- Key columns: unitname, groupname, unittype, datetime, prev_datetime, dt_seconds, distance_delta, speed_per_sec, prev_speed_per_sec, speed_change_per_sec
-- Use when: 아군 병사 이동 속도 변화, 특정 유닛의 가속/감속 추적, 최근 이동 추세 확인
-- Notes: 연속 시점 간 3차원 위치 변화량 / 시간차(초)로 속도를 계산하며, datetime DESC 기준으로 최신 시점부터 정렬
+### 주요 컬럼
+- `phase`
+- `snapshotid`
+- `ref_datetime`
+- `side`
+- `vehiclename`
+- `groupname`
+- `vehicletype`
+- `posx`, `posy`, `posz`
+- `damage`
+- `hitpointjson`
 
-## v_friendly_vehicle_speed_trend
-- Purpose: 아군 장비별 속도 시계열 추이
-- Key columns: vehiclename, groupname, vehicletype, datetime, prev_datetime, dt_seconds, distance_delta, speed_per_sec, prev_speed_per_sec, speed_change_per_sec
-- Use when: 아군 장비 이동 속도 변화, 차량 가속/감속 추적, 최근 기동 추세 확인
-- Notes: 연속 시점 간 3차원 위치 변화량 / 시간차(초)로 속도를 계산하며, datetime DESC 기준으로 최신 시점부터 정렬
+### 해석
+행 하나는 특정 기준 시점에 선택된 개별 장비 상태를 의미합니다.
 
-## v_enemy_unit_speed_trend
-- Purpose: 적군 유닛별 속도 시계열 추이
-- Key columns: unitname, groupname, unittype, datetime, prev_datetime, dt_seconds, distance_delta, speed_per_sec, prev_speed_per_sec, speed_change_per_sec
-- Use when: 적군 병사 이동 속도 변화, 특정 적 유닛의 가속/감속 추적, 최근 이동 추세 확인
-- Notes: 연속 시점 간 3차원 위치 변화량 / 시간차(초)로 속도를 계산하며, datetime DESC 기준으로 최신 시점부터 정렬
+---
 
-## v_enemy_vehicle_speed_trend
-- Purpose: 적군 장비별 속도 시계열 추이
-- Key columns: vehiclename, groupname, vehicletype, datetime, prev_datetime, dt_seconds, distance_delta, speed_per_sec, prev_speed_per_sec, speed_change_per_sec
-- Use when: 적군 장비 이동 속도 변화, 특정 적 장비의 가속/감속 추적, 최근 기동 추세 확인
-- Notes: 연속 시점 간 3차원 위치 변화량 / 시간차(초)로 속도를 계산하며, datetime DESC 기준으로 최신 시점부터 정렬
+## 4. `v_vehicles_snapshot_count`
 
-## v_friendly_unit_ammo_trend
-- Purpose: 아군 유닛별 총 탄약량 시계열 추이
-- Key columns: unitname, datetime, prev_datetime, total_ammo_count, prev_total_ammo_count, ammo_change
-- Use when: 아군 유닛 탄약 소모 추적, 최근 탄약 감소량 확인, 병사별 잔여 탄약 추세 분석
-- Notes: units_ammo에서 동일 유닛의 모든 탄종 count를 합산한 total_ammo_count 기준
+장비 스냅샷 집계 뷰입니다.  
+`v_vehicles_snapshot`를 기준으로 시점과 진영별 장비 수를 제공합니다.
 
-## v_friendly_vehicle_ammo_trend
-- Purpose: 아군 장비별 총 탄약량 시계열 추이
-- Key columns: vehiclename, datetime, prev_datetime, total_ammo_count, prev_total_ammo_count, ammo_change
-- Use when: 아군 장비 탄약 소모 추적, 최근 탄약 감소량 확인, 차량별 잔여 탄약 추세 분석
-- Notes: vehicles_ammo에서 동일 장비의 모든 탄종 count를 합산한 total_ammo_count 기준
+### 목적
+- 장비 규모 요약
+- 초기/현재 장비 수 비교
+- 진영별 장비 수 비교
+- 리포트용 카운트 제공
 
-## v_enemy_unit_ammo_trend
-- Purpose: 적군 유닛별 총 탄약량 시계열 추이
-- Key columns: unitname, datetime, prev_datetime, total_ammo_count, prev_total_ammo_count, ammo_change
-- Use when: 적군 유닛 탄약 소모 추적, 최근 탄약 감소량 확인, 병사별 잔여 탄약 추세 분석
-- Notes: units_ammo에서 동일 유닛의 모든 탄종 count를 합산한 total_ammo_count 기준
+### 주요 컬럼
+- `phase`
+- `side`
+- `ref_datetime`
+- `vehicle_count`
 
-## v_enemy_vehicle_ammo_trend
-- Purpose: 적군 장비별 총 탄약량 시계열 추이
-- Key columns: vehiclename, datetime, prev_datetime, total_ammo_count, prev_total_ammo_count, ammo_change
-- Use when: 적군 장비 탄약 소모 추적, 최근 탄약 감소량 확인, 차량별 잔여 탄약 추세 분석
-- Notes: vehicles_ammo에서 동일 장비의 모든 탄종 count를 합산한 total_ammo_count 기준
+### 해석
+행 하나는 특정 `phase`와 `side` 조합에 대한 총 장비 수입니다.
 
-## event_dammaged_dedup
-- Purpose: `event_dammaged` 원본 로그에서 동일 `(datetime, shooter, targetunit)` 조합을 하나의 논리적 damage event로 정규화한 뷰
-- Key columns: event_time, shooter, targetunit, raw_row_count
+---
 
-## event_dammaged_by_attacker
-- Purpose: `event_dammaged_dedup`를 기준으로 시각별 attacker 활동을 집계한 뷰
-- Key columns: event_time, attacker, victim_count
-- Use when: 시간 범위 기준 공격 이벤트 수 집계
+## 5. `v_current_friendly_enemy_group_distance`
 
-## event_dammaged_by_victim
-- Purpose: `event_dammaged_dedup`를 기준으로 시각별 victim 피격 상황을 집계한 뷰
-- Key columns: event_time, victim, attack_count
-- Use when: 시간 범위 기준 피해 이벤트 수 집계
+현재 시점 기준 아군 그룹과 적군 그룹 사이의 3차원 거리를 계산한 뷰입니다.
 
+### 목적
+- 그룹 단위 근접도 분석
+- 접촉 가능성이 높은 그룹 쌍 식별
+- 전선 간격 또는 충돌 가능성 점검
 
-## 뷰 우선 활용 가이드
+### 계산 방식
+1. `snapshots`의 최대 `datetime`를 현재 기준 시점으로 설정
+2. 아군/적군 각각에 대해 그룹별 중심점(centroid) 계산
+3. 각 그룹에서 기준 시점에 가장 가까운 관측값 1개 선택
+4. 아군 그룹 중심과 적군 그룹 중심 간 3D Euclidean distance 계산
 
-- `view_catalog.csv` / `view_catalog.md`에 정의된 뷰가 있으면, **원본 테이블 직접 조인보다 뷰를 우선 사용**한다.
-- 특히 현재 시점 아군/적군 간 거리, 속도 변화 추이, 탄약량 변화 추이는 아래 뷰를 우선 검토한다.
-- 사용자가 "현재"를 물으면, 별도 시점 조건이 없는 한 **가장 최신 시점** 기준으로 해석한다.
-- 사용자가 "추이"를 물으면, 특별한 요구가 없는 한 **최신 시간대부터 (`datetime DESC`)** 보여주는 질의를 선호한다.
-- 시간대별 attacker/victim 랭킹 등의 event_Dammaged 테이블에서의 집계가 필요하면, `event_dammaged_by_attacker` 혹은 `event_dammaged_by_victim`를 사용한다.
+### 주요 컬럼
+- `ref_datetime`
+- `friendly_groupname`
+- `friendly_datetime`
+- `friendly_posx`, `friendly_posy`, `friendly_posz`
+- `enemy_groupname`
+- `enemy_datetime`
+- `enemy_posx`, `enemy_posy`, `enemy_posz`
+- `distance_3d`
 
-### 거리 관련 추천 뷰
-- `v_current_friendly_enemy_group_distance`
-  - 아군 그룹과 적군 그룹 간 현재 거리.
-  - 주의: `groups` 테이블에는 적군 정보가 없으므로, 이 뷰는 `units` 테이블의 **그룹별 평균 위치(centroid)** 를 그룹 위치로 사용한다.
-  - `ref_datetime`은 전체 데이터의 `MAX(datetime)`이며, 각 그룹은 그 시각에 가장 가까운 관측 1건을 사용한다.
+### 해석
+행 하나는 아군 그룹 하나와 적군 그룹 하나의 현재 기준 거리입니다.  
+정렬은 거리 오름차순이므로, 가장 가까운 그룹 쌍이 먼저 보입니다.
 
-- `v_current_friendly_enemy_unit_distance`
-  - 아군 유닛과 적군 유닛 간 현재 거리.
-  - 각 유닛별로 `ref_datetime`에 가장 가까운 1개 레코드를 사용한다.
+---
 
-- `v_current_friendly_enemy_vehicle_distance`
-  - 아군 장비와 적군 장비 간 현재 거리.
-  - 각 장비별로 `ref_datetime`에 가장 가까운 1개 레코드를 사용한다.
+## 6. `v_current_friendly_enemy_unit_distance`
 
-### 속도 변화 추이 관련 추천 뷰
-- `v_friendly_unit_speed_trend`
-- `v_friendly_vehicle_speed_trend`
-- `v_enemy_unit_speed_trend`
-- `v_enemy_vehicle_speed_trend`
+현재 시점 기준 아군 유닛과 적군 유닛 사이의 3차원 거리를 계산한 뷰입니다.
 
-공통 규칙:
-- 속도는 별도 컬럼이 없으므로, 연속 두 시점 간 위치 변화량을 이용해 계산한다.
-- `dt_seconds = (julianday(datetime) - julianday(prev_datetime)) * 86400.0`
-- `distance_delta = sqrt(dx*dx + dy*dy + dz*dz)`
-- `speed_per_sec = distance_delta / dt_seconds`
-- `speed_change_per_sec = speed_per_sec - prev_speed_per_sec`
+### 목적
+- 개별 유닛 근접도 분석
+- 직접 교전 가능성이 높은 유닛 쌍 탐색
+- 세부 전술 수준 거리 분석
 
-### 탄약량 변화 추이 관련 추천 뷰
-- `v_friendly_unit_ammo_trend`
-- `v_friendly_vehicle_ammo_trend`
-- `v_enemy_unit_ammo_trend`
-- `v_enemy_vehicle_ammo_trend`
+### 계산 방식
+1. `snapshots`의 최대 `datetime`를 현재 기준 시점으로 설정
+2. 각 유닛별로 기준 시점에 가장 가까운 관측값 1개 선택
+3. 아군 유닛과 적군 유닛의 모든 조합에 대해 3D distance 계산
 
-공통 규칙:
-- 탄약량 변화 추이는 **개체별 총 탄약량(total ammo)** 기준이다.
-- 즉, `units_ammo` 또는 `vehicles_ammo`에서 동일 개체의 여러 `ammotype` 행을 `SUM(count)`로 합산한다.
-- `ammo_change = total_ammo_count - prev_total_ammo_count`
-  - 음수면 탄약 소모, 양수면 탄약 보충/적재 가능성을 의미한다.
+### 주요 컬럼
+- `ref_datetime`
+- `friendly_unitname`
+- `friendly_groupname`
+- `friendly_unittype`
+- `friendly_datetime`
+- `friendly_posx`, `friendly_posy`, `friendly_posz`
+- `enemy_unitname`
+- `enemy_groupname`
+- `enemy_unittype`
+- `enemy_datetime`
+- `enemy_posx`, `enemy_posy`, `enemy_posz`
+- `distance_3d`
 
-### Damage event 관련 추천 뷰
-- `event_dammaged_by_attacker`
-- `event_dammaged_by_victim`
+### 해석
+행 하나는 아군 유닛 하나와 적군 유닛 하나의 현재 기준 거리입니다.
 
+---
 
-### 예시 질의 패턴
+## 7. `v_current_friendly_enemy_vehicle_distance`
 
-#### 현재 아군 그룹별 가장 가까운 적군 그룹은?
-```sql
-WITH ranked AS (
-    SELECT
-        friendly_groupname,
-        enemy_groupname,
-        friendly_datetime,
-        enemy_datetime,
-        distance_3d,
-        ROW_NUMBER() OVER (
-            PARTITION BY friendly_groupname
-            ORDER BY distance_3d ASC, enemy_groupname
-        ) AS rn
-    FROM v_current_friendly_enemy_group_distance
-)
-SELECT
-    friendly_groupname,
-    enemy_groupname AS nearest_enemy_groupname,
-    friendly_datetime,
-    enemy_datetime,
-    distance_3d
-FROM ranked
-WHERE rn = 1
-ORDER BY distance_3d ASC, friendly_groupname;
-```
+현재 시점 기준 아군 장비와 적군 장비 사이의 3차원 거리를 계산한 뷰입니다.
 
-#### 현재 아군 유닛별 가장 가까운 적군 유닛은?
-```sql
-WITH ranked AS (
-    SELECT
-        friendly_unitname,
-        enemy_unitname,
-        distance_3d,
-        ROW_NUMBER() OVER (
-            PARTITION BY friendly_unitname
-            ORDER BY distance_3d ASC, enemy_unitname
-        ) AS rn
-    FROM v_current_friendly_enemy_unit_distance
-)
-SELECT
-    friendly_unitname,
-    enemy_unitname AS nearest_enemy_unitname,
-    distance_3d
-FROM ranked
-WHERE rn = 1
-ORDER BY distance_3d ASC, friendly_unitname;
-```
+### 목적
+- 개별 장비 근접도 분석
+- 장비 간 교전 또는 접촉 가능성 분석
+- 차량/장비 배치 비교
 
-#### 현재 아군 장비별 가장 가까운 적군 장비는?
-```sql
-WITH ranked AS (
-    SELECT
-        friendly_vehiclename,
-        enemy_vehiclename,
-        distance_3d,
-        ROW_NUMBER() OVER (
-            PARTITION BY friendly_vehiclename
-            ORDER BY distance_3d ASC, enemy_vehiclename
-        ) AS rn
-    FROM v_current_friendly_enemy_vehicle_distance
-)
-SELECT
-    friendly_vehiclename,
-    enemy_vehiclename AS nearest_enemy_vehiclename,
-    distance_3d
-FROM ranked
-WHERE rn = 1
-ORDER BY distance_3d ASC, friendly_vehiclename;
-```
+### 계산 방식
+1. `snapshots`의 최대 `datetime`를 현재 기준 시점으로 설정
+2. 각 장비별로 기준 시점에 가장 가까운 관측값 1개 선택
+3. 아군 장비와 적군 장비의 모든 조합에 대해 3D distance 계산
 
-#### 특정 아군 유닛의 최근 속도 변화 추이
-```sql
-SELECT
-    unitname,
-    groupname,
-    datetime,
-    prev_datetime,
-    dt_seconds,
-    distance_delta,
-    speed_per_sec,
-    prev_speed_per_sec,
-    speed_change_per_sec
-FROM v_friendly_unit_speed_trend
-WHERE unitname = 'b_1_m2_1_u1'
-ORDER BY datetime DESC;
-```
+### 주요 컬럼
+- `ref_datetime`
+- `friendly_vehiclename`
+- `friendly_groupname`
+- `friendly_vehicletype`
+- `friendly_datetime`
+- `friendly_posx`, `friendly_posy`, `friendly_posz`
+- `enemy_vehiclename`
+- `enemy_groupname`
+- `enemy_vehicletype`
+- `enemy_datetime`
+- `enemy_posx`, `enemy_posy`, `enemy_posz`
+- `distance_3d`
 
-#### 특정 적군 장비의 최근 속도 변화 추이
-```sql
-SELECT
-    vehiclename,
-    groupname,
-    datetime,
-    prev_datetime,
-    dt_seconds,
-    distance_delta,
-    speed_per_sec,
-    prev_speed_per_sec,
-    speed_change_per_sec
-FROM v_enemy_vehicle_speed_trend
-WHERE vehiclename = 'op_1_i3_1_v1'
-ORDER BY datetime DESC;
-```
+### 해석
+행 하나는 아군 장비 하나와 적군 장비 하나의 현재 기준 거리입니다.
 
-#### 특정 아군 유닛의 탄약량 변화 추이
-```sql
-SELECT
-    unitname,
-    datetime,
-    prev_datetime,
-    total_ammo_count,
-    prev_total_ammo_count,
-    ammo_change
-FROM v_friendly_unit_ammo_trend
-WHERE unitname = 'b_1_m2_1_u1'
-ORDER BY datetime DESC;
-```
+---
 
-#### 특정 적군 장비의 탄약량 변화 추이
-```sql
-SELECT
-    vehiclename,
-    datetime,
-    prev_datetime,
-    total_ammo_count,
-    prev_total_ammo_count,
-    ammo_change
-FROM v_enemy_vehicle_ammo_trend
-WHERE vehiclename = 'op_1_i3_1_v1'
-ORDER BY datetime DESC;
-```
+## 8. `v_friendly_unit_speed_trend`
 
+아군 유닛의 시간대별 이동 속도 변화를 계산한 뷰입니다.
 
-#### 최근 1분 간 공격을 수행하여 아군에게 피해를 입힌 적군 및 공격 횟수?
-```sql
-SELECT
-    shooter,
-    COUNT(*) AS attack_count
-FROM event_dammaged
-WHERE side = 'op'
-  AND datetime >= datetime((SELECT MAX(datetime) FROM event_dammaged), '-1 minute')
-GROUP BY shooter
-ORDER BY attack_count DESC, shooter;
-```
+### 목적
+- 기동성 변화 추적
+- 급가속/정지 구간 탐지
+- 시간 흐름에 따른 이동 패턴 파악
+
+### 계산 방식
+1. 같은 `unitname` 내에서 직전 시점 좌표와 시간을 `LAG`로 조회
+2. 현재 좌표와 직전 좌표의 거리 차이를 계산
+3. 시간 차이(`dt_seconds`)로 나누어 속도 계산
+
+### 주요 컬럼
+- `unitname`
+- `groupname`
+- `unittype`
+- `datetime`
+- `prev_datetime`
+- `dt_seconds`
+- `distance_delta`
+- `speed`
+
+### 해석
+행 하나는 특정 유닛의 한 시점 이동 구간에 대한 속도 계산 결과입니다.  
+`speed`는 직전 시점에서 현재 시점까지의 평균 이동 속도입니다.
+
+---
+
+## 9. `v_friendly_vehicle_speed_trend`
+
+아군 장비의 시간대별 이동 속도 변화를 계산한 뷰입니다.
+
+### 목적
+- 장비 기동 추적
+- 이동/정지 패턴 분석
+- 장비별 속도 변화 분석
+
+### 계산 방식
+- `vehiclename`별 직전 좌표/시간을 사용해 구간 이동거리와 시간 차이를 계산
+- 이동거리 ÷ 시간차로 속도 산출
+
+### 주요 컬럼
+- `vehiclename`
+- `groupname`
+- `vehicletype`
+- `datetime`
+- `prev_datetime`
+- `dt_seconds`
+- `distance_delta`
+- `speed`
+
+### 해석
+행 하나는 특정 장비의 연속 두 시점 사이 속도 값입니다.
+
+---
+
+## 10. `v_enemy_unit_speed_trend`
+
+적군 유닛의 시간대별 이동 속도 변화를 계산한 뷰입니다.
+
+### 목적
+- 적군 기동성 파악
+- 접근/후퇴 패턴 분석
+- 시간대별 이동량 추적
+
+### 계산 방식
+아군 유닛 속도 추이 뷰와 동일하되, `side='op'` 유닛만 대상으로 합니다.
+
+### 주요 컬럼
+- `unitname`
+- `groupname`
+- `unittype`
+- `datetime`
+- `prev_datetime`
+- `dt_seconds`
+- `distance_delta`
+- `speed`
+
+### 해석
+행 하나는 특정 적군 유닛의 연속 구간 속도입니다.
+
+---
+
+## 11. `v_enemy_vehicle_speed_trend`
+
+적군 장비의 시간대별 이동 속도 변화를 계산한 뷰입니다.
+
+### 목적
+- 적군 장비 기동 추적
+- 차량/장비 이동 패턴 분석
+- 위협 접근 속도 분석
+
+### 계산 방식
+아군 장비 속도 추이 뷰와 동일하되, `side='op'` 장비만 대상으로 합니다.
+
+### 주요 컬럼
+- `vehiclename`
+- `groupname`
+- `vehicletype`
+- `datetime`
+- `prev_datetime`
+- `dt_seconds`
+- `distance_delta`
+- `speed`
+
+### 해석
+행 하나는 특정 적군 장비의 연속 구간 속도입니다.
+
+---
+
+## 12. `v_friendly_unit_ammo_trend`
+
+아군 유닛별 탄약 총량 변화 추이를 계산한 뷰입니다.
+
+### 목적
+- 탄약 소모 추세 파악
+- 재보급 필요성 탐지
+- 유닛별 전투 소모량 비교
+
+### 계산 방식
+1. `units_ammo`에서 같은 `unitname`, `datetime`에 대한 탄약 수량 합계 계산
+2. 직전 시점 총탄약량을 `LAG`로 조회
+3. 현재 총량 - 직전 총량으로 `ammo_change` 계산
+
+### 주요 컬럼
+- `unitname`
+- `datetime`
+- `prev_datetime`
+- `total_ammo_count`
+- `prev_total_ammo_count`
+- `ammo_change`
+
+### 해석
+- `ammo_change < 0`: 탄약 소모
+- `ammo_change = 0`: 변화 없음
+- `ammo_change > 0`: 탄약 증가 또는 재보급
+
+---
+
+## 13. `v_friendly_vehicle_ammo_trend`
+
+아군 장비별 탄약 총량 변화 추이를 계산한 뷰입니다.
+
+### 목적
+- 장비 탄약 소모 추세 분석
+- 재무장 여부 확인
+- 장비별 전투 지속성 판단
+
+### 계산 방식
+`vehicles_ammo`를 사용해 장비별 시점 총탄약량과 직전 시점 총탄약량 차이를 계산합니다.
+
+### 주요 컬럼
+- `vehiclename`
+- `datetime`
+- `prev_datetime`
+- `total_ammo_count`
+- `prev_total_ammo_count`
+- `ammo_change`
+
+### 해석
+값의 부호 해석은 유닛 탄약 추이와 동일합니다.
+
+---
+
+## 14. `v_enemy_unit_ammo_trend`
+
+적군 유닛별 탄약 총량 변화 추이를 계산한 뷰입니다.
+
+### 목적
+- 적군 화력 소모 추정
+- 지속 전투 가능성 판단
+- 재보급 정황 탐지
+
+### 계산 방식
+아군 유닛 탄약 추이 뷰와 동일하되, `side='op'`만 대상으로 합니다.
+
+### 주요 컬럼
+- `unitname`
+- `datetime`
+- `prev_datetime`
+- `total_ammo_count`
+- `prev_total_ammo_count`
+- `ammo_change`
+
+### 해석
+`ammo_change`를 통해 적군의 소모 또는 증강 흐름을 볼 수 있습니다.
+
+---
+
+## 15. `v_enemy_vehicle_ammo_trend`
+
+적군 장비별 탄약 총량 변화 추이를 계산한 뷰입니다.
+
+### 목적
+- 적군 장비 화력 자원 변화 확인
+- 장비별 교전 지속성 분석
+- 보급 징후 파악
+
+### 계산 방식
+아군 장비 탄약 추이 뷰와 동일하되, `side='op'` 장비만 대상으로 합니다.
+
+### 주요 컬럼
+- `vehiclename`
+- `datetime`
+- `prev_datetime`
+- `total_ammo_count`
+- `prev_total_ammo_count`
+- `ammo_change`
+
+### 해석
+음수는 소모, 양수는 증가를 의미합니다.
+
+---
+
+## 16. `event_dammaged_dedup`
+
+피해 이벤트 원본 테이블 `event_dammaged`를 `(datetime, shooter, targetunit)` 기준으로 중복 제거한 canonical 뷰입니다.
+
+### 목적
+- 이벤트 중복 제거
+- 후속 집계의 기준 이벤트셋 제공
+- 동일 시점 동일 공격자-피격자 조합 정리
+
+### 계산 방식
+- `datetime`, `shooter`, `targetunit` 기준으로 그룹화
+- 원본 행 수를 `raw_row_count`로 유지
+
+### 주요 컬럼
+- `event_time`
+- `shooter`
+- `targetunit`
+- `raw_row_count`
+
+### 해석
+행 하나는 중복 제거된 고유 피해 이벤트 키 1건입니다.  
+`raw_row_count`는 동일 이벤트가 원본에 몇 번 존재했는지를 보여줍니다.
+
+---
+
+## 17. `event_dammaged_by_attacker`
+
+중복 제거된 피해 이벤트를 공격자 기준으로 집계한 뷰입니다.
+
+### 목적
+- 공격자별 피해 유발 규모 집계
+- 특정 시점 공격 주체 파악
+- 공격자별 피격 대상 다양성 확인
+
+### 계산 방식
+- `event_dammaged_dedup`를 기준으로
+- `event_time`, `shooter`별 그룹화
+- 공격자가 맞힌 서로 다른 `targetunit` 수를 `victim_count`로 계산
+
+### 주요 컬럼
+- `event_time`
+- `attacker`
+- `victim_count`
+
+### 해석
+행 하나는 특정 시점의 특정 공격자가 몇 개의 서로 다른 피해 대상을 만들었는지를 의미합니다.
+
+---
+
+## 18. `event_dammaged_by_victim`
+
+중복 제거된 피해 이벤트를 피격자 기준으로 집계한 뷰입니다.
+
+### 목적
+- 피격자별 공격 집중도 집계
+- 동일 시점 다중 공격 여부 파악
+- 특정 피해 대상의 위협 수준 확인
+
+### 계산 방식
+- `event_dammaged_dedup`를 기준으로
+- `event_time`, `targetunit`별 그룹화
+- 해당 피격자를 공격한 서로 다른 `shooter` 수를 `attack_count`로 계산
+
+### 주요 컬럼
+- `event_time`
+- `victim`
+- `attack_count`
+
+### 해석
+행 하나는 특정 시점의 특정 피격자가 몇 명의 서로 다른 공격자로부터 공격받았는지를 의미합니다.
+
+---
+
+## 공통 해석 주의
+
+### 현재 시점 기준 거리 뷰
+거리 뷰 3종은 모두 `snapshots`의 최대 `datetime`를 기준 시점으로 사용합니다.  
+개별 그룹/유닛/장비의 실제 기록 시각은 기준 시점과 완전히 같지 않을 수 있으며, 가장 가까운 기록이 선택됩니다.
+
+### 속도 추이 뷰
+속도는 연속 두 시점 사이의 평균 이동 속도입니다.  
+샘플링 간격이 길거나 불규칙하면 순간 속도가 아니라 구간 평균으로 해석해야 합니다.
+
+### 탄약 추이 뷰
+탄약 증감은 총합 기준입니다.  
+개별 탄종별 변화가 아니라 해당 객체의 전체 탄약량 순변화를 보여줍니다.
+
+### 피해 이벤트 뷰
+이벤트 집계는 먼저 `event_dammaged_dedup`으로 중복을 정리한 뒤 계산됩니다.  
+따라서 원본 raw row 수와 최종 집계 수는 다를 수 있습니다.
