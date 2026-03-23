@@ -1,11 +1,24 @@
 ﻿enabled,view_name,drop_if_exists,note,create_sql
-1,v_current_friendly_units,1,현재 시점 아군 유닛 상세,"CREATE VIEW v_current_friendly_units AS
-WITH anchor AS (
-    SELECT MAX(datetime) AS ref_datetime
+1,v_units_snapshot,1,"유닛 스냅샷 통합 상세 (현재/초기, 아군/적군)","CREATE VIEW v_units_snapshot AS
+WITH unit_anchor AS (
+    SELECT 'current' AS phase, 'b' AS side, MAX(datetime) AS ref_datetime
     FROM units
     WHERE side = 'b'
+    UNION ALL
+    SELECT 'initial' AS phase, 'b' AS side, MIN(datetime) AS ref_datetime
+    FROM units
+    WHERE side = 'b'
+    UNION ALL
+    SELECT 'current' AS phase, 'op' AS side, MAX(datetime) AS ref_datetime
+    FROM units
+    WHERE side = 'op'
+    UNION ALL
+    SELECT 'initial' AS phase, 'op' AS side, MIN(datetime) AS ref_datetime
+    FROM units
+    WHERE side = 'op'
 )
 SELECT
+    a.phase,
     u.snapshotid,
     u.datetime AS ref_datetime,
     u.side,
@@ -18,144 +31,40 @@ SELECT
     u.damage,
     u.objectparent
 FROM units u
-JOIN anchor a ON u.datetime = a.ref_datetime
-WHERE u.side = 'b' "
-1,v_initial_friendly_units,1,"최초 시점 (원래, 초기) 아군 유닛 상세","CREATE VIEW v_initial_friendly_units AS
-WITH anchor AS (
-    SELECT MIN(datetime) AS ref_datetime
-    FROM units
-    WHERE side = 'b'
-)
+JOIN unit_anchor a
+  ON u.side = a.side
+ AND u.datetime = a.ref_datetime"
+1,v_units_snapshot_count,1,"유닛 스냅샷 통합 개수 (현재/초기, 아군/적군)","CREATE VIEW v_units_snapshot_count AS
 SELECT
-    u.snapshotid,
-    u.datetime AS ref_datetime,
-    u.side,
-    u.unitname,
-    u.groupname,
-    u.unittype,
-    u.posx,
-    u.posy,
-    u.posz,
-    u.damage,
-    u.objectparent
-FROM units u
-JOIN anchor a ON u.datetime = a.ref_datetime
-WHERE u.side = 'b' "
-1,v_current_enemy_units,1,현재 시점 적군 유닛 상세,"CREATE VIEW v_current_enemy_units AS
-WITH anchor AS (
-    SELECT MAX(datetime) AS ref_datetime
-    FROM units
-    WHERE side = 'op'
-)
-SELECT
-    u.snapshotid,
-    u.datetime AS ref_datetime,
-    u.side,
-    u.unitname,
-    u.groupname,
-    u.unittype,
-    u.posx,
-    u.posy,
-    u.posz,
-    u.damage,
-    u.objectparent
-FROM units u
-JOIN anchor a ON u.datetime = a.ref_datetime
-WHERE u.side = 'op' "
-1,v_initial_enemy_units,1,"최초 시점 (원래, 초기) 적군 유닛 상세","CREATE VIEW v_initial_enemy_units AS
-WITH anchor AS (
-    SELECT MIN(datetime) AS ref_datetime
-    FROM units
-    WHERE side = 'op'
-)
-SELECT
-    u.snapshotid,
-    u.datetime AS ref_datetime,
-    u.side,
-    u.unitname,
-    u.groupname,
-    u.unittype,
-    u.posx,
-    u.posy,
-    u.posz,
-    u.damage,
-    u.objectparent
-FROM units u
-JOIN anchor a ON u.datetime = a.ref_datetime
-WHERE u.side = 'op' "
-1,v_current_friendly_unit_count,1,현재 아군 유닛 개수,"CREATE VIEW v_current_friendly_unit_count AS
-SELECT
+    phase,
+    side,
     ref_datetime,
     COUNT(*) AS unit_count
-FROM v_current_friendly_units
-GROUP BY ref_datetime "
-1,v_initial_friendly_unit_count,1,"최초 시점 (원래, 초기) 아군 유닛 개수","CREATE VIEW v_initial_friendly_unit_count AS
-SELECT
-    ref_datetime,
-    COUNT(*) AS unit_count
-FROM v_initial_friendly_units
-GROUP BY ref_datetime "
-1,v_current_enemy_unit_count,1,현재 적군 유닛 개수,"CREATE VIEW v_current_enemy_unit_count AS
-SELECT
-    ref_datetime,
-    COUNT(*) AS unit_count
-FROM v_current_enemy_units
-GROUP BY ref_datetime "
-1,v_initial_enemy_unit_count,1,"최초 시점 (원래, 초기) 적군 유닛 개수","CREATE VIEW v_initial_enemy_unit_count AS
-SELECT
-    ref_datetime,
-    COUNT(*) AS unit_count
-FROM v_initial_enemy_units
-GROUP BY ref_datetime "
-1,v_current_friendly_vehicles,1,현재 아군 장비 상세,"CREATE VIEW v_current_friendly_vehicles AS
-WITH anchor AS (
-    SELECT MAX(datetime) AS ref_datetime
+FROM v_units_snapshot
+GROUP BY
+    phase,
+    side,
+    ref_datetime"
+1,v_vehicles_snapshot,1,"장비 스냅샷 통합 상세 (현재/초기, 아군/적군)","CREATE VIEW v_vehicles_snapshot AS
+WITH vehicle_anchor AS (
+    SELECT 'current' AS phase, 'b' AS side, MAX(datetime) AS ref_datetime
     FROM vehicles
     WHERE side = 'b'
-)
-SELECT
-    v.snapshotid,
-    v.datetime AS ref_datetime,
-    v.side,
-    v.vehiclename,
-    v.groupname,
-    v.vehicletype,
-    v.posx,
-    v.posy,
-    v.posz,
-    v.damage,
-    v.hitpointjson
-FROM vehicles v
-JOIN anchor a ON v.datetime = a.ref_datetime
-WHERE v.side = 'b' "
-1,v_initial_friendly_vehicles,1,"최초 시점 (원래, 초기) 아군 장비 상세","CREATE VIEW v_initial_friendly_vehicles AS
-WITH anchor AS (
-    SELECT MIN(datetime) AS ref_datetime
+    UNION ALL
+    SELECT 'initial' AS phase, 'b' AS side, MIN(datetime) AS ref_datetime
     FROM vehicles
     WHERE side = 'b'
-)
-SELECT
-    v.snapshotid,
-    v.datetime AS ref_datetime,
-    v.side,
-    v.vehiclename,
-    v.groupname,
-    v.vehicletype,
-    v.posx,
-    v.posy,
-    v.posz,
-    v.damage,
-    v.hitpointjson
-FROM vehicles v
-JOIN anchor a ON v.datetime = a.ref_datetime
-WHERE v.side = 'b' "
-1,v_current_enemy_vehicles,1,현재 적군 장비 상세,"CREATE VIEW v_current_enemy_vehicles AS
-WITH anchor AS (
-    SELECT MAX(datetime) AS ref_datetime
+    UNION ALL
+    SELECT 'current' AS phase, 'op' AS side, MAX(datetime) AS ref_datetime
+    FROM vehicles
+    WHERE side = 'op'
+    UNION ALL
+    SELECT 'initial' AS phase, 'op' AS side, MIN(datetime) AS ref_datetime
     FROM vehicles
     WHERE side = 'op'
 )
 SELECT
+    a.phase,
     v.snapshotid,
     v.datetime AS ref_datetime,
     v.side,
@@ -168,53 +77,20 @@ SELECT
     v.damage,
     v.hitpointjson
 FROM vehicles v
-JOIN anchor a ON v.datetime = a.ref_datetime
-WHERE v.side = 'op' "
-1,v_initial_enemy_vehicles,1,"최초 시점 (원래, 초기) 적군 장비 상세","CREATE VIEW v_initial_enemy_vehicles AS
-WITH anchor AS (
-    SELECT MIN(datetime) AS ref_datetime
-    FROM vehicles
-    WHERE side = 'op'
-)
+JOIN vehicle_anchor a
+  ON v.side = a.side
+ AND v.datetime = a.ref_datetime"
+1,v_vehicles_snapshot_count,1,"장비 스냅샷 통합 개수 (현재/초기, 아군/적군)","CREATE VIEW v_vehicles_snapshot_count AS
 SELECT
-    v.snapshotid,
-    v.datetime AS ref_datetime,
-    v.side,
-    v.vehiclename,
-    v.groupname,
-    v.vehicletype,
-    v.posx,
-    v.posy,
-    v.posz,
-    v.damage,
-    v.hitpointjson
-FROM vehicles v
-JOIN anchor a ON v.datetime = a.ref_datetime
-WHERE v.side = 'op' "
-1,v_current_friendly_vehicle_count,1,현재 아군 장비 개수,"CREATE VIEW v_current_friendly_vehicle_count AS
-SELECT
+    phase,
+    side,
     ref_datetime,
     COUNT(*) AS vehicle_count
-FROM v_current_friendly_vehicles
-GROUP BY ref_datetime "
-1,v_initial_friendly_vehicle_count,1,"최초 시점 (원래, 초기) 아군 장비 개수","CREATE VIEW v_initial_friendly_vehicle_count AS
-SELECT
-    ref_datetime,
-    COUNT(*) AS vehicle_count
-FROM v_initial_friendly_vehicles
-GROUP BY ref_datetime "
-1,v_current_enemy_vehicle_count,1,현재 적군 장비 개수,"CREATE VIEW v_current_enemy_vehicle_count AS
-SELECT
-    ref_datetime,
-    COUNT(*) AS vehicle_count
-FROM v_current_enemy_vehicles
-GROUP BY ref_datetime "
-1,v_initial_enemy_vehicle_count,1,"최초 시점 (원래, 초기) 적군 장비 개수","CREATE VIEW v_initial_enemy_vehicle_count AS
-SELECT
-    ref_datetime,
-    COUNT(*) AS vehicle_count
-FROM v_initial_enemy_vehicles
-GROUP BY ref_datetime "
+FROM v_vehicles_snapshot
+GROUP BY
+    phase,
+    side,
+    ref_datetime"
 1,v_current_friendly_enemy_group_distance,1,현재 아군 그룹과 적군 그룹 간 거리,"CREATE VIEW v_current_friendly_enemy_group_distance AS
 WITH
 anchor AS (
