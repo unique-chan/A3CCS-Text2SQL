@@ -528,22 +528,44 @@ def get_entity_frequency_recent_minutes(
 
     return _run(f"""
     WITH events AS (
-        SELECT datetime, shooter, targetunit, NULL AS unit, NULL AS gunner, NULL AS killer
+        SELECT
+            datetime,
+            'event_dammaged' AS event_type,
+            shooter,
+            targetunit,
+            NULL AS unit,
+            NULL AS gunner,
+            NULL AS killer
         FROM event_dammaged
 
         UNION ALL
 
-        SELECT datetime, NULL AS shooter, NULL AS targetunit, unit, gunner, NULL AS killer
+        SELECT
+            datetime,
+            'event_fired' AS event_type,
+            NULL AS shooter,
+            NULL AS targetunit,
+            unit,
+            gunner,
+            NULL AS killer
         FROM event_fired
 
         UNION ALL
 
-        SELECT datetime, NULL AS shooter, targetunit, NULL AS unit, NULL AS gunner, killer
+        SELECT
+            datetime,
+            'event_killed' AS event_type,
+            NULL AS shooter,
+            targetunit,
+            NULL AS unit,
+            NULL AS gunner,
+            killer
         FROM event_killed
     ),
     normalized AS (
         SELECT
             replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
+            event_type,
             shooter,
             targetunit,
             unit,
@@ -562,15 +584,48 @@ def get_entity_frequency_recent_minutes(
           AND dt_norm <= (SELECT max_dt FROM last_time)
     ),
     entities AS (
-        SELECT shooter AS name FROM recent WHERE shooter IS NOT NULL
+        SELECT
+            shooter AS name,
+            event_type,
+            'attacker' AS role
+        FROM recent
+        WHERE shooter IS NOT NULL
+
         UNION ALL
-        SELECT targetunit AS name FROM recent WHERE targetunit IS NOT NULL
+
+        SELECT
+            targetunit AS name,
+            event_type,
+            'victim' AS role
+        FROM recent
+        WHERE targetunit IS NOT NULL
+
         UNION ALL
-        SELECT unit AS name FROM recent WHERE unit IS NOT NULL
+
+        SELECT
+            unit AS name,
+            event_type,
+            'attacker' AS role
+        FROM recent
+        WHERE unit IS NOT NULL
+
         UNION ALL
-        SELECT gunner AS name FROM recent WHERE gunner IS NOT NULL
+
+        SELECT
+            gunner AS name,
+            event_type,
+            'attacker' AS role
+        FROM recent
+        WHERE gunner IS NOT NULL
+
         UNION ALL
-        SELECT killer AS name FROM recent WHERE killer IS NOT NULL
+
+        SELECT
+            killer AS name,
+            event_type,
+            'attacker' AS role
+        FROM recent
+        WHERE killer IS NOT NULL
     ),
     aggregated AS (
         SELECT
@@ -582,11 +637,45 @@ def get_entity_frequency_recent_minutes(
             COUNT(*) AS frequency
         FROM entities
         GROUP BY name
+    ),
+    event_ranked AS (
+        SELECT
+            name,
+            event_type,
+            COUNT(*) AS event_count,
+            ROW_NUMBER() OVER (
+                PARTITION BY name
+                ORDER BY COUNT(*) DESC, event_type DESC
+            ) AS rn
+        FROM entities
+        GROUP BY name, event_type
+    ),
+    role_ranked AS (
+        SELECT
+            name,
+            role,
+            COUNT(*) AS role_count,
+            ROW_NUMBER() OVER (
+                PARTITION BY name
+                ORDER BY COUNT(*) DESC,
+                         CASE WHEN role = 'attacker' THEN 1 ELSE 0 END DESC,
+                         role DESC
+            ) AS rn
+        FROM entities
+        GROUP BY name, role
     )
     SELECT
-        entity_type,
-        entity_name,
-        frequency
-    FROM aggregated{where_clause}
-    ORDER BY frequency DESC, entity_name DESC{limit_clause}
+        a.entity_type,
+        a.entity_name,
+        a.frequency,
+        er.event_type AS most_frequent_event_type,
+        rr.role AS dominant_role
+    FROM aggregated a
+    LEFT JOIN event_ranked er
+        ON a.entity_name = er.name AND er.rn = 1
+    LEFT JOIN role_ranked rr
+        ON a.entity_name = rr.name AND rr.rn = 1
+    {where_clause}
+    ORDER BY a.frequency DESC, a.entity_name DESC
+    {limit_clause}
     """)
