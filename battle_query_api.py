@@ -18,87 +18,66 @@ def _run(sql: str) -> str:
 # 1) current / initial counts
 # =========================
 
-def get_b_unit_count() -> str:
-    return _run("""
+def get_unit_count(side: str, damage_threshold: float = 0.5) -> str:
+    return _run(f"""
     SELECT
         (
             SELECT COUNT(DISTINCT unitname)
             FROM units
-            WHERE side = 'b'
+            WHERE side = '{side}'
               AND unitname NOT IN (
                   SELECT DISTINCT targetunit
                   FROM event_killed
-                  WHERE side = 'b'
+                  WHERE side = '{side}'
+
+                  UNION
+
+                  SELECT DISTINCT unitname
+                  FROM units
+                  WHERE side = '{side}'
+                    AND damage >= {damage_threshold}
               )
         ) AS alive_unit_count,
         (
             SELECT COUNT(DISTINCT unitname)
             FROM units
-            WHERE side = 'b'
+            WHERE side = '{side}'
         ) AS initial_unit_count
     """)
 
-
-def get_op_unit_count() -> str:
-    return _run("""
+def get_vehicle_count(side: str, damage_threshold: float = 0.5) -> str:
+    return _run(f"""
     SELECT
         (
-            SELECT COUNT(DISTINCT unitname)
-            FROM units
-            WHERE side = 'op'
-              AND unitname NOT IN (
-                  SELECT DISTINCT targetunit
-                  FROM event_killed
-                  WHERE side = 'op'
+            SELECT COUNT(DISTINCT vehiclename)
+            FROM vehicles
+            WHERE side = '{side}'
+              AND vehiclename NOT IN (
+                  SELECT DISTINCT vehiclename
+                  FROM vehicles
+                  WHERE side = '{side}'
+                    AND damage >= {damage_threshold}
               )
-        ) AS alive_unit_count,
+        ) AS available_vehicle_count,
         (
-            SELECT COUNT(DISTINCT unitname)
-            FROM units
-            WHERE side = 'op'
-        ) AS initial_unit_count
+            SELECT COUNT(DISTINCT vehiclename)
+            FROM vehicles
+            WHERE side = '{side}'
+        ) AS initial_vehicle_count
     """)
-
-
-def get_b_equipment_count() -> str:
-    return _run("""
-    SELECT
-        (
-            SELECT COUNT(DISTINCT vehiclename)
-            FROM vehicles
-            WHERE side = 'b'
-              AND damage < 1
-        ) AS available_equipment_count,
-        (
-            SELECT COUNT(DISTINCT vehiclename)
-            FROM vehicles
-            WHERE side = 'b'
-        ) AS initial_equipment_count
-    """)
-
-
-def get_op_equipment_count() -> str:
-    return _run("""
-    SELECT
-        (
-            SELECT COUNT(DISTINCT vehiclename)
-            FROM vehicles
-            WHERE side = 'op'
-              AND damage < 1
-        ) AS available_equipment_count,
-        (
-            SELECT COUNT(DISTINCT vehiclename)
-            FROM vehicles
-            WHERE side = 'op'
-        ) AS initial_equipment_count
-    """)
-
 
 # =========================
 # 2) interval stats
 # =========================
 
-def get_b_unit_alive_by_interval(interval_minutes: int) -> str:
+def get_unit_alive_by_interval(
+    side: str,
+    interval_minutes: int,
+    damage_threshold: float = 0.5,
+    limit: int | None = None,
+) -> str:
+    limit_clause = f"\nLIMIT {limit}" if limit is not None else ""
+
     return _run(f"""
     SELECT
         datetime(
@@ -107,70 +86,59 @@ def get_b_unit_alive_by_interval(interval_minutes: int) -> str:
         ) AS bucket_time,
         COUNT(DISTINCT unitname) AS alive_unit_count
     FROM units
-    WHERE side = 'b'
+    WHERE side = '{side}'
       AND unitname NOT IN (
           SELECT DISTINCT targetunit
           FROM event_killed
-          WHERE side = 'b'
+          WHERE side = '{side}'
+
+          UNION
+
+          SELECT DISTINCT unitname
+          FROM units
+          WHERE side = '{side}'
+            AND damage >= {damage_threshold}
       )
     GROUP BY bucket_time
-    ORDER BY bucket_time
+    ORDER BY bucket_time DESC{limit_clause}
     """)
 
 
-def get_op_unit_alive_by_interval(interval_minutes: int) -> str:
+def get_vehicle_available_by_interval(
+    side: str,
+    interval_minutes: int,
+    damage_threshold: float = 1.0,
+    limit: int | None = None,
+) -> str:
+    limit_clause = f"\nLIMIT {limit}" if limit is not None else ""
+
     return _run(f"""
     SELECT
         datetime(
             (CAST(strftime('%s', datetime) AS INTEGER) / ({interval_minutes} * 60)) * ({interval_minutes} * 60),
             'unixepoch'
         ) AS bucket_time,
-        COUNT(DISTINCT unitname) AS alive_unit_count
-    FROM units
-    WHERE side = 'op'
-      AND unitname NOT IN (
-          SELECT DISTINCT targetunit
-          FROM event_killed
-          WHERE side = 'op'
+        COUNT(DISTINCT vehiclename) AS available_vehicle_count
+    FROM vehicles
+    WHERE side = '{side}'
+      AND vehiclename NOT IN (
+          SELECT DISTINCT vehiclename
+          FROM vehicles
+          WHERE side = '{side}'
+            AND damage >= {damage_threshold}
       )
     GROUP BY bucket_time
-    ORDER BY bucket_time
+    ORDER BY bucket_time DESC{limit_clause}
     """)
 
 
-def get_b_equipment_available_by_interval(interval_minutes: int) -> str:
-    return _run(f"""
-    SELECT
-        datetime(
-            (CAST(strftime('%s', datetime) AS INTEGER) / ({interval_minutes} * 60)) * ({interval_minutes} * 60),
-            'unixepoch'
-        ) AS bucket_time,
-        COUNT(DISTINCT vehiclename) AS available_equipment_count
-    FROM vehicles
-    WHERE side = 'b'
-      AND damage < 1
-    GROUP BY bucket_time
-    ORDER BY bucket_time
-    """)
+def get_ammo_total_by_interval(
+    side: str,
+    interval_minutes: int,
+    limit: int | None = None,
+) -> str:
+    limit_clause = f"\nLIMIT {limit}" if limit is not None else ""
 
-
-def get_op_equipment_available_by_interval(interval_minutes: int) -> str:
-    return _run(f"""
-    SELECT
-        datetime(
-            (CAST(strftime('%s', datetime) AS INTEGER) / ({interval_minutes} * 60)) * ({interval_minutes} * 60),
-            'unixepoch'
-        ) AS bucket_time,
-        COUNT(DISTINCT vehiclename) AS available_equipment_count
-    FROM vehicles
-    WHERE side = 'op'
-      AND damage < 1
-    GROUP BY bucket_time
-    ORDER BY bucket_time
-    """)
-
-
-def get_b_ammo_total_by_interval(interval_minutes: int) -> str:
     return _run(f"""
     SELECT
         datetime(
@@ -181,40 +149,16 @@ def get_b_ammo_total_by_interval(interval_minutes: int) -> str:
     FROM (
         SELECT datetime, count
         FROM units_ammo
-        WHERE side = 'b'
+        WHERE side = '{side}'
 
         UNION ALL
 
         SELECT datetime, count
         FROM vehicles_ammo
-        WHERE side = 'b'
+        WHERE side = '{side}'
     )
     GROUP BY bucket_time
-    ORDER BY bucket_time
-    """)
-
-
-def get_op_ammo_total_by_interval(interval_minutes: int) -> str:
-    return _run(f"""
-    SELECT
-        datetime(
-            (CAST(strftime('%s', datetime) AS INTEGER) / ({interval_minutes} * 60)) * ({interval_minutes} * 60),
-            'unixepoch'
-        ) AS bucket_time,
-        SUM(count) AS ammo_total
-    FROM (
-        SELECT datetime, count
-        FROM units_ammo
-        WHERE side = 'op'
-
-        UNION ALL
-
-        SELECT datetime, count
-        FROM vehicles_ammo
-        WHERE side = 'op'
-    )
-    GROUP BY bucket_time
-    ORDER BY bucket_time
+    ORDER BY bucket_time DESC{limit_clause}
     """)
 
 
@@ -224,10 +168,10 @@ def get_op_ammo_total_by_interval(interval_minutes: int) -> str:
 
 def get_events_between(start_time: str, end_time: str) -> str:
     return _run(f"""
-    SELECT *
-    FROM (
+    WITH events AS (
         SELECT
             datetime,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
             side,
             'event_dammaged' AS event_type,
             targetunit,
@@ -241,13 +185,12 @@ def get_events_between(start_time: str, end_time: str) -> str:
             NULL AS muzzle,
             NULL AS killer
         FROM event_dammaged
-        WHERE datetime >= '{start_time}'
-          AND datetime <= '{end_time}'
 
         UNION ALL
 
         SELECT
             datetime,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
             side,
             'event_fired' AS event_type,
             NULL AS targetunit,
@@ -261,13 +204,12 @@ def get_events_between(start_time: str, end_time: str) -> str:
             muzzle,
             NULL AS killer
         FROM event_fired
-        WHERE datetime >= '{start_time}'
-          AND datetime <= '{end_time}'
 
         UNION ALL
 
         SELECT
             datetime,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
             side,
             'event_killed' AS event_type,
             targetunit,
@@ -281,29 +223,34 @@ def get_events_between(start_time: str, end_time: str) -> str:
             NULL AS muzzle,
             killer
         FROM event_killed
-        WHERE datetime >= '{start_time}'
-          AND datetime <= '{end_time}'
     )
-    ORDER BY datetime
+    SELECT
+        datetime,
+        side,
+        event_type,
+        targetunit,
+        shooter,
+        damage,
+        weapon,
+        hitpoint,
+        unit,
+        gunner,
+        ammotype,
+        muzzle,
+        killer
+    FROM events
+    WHERE dt_norm >= replace(substr('{start_time}', 1, 19), 'T', ' ')
+      AND dt_norm <= replace(substr('{end_time}', 1, 19), 'T', ' ')
+    ORDER BY dt_norm DESC, event_type
     """)
 
 
 def get_events_recent_minutes(minutes: int) -> str:
     return _run(f"""
-    WITH last_time AS (
-        SELECT MAX(datetime) AS max_dt
-        FROM (
-            SELECT datetime FROM event_dammaged
-            UNION ALL
-            SELECT datetime FROM event_fired
-            UNION ALL
-            SELECT datetime FROM event_killed
-        )
-    )
-    SELECT *
-    FROM (
+    WITH events AS (
         SELECT
             datetime,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
             side,
             'event_dammaged' AS event_type,
             targetunit,
@@ -317,12 +264,12 @@ def get_events_recent_minutes(minutes: int) -> str:
             NULL AS muzzle,
             NULL AS killer
         FROM event_dammaged
-        WHERE datetime >= datetime((SELECT max_dt FROM last_time), '-{minutes} minutes')
 
         UNION ALL
 
         SELECT
             datetime,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
             side,
             'event_fired' AS event_type,
             NULL AS targetunit,
@@ -336,12 +283,12 @@ def get_events_recent_minutes(minutes: int) -> str:
             muzzle,
             NULL AS killer
         FROM event_fired
-        WHERE datetime >= datetime((SELECT max_dt FROM last_time), '-{minutes} minutes')
 
         UNION ALL
 
         SELECT
             datetime,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
             side,
             'event_killed' AS event_type,
             targetunit,
@@ -355,18 +302,38 @@ def get_events_recent_minutes(minutes: int) -> str:
             NULL AS muzzle,
             killer
         FROM event_killed
-        WHERE datetime >= datetime((SELECT max_dt FROM last_time), '-{minutes} minutes')
+    ),
+    last_time AS (
+        SELECT MAX(dt_norm) AS max_dt
+        FROM events
     )
-    ORDER BY datetime
+    SELECT
+        datetime,
+        side,
+        event_type,
+        targetunit,
+        shooter,
+        damage,
+        weapon,
+        hitpoint,
+        unit,
+        gunner,
+        ammotype,
+        muzzle,
+        killer
+    FROM events
+    WHERE dt_norm >= datetime((SELECT max_dt FROM last_time), '-{minutes} minutes')
+      AND dt_norm <= (SELECT max_dt FROM last_time)
+    ORDER BY dt_norm DESC, event_type
     """)
 
 
 def get_events_recent_rows(limit: int) -> str:
     return _run(f"""
-    SELECT *
-    FROM (
+    WITH events AS (
         SELECT
             datetime,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
             side,
             'event_dammaged' AS event_type,
             targetunit,
@@ -385,6 +352,7 @@ def get_events_recent_rows(limit: int) -> str:
 
         SELECT
             datetime,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
             side,
             'event_fired' AS event_type,
             NULL AS targetunit,
@@ -403,6 +371,7 @@ def get_events_recent_rows(limit: int) -> str:
 
         SELECT
             datetime,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
             side,
             'event_killed' AS event_type,
             targetunit,
@@ -417,7 +386,22 @@ def get_events_recent_rows(limit: int) -> str:
             killer
         FROM event_killed
     )
-    ORDER BY datetime DESC
+    SELECT
+        datetime,
+        side,
+        event_type,
+        targetunit,
+        shooter,
+        damage,
+        weapon,
+        hitpoint,
+        unit,
+        gunner,
+        ammotype,
+        muzzle,
+        killer
+    FROM events
+    ORDER BY dt_norm DESC, event_type
     LIMIT {limit}
     """)
 
@@ -426,51 +410,183 @@ def get_events_recent_rows(limit: int) -> str:
 # 4) observations
 # =========================
 
-def get_observation_between(start_time: str, end_time: str) -> str:
+def get_knowsaboutchanged_between(
+    start_time: str,
+    end_time: str,
+    target_side: str | None = None,
+    source_side: str | None = None,
+) -> str:
+    filters = ""
+    if target_side is not None:
+        filters += f"\n      AND targetunit LIKE '{target_side}%'"
+    if source_side is not None:
+        filters += f"\n      AND side = '{source_side}'"
+
     return _run(f"""
     SELECT
         datetime,
-        side,
         groupname,
         targetunit,
         oldknowsabout,
         newknowsabout
     FROM event_knowsaboutchanged
-    WHERE datetime >= '{start_time}'
-      AND datetime <= '{end_time}'
-    ORDER BY datetime, groupname, targetunit
+    WHERE strftime('%s', replace(substr(datetime, 1, 19), 'T', ' ')) >= strftime('%s', replace(substr('{start_time}', 1, 19), 'T', ' '))
+      AND strftime('%s', replace(substr(datetime, 1, 19), 'T', ' ')) <= strftime('%s', replace(substr('{end_time}', 1, 19), 'T', ' ')){filters}
+    ORDER BY datetime DESC, groupname, targetunit
     """)
 
 
-def get_observation_recent_minutes(minutes: int) -> str:
+def get_knowsaboutchanged_recent_minutes(
+    minutes: int,
+    target_side: str | None = None,
+    source_side: str | None = None,
+) -> str:
+    filters = ""
+    if target_side is not None:
+        filters += f"\n      AND targetunit LIKE '{target_side}%'"
+    if source_side is not None:
+        filters += f"\n      AND side = '{source_side}'"
+
     return _run(f"""
-    WITH last_time AS (
-        SELECT MAX(datetime) AS max_dt
+    WITH normalized AS (
+        SELECT
+            datetime,
+            side,
+            groupname,
+            targetunit,
+            oldknowsabout,
+            newknowsabout,
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm
         FROM event_knowsaboutchanged
+    ),
+    last_time AS (
+        SELECT MAX(dt_norm) AS max_dt
+        FROM normalized
     )
     SELECT
         datetime,
-        side,
         groupname,
         targetunit,
         oldknowsabout,
         newknowsabout
-    FROM event_knowsaboutchanged
-    WHERE datetime >= datetime((SELECT max_dt FROM last_time), '-{minutes} minutes')
-    ORDER BY datetime, groupname, targetunit
+    FROM normalized
+    WHERE dt_norm >= datetime((SELECT max_dt FROM last_time), '-{minutes} minutes')
+      AND dt_norm <= (SELECT max_dt FROM last_time){filters}
+    ORDER BY dt_norm DESC, groupname, targetunit
     """)
 
 
-def get_observation_recent_rows(limit: int) -> str:
+def get_knowsaboutchanged_recent_rows(
+    limit: int,
+    target_side: str | None = None,
+    source_side: str | None = None,
+) -> str:
+    where_clause = ""
+    conditions = []
+
+    if target_side is not None:
+        conditions.append(f"targetunit LIKE '{target_side}%'")
+    if source_side is not None:
+        conditions.append(f"side = '{source_side}'")
+
+    if conditions:
+        where_clause = "\nWHERE " + "\n  AND ".join(conditions)
+
     return _run(f"""
     SELECT
         datetime,
-        side,
         groupname,
         targetunit,
         oldknowsabout,
         newknowsabout
-    FROM event_knowsaboutchanged
+    FROM event_knowsaboutchanged{where_clause}
     ORDER BY datetime DESC, groupname, targetunit
     LIMIT {limit}
+    """)
+
+
+
+
+
+
+
+
+
+
+
+
+def get_entity_frequency_recent_minutes(
+    minutes: int,
+    top_k: int | None = None,
+    entity_type: str | None = None,
+) -> str:
+    where_clause = ""
+    if entity_type is not None:
+        where_clause = f"\nWHERE entity_type = '{entity_type}'"
+
+    limit_clause = f"\nLIMIT {top_k}" if top_k is not None else ""
+
+    return _run(f"""
+    WITH events AS (
+        SELECT datetime, shooter, targetunit, NULL AS unit, NULL AS gunner, NULL AS killer
+        FROM event_dammaged
+
+        UNION ALL
+
+        SELECT datetime, NULL AS shooter, NULL AS targetunit, unit, gunner, NULL AS killer
+        FROM event_fired
+
+        UNION ALL
+
+        SELECT datetime, NULL AS shooter, targetunit, NULL AS unit, NULL AS gunner, killer
+        FROM event_killed
+    ),
+    normalized AS (
+        SELECT
+            replace(substr(datetime, 1, 19), 'T', ' ') AS dt_norm,
+            shooter,
+            targetunit,
+            unit,
+            gunner,
+            killer
+        FROM events
+    ),
+    last_time AS (
+        SELECT MAX(dt_norm) AS max_dt
+        FROM normalized
+    ),
+    recent AS (
+        SELECT *
+        FROM normalized
+        WHERE dt_norm >= datetime((SELECT max_dt FROM last_time), '-{minutes} minutes')
+          AND dt_norm <= (SELECT max_dt FROM last_time)
+    ),
+    entities AS (
+        SELECT shooter AS name FROM recent WHERE shooter IS NOT NULL
+        UNION ALL
+        SELECT targetunit AS name FROM recent WHERE targetunit IS NOT NULL
+        UNION ALL
+        SELECT unit AS name FROM recent WHERE unit IS NOT NULL
+        UNION ALL
+        SELECT gunner AS name FROM recent WHERE gunner IS NOT NULL
+        UNION ALL
+        SELECT killer AS name FROM recent WHERE killer IS NOT NULL
+    ),
+    aggregated AS (
+        SELECT
+            CASE
+                WHEN name GLOB '*_v[0-9]*' THEN 'vehicle'
+                ELSE 'unit'
+            END AS entity_type,
+            name AS entity_name,
+            COUNT(*) AS frequency
+        FROM entities
+        GROUP BY name
+    )
+    SELECT
+        entity_type,
+        entity_name,
+        frequency
+    FROM aggregated{where_clause}
+    ORDER BY frequency DESC, entity_name DESC{limit_clause}
     """)
