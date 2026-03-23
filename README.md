@@ -41,7 +41,8 @@
   python test_dump_arma.py
   ~~~
 
-### How to use?
+### How to use? 
+- Text2SQL
 
   ~~~python
   from text2sql_langgraph import run_text2sql_query
@@ -51,6 +52,17 @@
   else:
     print(resp['error'])
   ~~~
+
+- [Tip] We provide wrapper functions around pre-written SQL queries for cases that are expected to be frequently requested. See `battle_query_api.ipynb` or (`.py`) for details.
+
+  ~~~python
+  from battle_query_api import *
+  print(get_unit_count(side='b', damage_threshold=0.5))
+  ~~~
+
+  | alive_unit_count | initial_unit_count |
+  |------------------|--------------------|
+  | 83               | 88                 | 
 
 
 ### Test (Live demo)
