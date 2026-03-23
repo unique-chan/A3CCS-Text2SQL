@@ -90,13 +90,16 @@ def _to_float_or_none(x):
         return None
 
 
-def add_ignore(db_session, model, **kwargs):
+def add_ignore(db_session, model, ignore=False, **kwargs):
     """
     SQLite 전용:
     UNIQUE / PK 충돌이 나면 해당 row insert를 무시한다.
     """
-    stmt = sqlite_insert(model).values(**kwargs).prefix_with("OR IGNORE")
-    db_session.execute(stmt)
+    if ignore:
+        stmt = sqlite_insert(model).values(**kwargs).prefix_with("OR IGNORE")
+        db_session.execute(stmt)
+    else:
+        db_session.add(model(**kwargs))
 
 
 def normalize_ammo_items(ammo_obj):
@@ -495,7 +498,7 @@ def dump_arma_into_sql(DB_Session, known_state, json_path, ok=-1, skip=-1, fail=
                                     EventEDC,
                                     snapshotid=sid,
                                     side=side,
-                                    # seq=seq,
+                                    seq=seq,
                                     # keyname=keyname,
                                     datetime=event_datetime,
                                     groupname=group,
@@ -522,7 +525,7 @@ def dump_arma_into_sql(DB_Session, known_state, json_path, ok=-1, skip=-1, fail=
                                 snapshotid=sid,
                                 datetime=event_datetime,
                                 side=side,
-                                # seq=seq,
+                                seq=seq,
                                 # keyname=keyname,
                                 unit=unit,
                                 weapon=weapon,
@@ -568,7 +571,7 @@ def dump_arma_into_sql(DB_Session, known_state, json_path, ok=-1, skip=-1, fail=
                                 EventD,
                                 snapshotid=sid,
                                 side=side,
-                                # seq=seq,
+                                seq=seq,
                                 # keyname=keyname,
                                 datetime=event_datetime,
                                 targetunit=unit,
@@ -596,7 +599,7 @@ def dump_arma_into_sql(DB_Session, known_state, json_path, ok=-1, skip=-1, fail=
                                 EventK,
                                 snapshotid=sid,
                                 side=side,
-                                # seq=seq,
+                                seq=seq,
                                 # keyname=keyname,
                                 datetime=event_datetime,
                                 targetunit=unit,
