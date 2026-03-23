@@ -163,13 +163,13 @@
 - 컬럼
   - `snapshotid`: 각 스냅샷에 부여된 고유의 식별 ID.
   - `datetime`: 현재 스냅샷 (현재 `snapshotid`)의 일시 (ISO8601 포맷 준수: {YYYY}-{MM}-{DD}T-{HH}-{MM}-{SS}.SSS 꼴) (예로, 2026-03-03T14:04:54.605는 2026년 3월 3일 14시 4분 54초 605밀리초)
-  - `side`: `b` 또는 `op` 값이 저장됨. 아군 (`b`) 및 적군 (`op`)을 구분하기 위한 식별자.
+  - `side`: `b` 또는 `op` 값이 저장됨. 아군 (`b`) 및 적군 (`op`)을 구분하기 위한 식별자. 이 테이블에서 특정 행의 `side`가 `b`일 경우, `b`의 어떤 그룹이 관측하고 있는 상대에 대한 인지 변화 기록임을 의미! 
   - `groupname`: f"{side}_{company}_{platoon}_{squad}" 꼴의 문자열.  
   - `targetunit`: 관심 대상 타겟. (유의사항: unit이라고 변수명은 되어 있으나, vehicle 차량 장비도 저장될 수 있음!)
-  - `oldknowsabout`: 변경 이전 knowsAbout 값. (0 이상 4 이하, 0에 가까울 수록 "거의 모른다/인지하지 못한다", 4에 가까울수록 "매우 잘 안다/정확히 인지한다". 실무적으로 **1 이상이면 ‘어느 정도 알고 있다(인지가 형성됨)’**로 볼 수 있음.)
-  - `newknowsabout`: 변경 이후 knowsAbout 값.
+  - `oldknowsabout`: 변경 이전 knowsAbout 값. (0 이상 4 이하, 0에 가까울 수록 "거의 모른다/인지하지 못한다", 4에 가까울수록 "매우 잘 안다/정확히 인지한다". 실무적으로 **1 이상이면 ‘어느 정도 알고 있다(인지가 형성됨)’**로 볼 수 있음후 knowsAbout 값.
 - 예시: event_knowsaboutchanged 테이블에 저장된 최상단 레코드는?
-    ~~~sql
+    ~~~sql.)
+  - `newknowsabout`: 변경 이
     select snapshotid, datetime, side, groupname, targetunit, newknowsabout, oldknowsabout from event_knowsaboutchanged limit 1;
     ~~~
     | snapshotid | datetime | side | groupname | targetunit | newknowsabout | oldknowsabout |
