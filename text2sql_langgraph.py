@@ -1427,7 +1427,11 @@ def main():
     graph = runtime.graph
 
     print(f"⚡Connected to SQLite: {cfg.db_path}")
-    print(f"⚡LLM backend: {cfg.llm_backend} {cfg.model} / Embedding: {os.getenv('EMBEDDING_MODEL')}")
+    print(f"⚡LLM backend: {cfg.llm_backend} {cfg.model}", end=' ')
+    if cfg.enable_query_rag:
+        print(f"Embedding: {os.getenv('EMBEDDING_MODEL')}")
+    else:
+        print()
     print(
         f"⚡Limits: MAX_REPAIR_ATTEMPTS={cfg.max_repair_attempts}, "
         f"MAX_STEPS={cfg.max_steps}, "
