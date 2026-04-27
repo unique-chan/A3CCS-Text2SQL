@@ -24,8 +24,8 @@
 
 - Remote PC for LLM
   ~~~shell
-  conda create -n hugging python=3.11 -y
-  conda activate hugging
+  conda create -n yechanhugging python=3.11 -y
+  conda activate yechanhugging
   pip install -U huggingface_hub==1.6.0
   pip install -U vllm==0.17.0
   mkdirs mymodels
